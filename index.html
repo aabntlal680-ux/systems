@@ -3,845 +3,1054 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-ar="تحويل فوري - National Bank" data-en="Instant Transfer - National Bank">تحويل فوري - National Bank</title>
+<title>تحويل فوري - National Bank</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #e8edf2; min-height: 100vh; direction: rtl; }
-  body.en { direction: ltr; }
-
-  /* LANG TOGGLE */
-  .lang-btn {
-    background: linear-gradient(135deg, #f0a500, #d48a00);
-    color: white; border: none; padding: 6px 14px; border-radius: 20px;
-    font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
-    display: flex; align-items: center; gap: 5px; transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  }
-  .lang-btn:hover { background: linear-gradient(135deg, #d48a00, #b87000); transform: translateY(-1px); }
-
-  /* TOP BAR */
-  .top-bar { background: #1a3a5c; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 58px; }
-  .top-bar-left { display: flex; align-items: center; gap: 10px; }
-  .logo-area { display: flex; align-items: center; gap: 12px; }
-  .logo-svg-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-  .logo-icon { width: 44px; height: 44px; background: #cc2020; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-  .logo-icon::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 55%; background: #a81818; clip-path: polygon(0 40%, 100% 0%, 100% 100%, 0% 100%); }
-  .logo-icon svg { position: relative; z-index: 1; }
-  .logo-text-block { display: flex; flex-direction: column; line-height: 1.2; }
-  .logo-text-top { color: white; font-size: 15px; font-weight: 900; letter-spacing: 1.5px; }
-  .logo-text-bot { color: #c8dff8; font-size: 12px; font-weight: 600; letter-spacing: 2px; }
-  .logo-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.25); margin: 0 4px; }
-  .logo-sub { color: #8ab0d0; font-size: 11px; line-height: 1.3; }
-  .exit-btn { background: #2a5080; color: #adc8e8; border: none; padding: 7px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
-  .exit-btn:hover { background: #3a6090; }
-
-  /* MAIN NAV */
-  .main-nav { background: #1e4878; display: flex; justify-content: flex-end; padding: 0 20px; border-bottom: 2px solid #0d3060; flex-wrap: wrap; }
-  body.en .main-nav { justify-content: flex-start; }
-  .nav-item { display: flex; flex-direction: column; align-items: center; padding: 10px 16px; color: #c0d8f0; font-size: 11.5px; cursor: pointer; transition: background 0.2s; border-bottom: 3px solid transparent; gap: 4px; }
-  .nav-item:hover { background: #2a5c9a; }
-  .nav-item.active { color: #fff; border-bottom-color: #f0a500; background: #163a6a; }
-  .nav-icon { font-size: 18px; }
-
-  /* LAYOUT */
-  .page-body { display: flex; max-width: 1100px; margin: 18px auto; padding: 0 14px; gap: 0; }
-
-  /* SIDEBAR */
-  .sidebar { width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; margin-right: 12px; }
-  body.en .sidebar { margin-right: 0; margin-left: 12px; }
-  .side-card { background: white; border: 1px solid #d0dae8; border-radius: 4px; overflow: hidden; }
-  .side-card-header { background: #1e4878; color: white; padding: 8px 12px; font-size: 13px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; }
-  .side-card-header .toggle-btn { background: none; border: none; color: white; cursor: pointer; font-size: 14px; }
-  .side-card-body { padding: 0; }
-  .side-link { display: flex; align-items: center; padding: 9px 14px; font-size: 12.5px; color: #1e4878; cursor: pointer; border-bottom: 1px solid #eef2f8; transition: background 0.15s; text-decoration: none; gap: 6px; }
-  .side-link:hover { background: #eef5ff; }
-  .side-link.active { background: #d8eaff; font-weight: bold; border-right: 3px solid #1e4878; }
-  body.en .side-link.active { border-right: none; border-left: 3px solid #1e4878; }
-  .banks-logo { padding: 14px; text-align: center; }
-  .banks-logo .sb-icon { width: 56px; height: 56px; background: linear-gradient(135deg, #1a6040, #2a8060); border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
-
-  /* MAIN CONTENT */
-  .main-content { flex: 1; }
-  .breadcrumb { font-size: 12px; color: #555; margin-bottom: 8px; padding: 4px 2px; }
-  .breadcrumb span { color: #1e4878; cursor: pointer; }
-  .page-title { font-size: 22px; font-weight: bold; color: #1a3a5c; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-  .page-title .star { color: #f0a500; }
-
-  /* STEPPER */
-  .stepper { display: flex; margin-bottom: 18px; border-radius: 4px; overflow: hidden; border: 1px solid #c0cfe0; }
-  .step { flex: 1; padding: 11px 8px; text-align: center; font-size: 13px; background: #d8e4f0; color: #5a7a9a; border-left: 1px solid #b0c4d8; font-weight: bold; cursor: default; transition: background 0.3s, color 0.3s; }
-  body.en .step { border-left: none; border-right: 1px solid #b0c4d8; }
-  body.en .step:last-child { border-right: none; }
-  .step:last-child { border-left: none; }
-  .step.active { background: #1e4878; color: white; }
-  .step.completed { background: #2e7d32; color: #c8f0cc; }
-  .step.failed { background: #cc2020; color: white; }
-
-  /* FORM CARD */
-  .form-card { background: white; border: 1px solid #c8d8ea; border-radius: 4px; margin-bottom: 14px; overflow: hidden; }
-  .form-card-header { background: #1e4878; color: white; padding: 9px 14px; font-size: 13.5px; font-weight: bold; }
-  .form-card-body { padding: 18px 20px; }
-  .form-row { display: flex; align-items: center; margin-bottom: 14px; gap: 10px; }
-  .form-label { font-size: 13px; color: #2a4a6a; font-weight: bold; min-width: 90px; flex-shrink: 0; }
-  .form-label .required { color: #cc2020; }
-  .form-control { flex: 1; padding: 8px 12px; border: 1px solid #b0c4d8; border-radius: 4px; font-size: 13px; color: #1a3a5c; outline: none; transition: border-color 0.2s, box-shadow 0.2s; background: #f8fbff; font-family: inherit; direction: rtl; }
-  body.en .form-control { direction: ltr; }
-  .form-control:focus { border-color: #1e4878; box-shadow: 0 0 0 3px rgba(30,72,120,0.12); background: white; }
-  .amount-field { font-weight: bold; font-size: 15px; background: #f0f6ff; border-color: #a0b8d4; }
-  .add-beneficiary { display: inline-flex; align-items: center; gap: 6px; color: #1e4878; font-size: 12.5px; cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0; font-family: inherit; }
-  .add-beneficiary:hover { color: #cc2020; }
-  .add-beneficiary .plus-icon { width: 20px; height: 20px; background: #1e4878; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink:0; }
-
-  /* NOTICE BOX */
-  .notice-card { background: white; border: 2px solid #cc3030; border-radius: 4px; margin-bottom: 14px; overflow: hidden; }
-  .notice-title { background: #1e4878; color: white; padding: 9px 20px; font-size: 13.5px; font-weight: bold; }
-  .notice-body { padding: 18px 20px; }
-  .notice-text { font-size: 13px; color: #222; line-height: 1.85; text-align: center; margin-bottom: 4px; }
-  .highlight-amount { background: #ffe066; color: #1a3a5c; font-weight: bold; padding: 1px 6px; border-radius: 3px; }
-  .inline-input { display: inline-block; border: none; border-bottom: 2px solid #1e4878; background: #f0f6ff; padding: 2px 8px; font-size: 13px; color: #1a3a5c; font-family: inherit; width: 200px; outline: none; text-align: center; direction: rtl; }
-  body.en .inline-input { direction: ltr; }
-  .inline-input:focus { background: #e0f0ff; border-bottom-color: #cc2020; }
-  .terms-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 12.5px; color: #444; justify-content: center; }
-  .terms-row input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; accent-color: #1e4878; }
-  .terms-link { color: #1e4878; text-decoration: underline; cursor: pointer; }
-
-  /* STEP SCREENS */
-  .step-screen { display: none; }
-  .step-screen.active { display: block; }
-
-  /* STEP 2 */
-  .confirm-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  .confirm-table tr { border-bottom: 1px solid #eef2f8; }
-  .confirm-table td { padding: 12px 16px; }
-  .confirm-table td:first-child { color: #5a7a9a; font-weight: bold; width: 40%; }
-  .confirm-table td:last-child { color: #1a3a5c; font-weight: bold; }
-  .confirm-amount-big { font-size: 20px; color: #1e7a38; font-weight: 900; }
-
-  /* STEP 3 */
-  .processing-box { text-align: center; padding: 40px 20px; }
-  .spinner { width: 60px; height: 60px; border: 6px solid #d0dae8; border-top-color: #1e4878; border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 20px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .processing-steps { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; text-align: right; }
-  body.en .processing-steps { text-align: left; }
-  .proc-step { display: flex; align-items: center; gap: 12px; font-size: 13.5px; padding: 10px 16px; background: #f0f6ff; border-radius: 6px; border-right: 4px solid #d0dae8; transition: all 0.4s; }
-  body.en .proc-step { border-right: none; border-left: 4px solid #d0dae8; }
-  .proc-step.done { border-right-color: #2e7d32; background: #f0fff4; color: #2e7d32; font-weight: bold; }
-  body.en .proc-step.done { border-left-color: #2e7d32; border-right-color: transparent; }
-  .proc-step.running { border-right-color: #1e4878; background: #e8f0ff; color: #1e4878; animation: pulse 1s ease-in-out infinite; }
-  body.en .proc-step.running { border-left-color: #1e4878; border-right-color: transparent; }
-  .proc-step.fail { border-right-color: #cc2020; background: #fff0f0; color: #cc2020; font-weight: bold; }
-  body.en .proc-step.fail { border-left-color: #cc2020; border-right-color: transparent; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
-  .proc-icon { font-size: 18px; flex-shrink:0; }
-  .progress-bar-wrap { background: #e0e8f0; border-radius: 8px; height: 8px; margin: 16px 0; overflow: hidden; }
-  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #1e4878, #2a80c8); border-radius: 8px; width: 0%; transition: width 0.5s ease; }
-
-  /* STEP 4 */
-  .result-box { text-align: center; padding: 30px 20px; }
-  .result-icon-fail { font-size: 64px; animation: shake 0.6s ease; display: block; margin-bottom: 10px; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
-  .result-title-fail { font-size: 22px; color: #cc2020; font-weight: 900; margin-bottom: 6px; }
-  .result-ref { font-size: 12px; color: #888; margin-bottom: 18px; }
-  .modal-info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
-  .modal-info-row:last-child { border-bottom: none; }
-  .modal-info-label { color: #777; }
-  .modal-info-value { color: #1a3a5c; font-weight: bold; }
-
-  /* BUTTONS */
-  .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px; }
-  .btn { padding: 10px 24px; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-  .btn-primary { background: #1e8a3a; color: white; }
-  .btn-primary:hover { background: #167030; transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.2); }
-  .btn-cancel { background: #cc2020; color: white; }
-  .btn-cancel:hover { background: #aa1818; transform: translateY(-1px); }
-  .btn-secondary { background: #1e4878; color: white; }
-  .btn-secondary:hover { background: #163a6a; transform: translateY(-1px); }
-  .btn-outline { background: white; color: #1e4878; border: 2px solid #1e4878; }
-  .btn-outline:hover { background: #f0f6ff; }
-
-  /* TOAST */
-  .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-80px); background: #1e4878; color: white; padding: 12px 28px; border-radius: 6px; font-size: 14px; font-weight: bold; z-index: 9999; transition: transform 0.35s ease; box-shadow: 0 4px 16px rgba(0,0,0,0.25); white-space: nowrap; }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.success { background: #1e7a38; }
-  .toast.error { background: #cc2020; }
-
-  /* MODALS */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9000; align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal-box { background: white; border-radius: 8px; width: 92%; max-width: 400px; overflow: hidden; animation: slideUp 0.28s ease; box-shadow: 0 16px 50px rgba(0,0,0,0.35); direction: rtl; }
-  body.en .modal-box { direction: ltr; }
-  .modal-box.wide { max-width: 430px; }
-  @keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
-  .modal-header { background: #cc2020; color: white; padding: 14px 18px; display: flex; align-items: center; gap: 10px; }
-  .modal-header.blue { background: #1e4878; }
-  .modal-header-icon { font-size: 24px; }
-  .modal-header-title { font-size: 16px; font-weight: 900; }
-  .modal-header-sub { font-size: 11px; opacity: 0.85; margin-top: 2px; }
-  .modal-body { padding: 16px 18px 10px; }
-  .modal-error-code { background: #fff0f0; border: 1px solid #f0b0b0; border-radius: 5px; padding: 8px 12px; font-size: 11px; color: #cc2020; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  .modal-footer { padding: 10px 18px 16px; display: flex; gap: 8px; justify-content: flex-end; background: #fafbfd; border-top: 1px solid #eee; flex-wrap: wrap; }
-
-  @media (max-width: 700px) {
-    .sidebar { display: none; }
-    .main-nav .nav-item { padding: 8px 8px; font-size: 10px; }
-    .action-bar { flex-direction: column-reverse; }
-    .btn { width: 100%; text-align: center; }
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#e8edf2;min-height:100vh;direction:rtl}
+body.en{direction:ltr}
+.lang-btn{background:linear-gradient(135deg,#f0a500,#d48a00);color:white;border:none;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.lang-btn:hover{transform:translateY(-1px)}
+.top-bar{background:#1a3a5c;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:58px}
+.top-bar-left{display:flex;align-items:center;gap:10px}
+.logo-svg-wrap{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-icon{width:44px;height:44px;border-radius:6px;background-image: url("ad.png");background-size: contain;background-position: center;background-repeat: no-repeat;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.logo-text-block{display:flex;flex-direction:column;line-height:1.2}
+.logo-text-top{color:white;font-size:15px;font-weight:900;letter-spacing:1.5px}
+.logo-text-bot{color:#c8dff8;font-size:12px;font-weight:600;letter-spacing:2px}
+.logo-divider{width:1px;height:32px;background:rgba(255,255,255,.25);margin:0 4px}
+.logo-sub{color:#8ab0d0;font-size:11px;line-height:1.3}
+.exit-btn{background:#2a5080;color:#adc8e8;border:none;padding:7px 16px;border-radius:4px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .2s}
+.exit-btn:hover{background:#3a6090}
+.main-nav{background:#1e4878;display:flex;justify-content:space-around;padding:0 8px;border-bottom:2px solid #0d3060;flex-wrap:wrap}
+body.en .main-nav{justify-content:flex-start}
+.nav-item{display:flex;flex-direction:column;align-items:center;padding:9px 12px;color:#c0d8f0;font-size:11px;cursor:pointer;transition:background .2s;border-bottom:3px solid transparent;gap:3px;white-space:nowrap}
+.nav-item:hover{background:#2a5c9a}
+.nav-item.active{color:#fff;border-bottom-color:#f0a500;background:#163a6a}
+.nav-icon{font-size:17px}
+.page-body{display:flex;max-width:1100px;margin:16px auto;padding:0 12px}
+.sidebar{width:210px;flex-shrink:0;display:flex;flex-direction:column;gap:10px;margin-right:12px}
+body.en .sidebar{margin-right:0;margin-left:12px}
+.side-card{background:white;border:1px solid #d0dae8;border-radius:4px;overflow:hidden}
+.side-card-header{background:#1e4878;color:white;padding:8px 12px;font-size:13px;font-weight:bold;display:flex;align-items:center;justify-content:space-between}
+.toggle-btn{background:none;border:none;color:white;cursor:pointer;font-size:14px}
+.side-link{display:flex;align-items:center;padding:9px 14px;font-size:12.5px;color:#1e4878;cursor:pointer;border-bottom:1px solid #eef2f8;transition:background .15s;text-decoration:none;gap:6px}
+.side-link:hover{background:#eef5ff}
+.side-link.active{background:#d8eaff;font-weight:bold;border-right:3px solid #1e4878}
+body.en .side-link.active{border-right:none;border-left:3px solid #1e4878}
+.banks-logo{padding:14px;text-align:center}
+.sb-icon{width:52px;height:52px;background:linear-gradient(135deg,#1a6040,#2a8060);border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px}
+.main-content{flex:1;min-width:0}
+.breadcrumb{font-size:12px;color:#555;margin-bottom:8px}
+.breadcrumb span{color:#1e4878;cursor:pointer}
+.page-title{font-size:21px;font-weight:bold;color:#1a3a5c;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.star{color:#f0a500}
+.stepper{display:flex;margin-bottom:16px;border-radius:4px;overflow:hidden;border:1px solid #c0cfe0}
+.step{flex:1;padding:10px 6px;text-align:center;font-size:12.5px;background:#d8e4f0;color:#5a7a9a;border-left:1px solid #b0c4d8;font-weight:bold;cursor:default;transition:background .3s,color .3s}
+body.en .step{border-left:none;border-right:1px solid #b0c4d8}
+.step:last-child{border-left:none}
+body.en .step:last-child{border-right:none}
+.step.active{background:#1e4878;color:white}
+.step.completed{background:#2e7d32;color:#c8f0cc}
+.step.failed{background:#cc2020;color:white}
+.form-card{background:white;border:1px solid #c8d8ea;border-radius:4px;margin-bottom:13px;overflow:hidden}
+.form-card-header{background:#1e4878;color:white;padding:9px 14px;font-size:13.5px;font-weight:bold}
+.form-card-body{padding:16px 18px}
+.form-row{display:flex;align-items:center;margin-bottom:13px;gap:10px;flex-wrap:wrap}
+.form-row:last-child{margin-bottom:0}
+.form-label{font-size:13px;color:#2a4a6a;font-weight:bold;min-width:88px;flex-shrink:0}
+.required{color:#cc2020}
+.form-control{flex:1;padding:8px 11px;border:1px solid #b0c4d8;border-radius:4px;font-size:13px;color:#1a3a5c;outline:none;transition:border-color .2s,box-shadow .2s;background:#f8fbff;font-family:inherit;direction:rtl;min-width:0}
+body.en .form-control{direction:ltr}
+.form-control:focus{border-color:#1e4878;box-shadow:0 0 0 3px rgba(30,72,120,.12);background:white}
+.amount-wrap{display:flex;flex:1;border:1px solid #a0b8d4;border-radius:4px;overflow:hidden;background:#f0f6ff;min-width:0}
+.currency-btn{background:#1e4878;color:white;border:none;padding:0 14px;font-size:13px;font-weight:bold;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .2s;flex-shrink:0}
+.currency-btn:hover{background:#163a6a}
+.amount-input{flex:1;padding:8px 11px;border:none;background:transparent;font-size:15px;font-weight:bold;color:#1a3a5c;outline:none;font-family:inherit;min-width:0;width:100%}
+.via-wrap{display:flex;flex:1;gap:8px;min-width:0;flex-wrap:wrap}
+.via-type-select{flex:0 0 155px;padding:8px 10px;border:1px solid #b0c4d8;border-radius:4px;font-size:12.5px;color:#1a3a5c;outline:none;background:#f8fbff;font-family:inherit;cursor:pointer}
+.via-bank-select{flex:1;min-width:120px}
+.add-beneficiary{display:inline-flex;align-items:center;gap:6px;color:#1e4878;font-size:12.5px;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;font-family:inherit}
+.add-beneficiary:hover{color:#cc2020}
+.plus-icon{width:20px;height:20px;background:#1e4878;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.notice-card{background:white;border:2px solid #cc3030;border-radius:4px;margin-bottom:13px;overflow:hidden}
+.notice-title{background:#1e4878;color:white;padding:9px 20px;font-size:13.5px;font-weight:bold}
+.notice-body{padding:16px 20px}
+.notice-text{font-size:13px;color:#222;line-height:1.85;text-align:center;margin-bottom:4px}
+.highlight-amount{background:#ffe066;color:#1a3a5c;font-weight:bold;padding:1px 6px;border-radius:3px}
+.inline-input{display:inline-block;border:none;border-bottom:2px solid #1e4878;background:#f0f6ff;padding:2px 8px;font-size:13px;color:#1a3a5c;font-family:inherit;width:200px;outline:none;text-align:center;direction:rtl}
+body.en .inline-input{direction:ltr}
+.inline-input:focus{background:#e0f0ff;border-bottom-color:#cc2020}
+.terms-row{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12.5px;color:#444;justify-content:center}
+.terms-link{color:#1e4878;text-decoration:underline;cursor:pointer}
+.step-screen{display:none}
+.step-screen.active{display:block}
+.confirm-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.confirm-table tr{border-bottom:1px solid #eef2f8}
+.confirm-table td{padding:11px 16px}
+.confirm-table td:first-child{color:#5a7a9a;font-weight:bold;width:42%}
+.confirm-amount-big{font-size:19px;color:#1e7a38;font-weight:900}
+.fee-highlight{color:#e65000;font-weight:bold;font-size:14px}
+.processing-box{text-align:center;padding:36px 18px}
+.spinner{width:56px;height:56px;border:6px solid #d0dae8;border-top-color:#1e4878;border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing-steps{margin-top:20px;display:flex;flex-direction:column;gap:9px;text-align:right}
+body.en .processing-steps{text-align:left}
+.proc-step{display:flex;align-items:center;gap:12px;font-size:13px;padding:9px 14px;background:#f0f6ff;border-radius:6px;border-right:4px solid #d0dae8;transition:all .4s}
+body.en .proc-step{border-right:none;border-left:4px solid #d0dae8}
+.proc-step.done{border-right-color:#2e7d32;background:#f0fff4;color:#2e7d32;font-weight:bold}
+body.en .proc-step.done{border-left-color:#2e7d32;border-right-color:transparent}
+.proc-step.running{border-right-color:#1e4878;background:#e8f0ff;color:#1e4878;animation:pulse 1s ease-in-out infinite}
+body.en .proc-step.running{border-left-color:#1e4878;border-right-color:transparent}
+.proc-step.fail{border-right-color:#cc2020;background:#fff0f0;color:#cc2020;font-weight:bold}
+body.en .proc-step.fail{border-left-color:#cc2020;border-right-color:transparent}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.proc-icon{font-size:17px;flex-shrink:0}
+.progress-bar-wrap{background:#e0e8f0;border-radius:8px;height:8px;margin:14px 0;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,#1e4878,#2a80c8);border-radius:8px;width:0%;transition:width .5s ease}
+.result-box{text-align:center;padding:28px 18px}
+.result-icon-fail{font-size:62px;display:block;margin-bottom:10px;animation:shake .6s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.result-title-fail{font-size:21px;color:#cc2020;font-weight:900;margin-bottom:6px}
+.result-ref{font-size:11.5px;color:#888;margin-bottom:16px}
+.info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee;font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#777}
+.info-value{color:#1a3a5c;font-weight:bold}
+.history-table{width:100%;border-collapse:collapse;font-size:13px}
+.history-table th{background:#1e4878;color:white;padding:10px 12px;font-weight:bold;text-align:right}
+body.en .history-table th{text-align:left}
+.history-table td{padding:10px 12px;border-bottom:1px solid #eef2f8;vertical-align:middle}
+.history-table tr:hover td{background:#f5f9ff}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11.5px;font-weight:bold}
+.badge-success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
+.badge-fail{background:#ffebee;color:#cc2020;border:1px solid #ef9a9a}
+.badge-pending{background:#fff8e1;color:#f57f17;border:1px solid #ffe082}
+.history-empty{text-align:center;padding:32px;color:#999;font-size:14px}
+.history-filter-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.filter-chip{padding:5px 14px;border-radius:20px;border:1.5px solid #1e4878;background:white;color:#1e4878;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s;font-weight:bold}
+.filter-chip.active,.filter-chip:hover{background:#1e4878;color:white}
+.action-bar{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px}
+.btn{padding:9px 22px;border:none;border-radius:4px;font-size:13.5px;font-weight:bold;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-primary{background:#1e8a3a;color:white}
+.btn-primary:hover{background:#167030;transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.btn-cancel{background:#cc2020;color:white}
+.btn-cancel:hover{background:#aa1818;transform:translateY(-1px)}
+.btn-secondary{background:#1e4878;color:white}
+.btn-secondary:hover{background:#163a6a;transform:translateY(-1px)}
+.btn-outline{background:white;color:#1e4878;border:2px solid #1e4878}
+.btn-outline:hover{background:#f0f6ff}
+.btn-sm{padding:6px 14px;font-size:12px}
+.toast{position:fixed;top:22px;left:50%;transform:translateX(-50%) translateY(-80px);background:#1e4878;color:white;padding:11px 26px;border-radius:6px;font-size:13.5px;font-weight:bold;z-index:9999;transition:transform .35s ease;box-shadow:0 4px 16px rgba(0,0,0,.25);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{background:#1e7a38}
+.toast.error{background:#cc2020}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:white;border-radius:8px;width:92%;max-width:390px;overflow:hidden;animation:slideUp .28s ease;box-shadow:0 16px 50px rgba(0,0,0,.35);direction:rtl}
+body.en .modal-box{direction:ltr}
+.modal-box.wide{max-width:450px}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{color:white;padding:13px 17px;display:flex;align-items:center;gap:10px}
+.modal-header.red{background:#cc2020}
+.modal-header.blue{background:#1e4878}
+.modal-header.green{background:#2e7d32}
+.modal-header-icon{font-size:22px}
+.modal-header-title{font-size:15px;font-weight:900}
+.modal-header-sub{font-size:11px;opacity:.85;margin-top:2px}
+.modal-body{padding:15px 17px 10px}
+.modal-footer{padding:10px 17px 15px;display:flex;gap:8px;justify-content:flex-end;background:#fafbfd;border-top:1px solid #eee;flex-wrap:wrap}
+.modal-err-code{background:#fff0f0;border:1px solid #f0b0b0;border-radius:5px;padding:8px 12px;font-size:11px;color:#cc2020;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.currency-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:4px 0}
+.currency-item{border:2px solid #d0dae8;border-radius:6px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;background:#f8fbff}
+.currency-item:hover{border-color:#1e4878;background:#eef5ff}
+.currency-item.selected{border-color:#1e4878;background:#d8eaff}
+.currency-flag{font-size:22px;display:block;margin-bottom:4px}
+.currency-code{font-size:13px;font-weight:bold;color:#1e4878}
+.currency-name{font-size:10px;color:#777;margin-top:2px}
+.receipt-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed #eee;font-size:13px}
+.receipt-status-ok{background:#e8f5e9;color:#2e7d32;padding:6px 16px;border-radius:20px;font-weight:bold;font-size:13px;text-align:center;margin:12px 0}
+.receipt-status-fail{background:#ffebee;color:#cc2020;padding:6px 16px;border-radius:20px;font-weight:bold;font-size:13px;text-align:center;margin:12px 0}
+@media(max-width:700px){.sidebar{display:none}.main-nav .nav-item{padding:7px 7px;font-size:10px}.via-wrap{flex-direction:column}.via-type-select{flex:none;width:100%}.currency-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body id="body-root">
 
-<!-- ========== TOP BAR ========== -->
 <div class="top-bar">
   <div class="top-bar-left">
-    <button class="exit-btn" onclick="handleExit()">① <span data-key="exit">خروج</span></button>
-    <button class="lang-btn" onclick="toggleLang()" id="langBtn">🌐 English</button>
+    <button class="exit-btn" id="exitBtn">&#9312; <span data-k="exit">خروج</span></button>
+    <button class="lang-btn" id="langBtn">&#127760; English</button>
   </div>
-  <div class="logo-area">
-    <div class="logo-svg-wrap">
-      <div class="logo-icon">
-           <img src="ad.png" alt="شعار النظام">
+  <div class="logo-svg-wrap">
+    <div class="logo-icon"></div>
+    <div class="logo-divider"></div>
+    <div class="logo-sub" data-k="logo-sub">الخدمات المصرفية<br>الإلكترونية الشامله</div>
+  </div>
+</div>
+
+<div class="main-nav">
+  <div class="nav-item" data-nav><span class="nav-icon">&#127968;</span><span data-k="nav-home">الرئيسية</span></div>
+  <div class="nav-item" data-nav><span class="nav-icon">&#128179;</span><span data-k="nav-acc">الحسابات</span></div>
+  <div class="nav-item" data-nav><span class="nav-icon">&#127183;</span><span data-k="nav-cards"> خدمات البطاقات</span></div>
+  <div class="nav-item" data-nav><span class="nav-icon">&#128260;</span><span data-k="nav-tr">خدمات التحويل</span></div>
+  <div class="nav-item" data-nav><span class="nav-icon">&#9881;</span><span>خدمات السداد</span></div>
+  <div class="nav-item" data-nav><span class="nav-icon">&#127963;</span><span data-k="nav-gov">خدمات حكومية</span></div>
+  <div class="nav-item" data-nav><span class="nav-icon">&#127961;</span><span data-k="nav-cap">الجزيرة كابيتال</span></div>
+  <div class="nav-item active" data-nav><span class="nav-icon">&#9889;</span><span data-k="nav-inst"> خدمات فوريه</span></div>
+  <div class="nav-item" data-nav><span class="nav-icon">&#128176;</span><span data-k="nav-fin">خدمات التمويل</span></div>
+  <div class="nav-item" data-nav><span class="nav-icon">&#128100;</span><span data-k="nav-self">الخدمات الذاتية</span></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- CURRENCY MODAL -->
+<div class="modal-overlay" id="currencyModal">
+  <div class="modal-box wide">
+    <div class="modal-header blue">
+      <span class="modal-header-icon">&#128434;</span>
+      <div>
+        <div class="modal-header-title" data-k="cur-title">اختر العملة</div>
+        <div class="modal-header-sub" data-k="cur-sub">يتم تحديث المبلغ وفق العملة المختارة</div>
       </div>
-      <div class="logo-divider"></div>
-      <div class="logo-sub" data-key="logo-sub">الخدمات المصرفية<br>الإلكترونية الفورية</div>
+    </div>
+    <div class="modal-body"><div class="currency-grid" id="currencyGrid"></div></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" id="closeCurrencyBtn" data-k="btn-close">إغلاق</button>
     </div>
   </div>
 </div>
 
-<!-- ========== MAIN NAV ========== -->
-<div class="main-nav">
-  <div class="nav-item" onclick="navClick(this)"><span class="nav-icon">🏠</span><span data-key="nav-home">الرئيسية</span></div>
-  <div class="nav-item" onclick="navClick(this)"><span class="nav-icon">💳</span><span data-key="nav-accounts">الحسابات</span></div>
-  <div class="nav-item" onclick="navClick(this)"><span class="nav-icon">🃏</span><span data-key="nav-cards">البطاقات</span></div>
-  <div class="nav-item" onclick="navClick(this)"><span class="nav-icon">🔄</span><span data-key="nav-transfer">التحويل</span></div>
-  <div class="nav-item" onclick="navClick(this)"><span class="nav-icon">⚙️</span><span>خدمات السداد</span></div>
-  <div class="nav-item" onclick="navClick(this)"><span class="nav-icon">🏛️</span><span data-key="nav-gov">خدمات حكومية</span></div>
-  <div class="nav-item" onclick="navClick(this)"><span class="nav-icon">🏙️</span><span data-key="nav-capital">الجزيرة كابيتال</span></div>
-  <div class="nav-item active" onclick="navClick(this)"><span class="nav-icon">⚡</span><span data-key="nav-instant">فوري</span></div>
-  <div class="nav-item" onclick="navClick(this)"><span class="nav-icon">💰</span><span data-key="nav-finance">التمويل</span></div>
-  <div class="nav-item" onclick="navClick(this)"><span class="nav-icon">👤</span><span data-key="nav-self">الخدمات الذاتية</span></div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- ========== ADD BENEFICIARY MODAL ========== -->
+<!-- ADD BENEFICIARY MODAL -->
 <div class="modal-overlay" id="addBenModal">
   <div class="modal-box wide">
     <div class="modal-header blue">
-      <span class="modal-header-icon">👤</span>
+      <span class="modal-header-icon">&#128100;</span>
       <div>
-        <div class="modal-header-title" data-key="addben-title">إضافة مستفيد جديد</div>
-        <div class="modal-header-sub" data-key="addben-sub">أدخل بيانات المستفيد لحفظه في قائمتك</div>
+        <div class="modal-header-title" data-k="addben-title">إضافة مستفيد جديد</div>
+        <div class="modal-header-sub" data-k="addben-sub">يتم الحفظ تلقائياً للاستخدام مستقبلاً</div>
       </div>
     </div>
     <div class="modal-body">
-      <div class="form-row" style="margin-bottom:14px;">
-        <label class="form-label" style="min-width:110px;" data-key="addben-name">اسم المستفيد <span class="required">*</span></label>
-        <input type="text" class="form-control" id="newBenName" data-placeholder-ar="الاسم الكامل للمستفيد" data-placeholder-en="Beneficiary full name" placeholder="الاسم الكامل للمستفيد" />
-      </div>
-      <div class="form-row" style="margin-bottom:14px;">
-        <label class="form-label" style="min-width:110px;" data-key="addben-acc">رقم الهاتف / الحساب <span class="required">*</span></label>
-        <input type="text" class="form-control" id="newBenAccount" data-placeholder-ar="05XXXXXXXX أو رقم الحساب" data-placeholder-en="05XXXXXXXX or account number" placeholder="05XXXXXXXX أو رقم الحساب" />
-      </div>
-      <div class="form-row" style="margin-bottom:6px;">
-        <label class="form-label" style="min-width:110px;" data-key="addben-country">الدولة</label>
+      <div class="form-row"><label class="form-label" style="min-width:105px" data-k="addben-name">الاسم <span class="required">*</span></label><input type="text" class="form-control" id="newBenName" placeholder="الاسم الكامل" data-par="الاسم الكامل" data-pen="Full name"/></div>
+      <div class="form-row"><label class="form-label" style="min-width:105px" data-k="addben-acc">هاتف / حساب <span class="required">*</span></label><input type="text" class="form-control" id="newBenAccount" placeholder="05XXXXXXXX" data-par="05XXXXXXXX أو رقم الحساب" data-pen="05XXXXXXXX or account no."/></div>
+      <div class="form-row"><label class="form-label" style="min-width:105px" data-k="addben-country">الدولة</label>
         <select class="form-control" id="newBenCountry">
-          <option value="" data-ar="— اختر الدولة —" data-en="— Select Country —">— اختر الدولة —</option>
-          <option value="sa" data-ar="المملكة العربية السعودية 🇸🇦" data-en="Saudi Arabia 🇸🇦">المملكة العربية السعودية 🇸🇦</option>
-          <option value="ae" data-ar="الإمارات العربية المتحدة 🇦🇪" data-en="United Arab Emirates 🇦🇪">الإمارات العربية المتحدة 🇦🇪</option>
-          <option value="kw" data-ar="الكويت 🇰🇼" data-en="Kuwait 🇰🇼">الكويت 🇰🇼</option>
-          <option value="bh" data-ar="البحرين 🇧🇭" data-en="Bahrain 🇧🇭">البحرين 🇧🇭</option>
-          <option value="qa" data-ar="قطر 🇶🇦" data-en="Qatar 🇶🇦">قطر 🇶🇦</option>
-          <option value="om" data-ar="عُمان 🇴🇲" data-en="Oman 🇴🇲">عُمان 🇴🇲</option>
-          <option value="jo" data-ar="الأردن 🇯🇴" data-en="Jordan 🇯🇴">الأردن 🇯🇴</option>
-          <option value="eg" data-ar="مصر 🇪🇬" data-en="Egypt 🇪🇬">مصر 🇪🇬</option>
-          <option value="lb" data-ar="لبنان 🇱🇧" data-en="Lebanon 🇱🇧">لبنان 🇱🇧</option>
-          <option value="us" data-ar="الولايات المتحدة 🇺🇸" data-en="United States 🇺🇸">الولايات المتحدة 🇺🇸</option>
-          <option value="gb" data-ar="المملكة المتحدة 🇬🇧" data-en="United Kingdom 🇬🇧">المملكة المتحدة 🇬🇧</option>
-          <option value="other" data-ar="أخرى" data-en="Other">أخرى</option>
+          <option value="" data-ar="— اختر —" data-en="— Select —">— اختر —</option>
+          <option value="sa" data-ar="السعودية" data-en="Saudi Arabia">السعودية</option>
+          <option value="ae" data-ar="الإمارات" data-en="UAE">الإمارات</option>
+          <option value="kw" data-ar="الكويت" data-en="Kuwait">الكويت</option>
+          <option value="bh" data-ar="البحرين" data-en="Bahrain">البحرين</option>
+          <option value="qa" data-ar="قطر" data-en="Qatar">قطر</option>
+          <option value="om" data-ar="عُمان" data-en="Oman">عُمان</option>
+          <option value="eg" data-ar="مصر" data-en="Egypt">مصر</option>
+          <option value="us" data-ar="الولايات المتحدة" data-en="USA">الولايات المتحدة</option>
+          <option value="gb" data-ar="المملكة المتحدة" data-en="UK">المملكة المتحدة</option>
         </select>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;padding:10px 0 4px;font-size:13px;color:#444;">
-        <input type="checkbox" id="autoSaveCheck" checked style="width:15px;height:15px;accent-color:#1e4878;cursor:pointer;flex-shrink:0;" />
-        <label for="autoSaveCheck" style="cursor:pointer;" data-key="addben-autosave">حفظ تلقائي وإضافته لقائمة المستفيدين</label>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13px;color:#444">
+        <input type="checkbox" id="autoSaveCheck" checked style="width:15px;height:15px;accent-color:#1e4878;cursor:pointer;flex-shrink:0">
+        <label for="autoSaveCheck" style="cursor:pointer" data-k="addben-auto">حفظ تلقائي في القائمة (localStorage)</label>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline" style="padding:8px 16px;font-size:13px;" onclick="closeAddBenModal()" data-key="btn-cancel-modal">إلغاء</button>
-      <button class="btn btn-primary" style="padding:8px 16px;font-size:13px;" onclick="saveNewBeneficiary()" data-key="addben-save">💾 حفظ المستفيد</button>
+      <button class="btn btn-outline btn-sm" id="cancelAddBenBtn" data-k="btn-cancel">إلغاء</button>
+      <button class="btn btn-primary btn-sm" id="saveAddBenBtn" data-k="addben-save">&#128190; حفظ المستفيد</button>
     </div>
   </div>
 </div>
 
-<!-- ========== ERROR MODAL ========== -->
+<!-- ERROR MODAL -->
 <div class="modal-overlay" id="errorModal">
   <div class="modal-box">
-    <div class="modal-header">
-      <span class="modal-header-icon">🚫</span>
+    <div class="modal-header red">
+      <span class="modal-header-icon">&#128683;</span>
       <div>
-        <div class="modal-header-title" data-key="err-title">فشل التحويل</div>
+        <div class="modal-header-title" data-k="err-title">فشل التحويل</div>
         <div class="modal-header-sub">ERR-4821: BENEFICIARY_FEE_PENDING</div>
       </div>
     </div>
     <div class="modal-body">
-      <div class="modal-error-code" data-key="err-code">⚠️ رسوم معاملة التحويل غير مسددة من قِبل المستفيد</div>
-      <div class="modal-info-row">
-        <span class="modal-info-label" data-key="err-amount-label">المبلغ</span>
-        <span class="modal-info-value" id="modal-transfer-amount">USD 1,000,000.00</span>
-      </div>
-      <div class="modal-info-row">
-        <span class="modal-info-label" data-key="err-ben-label">المستفيد</span>
-        <span class="modal-info-value" id="modal-beneficiary-name">—</span>
-      </div>
-      <div class="modal-info-row">
-        <span class="modal-info-label" data-key="err-reason-label">سبب الرفض</span>
-        <span class="modal-info-value" style="color:#cc2020;" data-key="err-reason-val">رسوم التحويل غير مسددة</span>
-      </div>
-      <div class="modal-info-row">
-        <span class="modal-info-label" data-key="err-fee-label">الرسوم المتبقية</span>
-        <span class="modal-info-value" style="color:#cc2020;font-size:15px;">USD 1,499.00</span>
-      </div>
+      <div class="modal-err-code" data-k="err-code">&#9888; رسوم معاملة التحويل غير مسددة من قِبل المستفيد</div>
+      <div class="info-row"><span class="info-label" data-k="lbl-amount">المبلغ</span><span class="info-value" id="err-amount">—</span></div>
+      <div class="info-row"><span class="info-label" data-k="lbl-ben">المستفيد</span><span class="info-value" id="err-ben">—</span></div>
+      <div class="info-row"><span class="info-label" data-k="lbl-reason">سبب الرفض</span><span class="info-value" style="color:#cc2020" data-k="val-reason">رسوم التحويل غير مسددة</span></div>
+      <div class="info-row"><span class="info-label" data-k="lbl-fees">الرسوم المتبقية</span><span class="info-value" style="color:#cc2020;font-size:15px" id="err-fees">—</span></div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline" style="padding:8px 14px;font-size:13px;" onclick="closeModal();resetToStep1()" data-key="err-retry">إعادة المحاولة</button>
-      <button class="btn btn-secondary" style="padding:8px 14px;font-size:13px;" onclick="closeModal();showToast(T('support-toast'))" data-key="err-support">الدعم</button>
-      <button class="btn btn-cancel" style="padding:8px 14px;font-size:13px;" onclick="closeModal()" data-key="btn-close">إغلاق</button>
+      <button class="btn btn-outline btn-sm" id="errRetryBtn" data-k="btn-retry">إعادة المحاولة</button>
+      <button class="btn btn-secondary btn-sm" id="errSupportBtn" data-k="btn-support">الدعم</button>
+      <button class="btn btn-cancel btn-sm" id="errCloseBtn" data-k="btn-close">إغلاق</button>
     </div>
   </div>
 </div>
 
-<!-- ========== PAGE BODY ========== -->
-<div class="page-body">
+<!-- RECEIPT MODAL -->
+<div class="modal-overlay" id="receiptModal">
+  <div class="modal-box wide">
+    <div class="modal-header blue" id="receiptHeader">
+      <span class="modal-header-icon" id="receiptIcon">&#128196;</span>
+      <div>
+        <div class="modal-header-title" data-k="receipt-title">تفاصيل العملية</div>
+        <div class="modal-header-sub" id="receiptRef">#TXN-—</div>
+      </div>
+    </div>
+    <div class="modal-body" id="receiptBody" style="max-height:60vh;overflow-y:auto"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" id="closeReceiptBtn" data-k="btn-close">إغلاق</button>
+      <button class="btn btn-secondary btn-sm" id="printReceiptBtn" data-k="btn-print">&#128424; طباعة</button>
+    </div>
+  </div>
+</div>
 
-  <!-- SIDEBAR -->
+<div class="page-body">
   <div class="sidebar">
     <div class="side-card">
-      <div class="side-card-header"><span data-key="nav-instant">فوري</span> <button class="toggle-btn" onclick="toggleSide(this)">▼</button></div>
-      <div class="side-card-body">
-        <a class="side-link" href="#" onclick="return false;">◀ <span data-key="side-instant-transfers">حوالات فورية</span></a>
-        <a class="side-link active" href="#" onclick="return false;">▶ <span data-key="side-instant-transfer">تحويل فوري</span></a>
-        <a class="side-link" href="#" onclick="return false;">◀ <span data-key="side-history">سجل العمليات</span></a>
-        <a class="side-link" href="#" onclick="return false;">◀ <span data-key="side-manage">إدارة خدمات فوري</span></a>
+      <div class="side-card-header"><span data-k="nav-inst">فوري</span><button class="toggle-btn" data-toggle>&#9660;</button></div>
+      <div class="side-card-body" id="sideBody1">
+        <a class="side-link" href="#" data-nav-link="1">&#9664; <span data-k="side-transfers">حوالات فورية</span></a>
+        <a class="side-link active" href="#" data-nav-link="1">&#9654; <span data-k="side-transfer">تحويل فوري</span></a>
+        <a class="side-link" href="#" id="historyLink">&#9664; <span data-k="side-history">سجل العمليات</span></a>
+        <a class="side-link" href="#" data-nav-link="1">&#9664; <span data-k="side-manage">إدارة خدمات فوري</span></a>
       </div>
     </div>
     <div class="side-card">
-      <div class="side-card-header"><span data-key="side-fav">العمليات المفضلة</span> <button class="toggle-btn" onclick="toggleSide(this)">▼</button></div>
-      <div class="side-card-body">
-        <a class="side-link" href="#" onclick="return false;">◀ UBL 3RD PARTY HBL</a>
-      </div>
+      <div class="side-card-header"><span data-k="side-fav">العمليات المفضلة</span><button class="toggle-btn" data-toggle>&#9660;</button></div>
+      <div class="side-card-body"><a class="side-link" href="#">&#9664; UBL 3RD PARTY HBL</a></div>
     </div>
     <div class="side-card">
-      <div class="side-card-header"><span data-key="side-shortcuts">روابط مختصرة</span> <button class="toggle-btn" onclick="toggleSide(this)">▼</button></div>
-      <div class="side-card-body">
-        <div style="padding:12px;font-size:12px;color:#888;text-align:center;" data-key="side-no-shortcuts">لا توجد روابط مختصرة مسجلة</div>
-      </div>
+      <div class="side-card-header"><span data-k="side-shortcuts">روابط مختصرة</span><button class="toggle-btn" data-toggle>&#9660;</button></div>
+      <div class="side-card-body"><div style="padding:12px;font-size:12px;color:#888;text-align:center" data-k="side-no-links">لا توجد روابط مختصرة</div></div>
     </div>
     <div class="side-card">
-      <div class="side-card-header" data-key="side-help">للمساعدة</div>
+      <div class="side-card-header" data-k="side-help">للمساعدة</div>
       <div class="side-card-body">
-        <a class="side-link" href="#" onclick="showToast(T('calling-support'));return false;">👤 <span data-key="side-call">طلب اتصال من خدمة العملاء</span></a>
-        <a class="side-link" href="#" onclick="showToast(T('open-msg'));return false;">✉️ <span data-key="side-msg">رسالة جديدة</span></a>
+        <a class="side-link" href="#" id="callSupportLink">&#128100; <span data-k="side-call">خدمة العملاء</span></a>
+        <a class="side-link" href="#" id="newMsgLink">&#9993; <span data-k="side-msg">رسالة جديدة</span></a>
       </div>
     </div>
     <div class="side-card">
       <div class="banks-logo">
-        <div class="sb-icon">🏦</div>
-        <span style="font-weight:bold;color:#1a6040;font-size:13px;" data-key="saudi-banks">البنـوك السعودية</span>
-        <span style="color:#888;font-size:11px;">Saudi Banks</span>
+        <div class="sb-icon">&#127970;</div>
+        <span style="font-weight:bold;color:#1a6040;font-size:13px" data-k="saudi-banks">البنـوك السعودية</span><br>
+        <span style="color:#888;font-size:11px">Saudi Banks</span>
       </div>
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main-content">
-    <div class="breadcrumb">
-      <span data-key="nav-instant">فوري</span> ← <span data-key="breadcrumb-sub">التحويل إلى مستفيد فوري</span>
-    </div>
-    <div class="page-title"><span data-key="page-title">تحويل فوري</span> <span class="star">★</span></div>
+    <div class="breadcrumb"><span data-k="nav-inst">فوري</span> &larr; <span data-k="breadcrumb">التحويل إلى مستفيد فوري</span></div>
+    <div class="page-title"><span data-k="page-title">تحويل فوري</span> <span class="star">&#9733;</span></div>
 
-    <!-- STEPPER -->
     <div class="stepper">
-      <div class="step" id="s4" data-key="step4">4. النتيجة</div>
-      <div class="step" id="s3" data-key="step3">3. التعميد</div>
-      <div class="step" id="s2" data-key="step2">2. التأكيد</div>
-      <div class="step active" id="s1" data-key="step1">1. التنفيذ</div>
+      <div class="step" id="s4" data-k="step4">4. النتيجة</div>
+      <div class="step" id="s3" data-k="step3">3. التعميد</div>
+      <div class="step" id="s2" data-k="step2">2. التأكيد</div>
+      <div class="step active" id="s1" data-k="step1">1. التنفيذ</div>
     </div>
 
-    <!-- ===== SCREEN 1 ===== -->
+    <!-- SCREEN 1 -->
     <div class="step-screen active" id="screen1">
       <div class="form-card">
-        <div class="form-card-header" data-key="sec-from">1. من</div>
+        <div class="form-card-header" data-k="sec-from">1. من</div>
         <div class="form-card-body">
           <div class="form-row">
-            <label class="form-label" data-key="label-from-account">من حساب <span class="required">*</span></label>
-            <select class="form-control" id="fromAccount" onchange="updateSummary()">
-              <option value="waleed" data-ar="مؤسسة الوليد بن طلال للإنسانية" data-en="Al-Waleed Bin Talal Humanitarian Foundation">مؤسسة الوليد بن طلال للإنسانية</option>
+            <label class="form-label" data-k="lbl-from">من حساب <span class="required">*</span></label>
+            <select class="form-control" id="fromAccount">
+              <option value="waleed" data-ar="مؤسسة الوليد بن طلال للإنسانية" data-en="Al-Waleed Humanitarian Foundation">مؤسسة الوليد بن طلال للإنسانية</option>
               <option value="personal" data-ar="الحساب الشخصي" data-en="Personal Account">الحساب الشخصي</option>
               <option value="business" data-ar="الحساب التجاري" data-en="Business Account">الحساب التجاري</option>
             </select>
           </div>
           <div class="form-row">
-            <label class="form-label" data-key="label-amount">المبلغ <span class="required">*</span></label>
-            <input type="text" class="form-control amount-field" id="amount" value="USD 1,000,000.00" oninput="formatAmount(this);updateSummary()" data-placeholder-ar="أدخل المبلغ" data-placeholder-en="Enter amount" placeholder="أدخل المبلغ" />
+            <label class="form-label" data-k="lbl-amount">المبلغ <span class="required">*</span></label>
+            <div class="amount-wrap">
+              <button class="currency-btn" id="currencyBtn">
+                <span id="currencyFlag">&#127482;&#127480;</span> <span id="currencyCode">USD</span> &#9660;
+              </button>
+              <input type="text" class="amount-input" id="amount" value="1,000,000.00"/>
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:4px">
+            <label class="form-label"></label>
+            <div style="font-size:12px;color:#555;background:#f5f9ff;padding:6px 12px;border-radius:4px;border:1px solid #dde8f5;flex:1">
+              <span data-k="fee-label">رسوم التحويل (0.5%):</span> <strong id="feeDisplay" style="color:#e65000">USD 5,000.00</strong>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="form-card">
-        <div class="form-card-header" data-key="sec-to">2. إلى</div>
+        <div class="form-card-header" data-k="sec-to">2. إلى</div>
         <div class="form-card-body">
           <div class="form-row">
-            <label class="form-label" data-key="label-via">التحويل بواسطة <span class="required">*</span></label>
-            <select class="form-control" id="viaBank">
-              <option value="iskan" data-ar="بنك الإسكان" data-en="Housing Bank">بنك الإسكان</option>
-              <option value="rajhi" data-ar="بنك الراجحي" data-en="Al Rajhi Bank">بنك الراجحي</option>
-              <option value="alinma" data-ar="بنك الإنماء" data-en="Alinma Bank">بنك الإنماء</option>
-              <option value="riyadh" data-ar="بنك الرياض" data-en="Riyad Bank">بنك الرياض</option>
-              <option value="ahli" data-ar="البنك الأهلي" data-en="Al Ahli Bank">البنك الأهلي</option>
-            </select>
+            <label class="form-label" data-k="lbl-via">التحويل بواسطة <span class="required">*</span></label>
+            <div class="via-wrap">
+              <select class="via-type-select" id="viaType">
+                <option value="local" data-ar="بنوك سعودية" data-en="Saudi Banks">بنوك سعودية</option>
+                <option value="intl" data-ar="بنوك دولية" data-en="International Banks">بنوك دولية</option>
+                <option value="western" data-ar="ويسترن يونيون" data-en="Western Union">ويسترن يونيون</option>
+                <option value="moneygram" data-ar="موني جرام" data-en="MoneyGram">موني جرام</option>
+              </select>
+              <select class="form-control via-bank-select" id="viaBank"></select>
+            </div>
           </div>
           <div class="form-row">
-            <label class="form-label" data-key="label-ben">المستفيد <span class="required">*</span></label>
-            <select class="form-control" id="beneficiary" onchange="updateSummary()">
-              <option value="ghazi" data-ar="غازي ساكب حسين الوحيدي" data-en="Ghazi Sakib Hussein Al-Wahidi">غازي ساكب حسين الوحيدي</option>
-            </select>
+            <label class="form-label" data-k="lbl-ben">المستفيد <span class="required">*</span></label>
+            <select class="form-control" id="beneficiary"></select>
           </div>
-          <button class="add-beneficiary" onclick="openAddBenModal()">
-            <span class="plus-icon">+</span> <span data-key="add-ben-btn">إضافة مستفيد جديد</span>
+          <button class="add-beneficiary" id="addBenBtn">
+            <span class="plus-icon">+</span> <span data-k="add-ben">إضافة مستفيد جديد</span>
           </button>
         </div>
       </div>
 
       <div class="notice-card">
-        <div class="notice-title" data-key="sec-details">3.  تفاصيل التحويل</div>
+        <div class="notice-title" data-k="sec-notice">3. تفاصيل التحويل</div>
         <div class="notice-body">
-          <p class="notice-text" data-key="notice-1">* سيستم نظام الإجراءات لازم سرعات التنفيذ خلال 24 ساعة</p>
-          <p class="notice-text" data-key="notice-2">* الموافقة على نظام مراقبة البنوك بالصيغة المرافقة لهذا</p>
-          <p class="notice-text" data-key="notice-3">* نظام الإيداعات والتحويلات المالية</p>
+          <p class="notice-text" data-k="notice-1">سيستم نظام الإجراءات لازم سرعات التنفيذ </p>
+          <p class="notice-text" data-k="notice-2">الموافقة على نظام مراقبة البنوك بالصيغة المرافقة لهذا</p>
+          <p class="notice-text" data-k="notice-3">نظام الإيداعات والتحويلات المالية</p>
           <br>
-          <p class="notice-text" data-key="notice-4">على نائب رئيس مكتب المالية والمسؤول المالي في مصرف الراجحي، يجب تنفيذ امر الصرف بشكل عاجل، وتفعيل نظام مراقبة البنوك بالصيغة المرافقة لهذا، وقد نظم مشروع مرسوم ملكي صورتة مرفقة للمستفيد ... علما بان اﻷمر صادر عن الديوان الملكي</p>
+          <p class="notice-text" style="font-weight:bold" data-k="notice-acct">المستفيد: </p>
+          <p class="notice-text"><span data-k="notice-ap-lbl">اسم الحالة :</span> <input class="inline-input" id="approvedName" value="غازي ساكب حسين الوحيدي"/></p>
           <br>
-          <p class="notice-text" style="font-weight:bold;" data-key="notice-acct">المستفيد المذكور اعلاه</p>
-          <p class="notice-text"><span data-key="notice-approved-label">اسم الحالة :</span> <input class="inline-input" id="approvedName" value="غازي ساكب حسين الوحيدي" /></p>
-          <br>
-          <p class="notice-text"><span data-key="notice-grant">يتم صرف المنحة المقدرة بمبلغ وقدره</span> <span class="highlight-amount" id="summaryAmount">USD 1,000,000.00</span> <span data-key="notice-grant-suffix"> لاغير</span></p>
-          <br>
-          <p class="notice-text"><span data-key="notice-deposit">المدير المالي يجب إيداع المنحة بعد استكمال ما تم التوجيه به للمستفيد:</span> <input class="inline-input" id="finalBeneficiary" value="غازي ساكب حسين الوحيدي" /></p>
+          <p class="notice-text">
+            <span data-k="notice-grant">يتم صرف المنحة المقدرة بمبلغ وقدره</span>
+            <span class="highlight-amount" id="summaryAmount">USD 1,000,000.00</span>
+            <span data-k="notice-only"> لاغير</span>
+          </p>
+          <p class="notice-text"><span data-k="notice-dep">المالية إيداع المنحة بعد استكمال ما تم التوجيه به للمستفيد:</span> <input class="inline-input" id="finalBeneficiary" value="غازي ساكب حسين الوحيدي"/></p>
           <div class="terms-row">
-            <input type="checkbox" id="termsCheck" onchange="validateTerms()" />
-            <label for="termsCheck" style="cursor:pointer;"><span data-key="terms-text">لقد قرأت وافقت على</span> <span class="terms-link" data-key="terms-link">الشروط والأحكام الخاصة</span></label>
+            <input type="checkbox" id="termsCheck">
+            <label for="termsCheck" style="cursor:pointer"><span data-k="terms-text">لقد قرأت وافقت على</span> <span class="terms-link" data-k="terms-link">الشروط والأحكام الخاصة</span></label>
           </div>
         </div>
       </div>
-
       <div class="action-bar">
-        <button class="btn btn-primary" onclick="goToStep2()" data-key="btn-continue">متابعة ←</button>
-        <button class="btn btn-cancel" onclick="cancelTransfer()" data-key="btn-cancel">إلغاء</button>
+        <button class="btn btn-primary" id="continueBtn" data-k="btn-continue">متابعة &larr;</button>
+        <button class="btn btn-cancel" id="cancelBtn" data-k="btn-cancel">إلغاء</button>
       </div>
     </div>
 
-    <!-- ===== SCREEN 2 ===== -->
+    <!-- SCREEN 2 -->
     <div class="step-screen" id="screen2">
       <div class="form-card">
-        <div class="form-card-header" data-key="confirm-title">✅ مراجعة وتأكيد بيانات التحويل</div>
-        <div class="form-card-body" style="padding:0;">
+        <div class="form-card-header" data-k="confirm-hdr">&#10003; مراجعة وتأكيد بيانات التحويل</div>
+        <div class="form-card-body" style="padding:0">
           <table class="confirm-table">
-            <tr><td data-key="conf-from">من حساب</td><td id="conf-account">—</td></tr>
-            <tr><td data-key="conf-via">التحويل بواسطة</td><td id="conf-bank">—</td></tr>
-            <tr><td data-key="conf-ben">المستفيد</td><td id="conf-beneficiary">—</td></tr>
-            <tr><td data-key="conf-amount">المبلغ</td><td><span class="confirm-amount-big" id="conf-amount-val">—</span></td></tr>
-            <tr><td data-key="conf-fees">رسوم التحويل</td><td style="color:#cc2020;font-weight:bold;">USD 1,499.00</td></tr>
-            <tr><td data-key="conf-date">تاريخ التنفيذ</td><td>27 / 06 / 2026</td></tr>
-            <tr><td data-key="conf-ref">رقم العملية</td><td style="font-family:monospace;">#TXN-20260627-4821</td></tr>
+            <tr><td data-k="lbl-from">من حساب</td><td id="cf-account">—</td></tr>
+            <tr><td data-k="lbl-via">التحويل بواسطة</td><td id="cf-bank">—</td></tr>
+            <tr><td data-k="lbl-ben">المستفيد</td><td id="cf-ben">—</td></tr>
+            <tr><td data-k="lbl-amount">المبلغ</td><td><span class="confirm-amount-big" id="cf-amount">—</span></td></tr>
+            <tr><td data-k="lbl-fees">رسوم التحويل (0.5%)</td><td class="fee-highlight" id="cf-fees">—</td></tr>
+            <tr><td data-k="lbl-total">الإجمالي</td><td style="font-weight:bold;color:#1e4878;font-size:15px" id="cf-total">—</td></tr>
+            <tr><td data-k="lbl-currency">العملة</td><td id="cf-currency">—</td></tr>
+            <tr><td data-k="lbl-date">تاريخ التنفيذ</td><td id="cf-date">—</td></tr>
+            <tr><td data-k="lbl-ref">رقم العملية</td><td style="font-family:monospace" id="cf-ref">—</td></tr>
           </table>
         </div>
       </div>
-      <div class="form-card" style="border-color:#f0a500;">
-        <div class="form-card-header" style="background:#b07800;" data-key="otp-title">🔐 رمز التحقق (OTP)</div>
+      <div class="form-card" style="border-color:#f0a500">
+        <div class="form-card-header" style="background:#b07800" data-k="otp-hdr">&#128274; رمز التحقق (OTP)</div>
         <div class="form-card-body">
-          <p style="font-size:13px;color:#555;margin-bottom:12px;" data-key="otp-sent">تم إرسال رمز التحقق إلى هاتفك المسجل ***680</p>
+          <p style="font-size:13px;color:#555;margin-bottom:12px" data-k="otp-sent">تم إرسال رمز التحقق إلى هاتفك المسجل ***456</p>
           <div class="form-row">
-            <label class="form-label" data-key="otp-label">رمز OTP <span class="required">*</span></label>
-            <input type="text" class="form-control" id="otpInput" maxlength="6" style="letter-spacing:4px;font-size:16px;text-align:center;" data-placeholder-ar="أدخل الرمز المكون من 6 أرقام" data-placeholder-en="Enter 6-digit code" placeholder="أدخل الرمز المكون من 6 أرقام" />
+            <label class="form-label" data-k="otp-lbl">رمز OTP <span class="required">*</span></label>
+            <input type="text" class="form-control" id="otpInput" maxlength="6" style="letter-spacing:4px;font-size:16px;text-align:center" data-par="6 أرقام" data-pen="6-digit code" placeholder="6 أرقام"/>
           </div>
-          <p style="font-size:12px;color:#1e4878;cursor:pointer;text-decoration:underline;" onclick="showToast(T('otp-resent'))" data-key="otp-resend">إعادة إرسال الرمز</p>
+          <p style="font-size:12px;color:#1e4878;cursor:pointer;text-decoration:underline" id="resendOtpLink" data-k="otp-resend">إعادة إرسال الرمز</p>
         </div>
       </div>
       <div class="action-bar">
-        <button class="btn btn-primary" onclick="goToStep3()" data-key="btn-confirm">تأكيد التحويل ←</button>
-        <button class="btn btn-outline" onclick="setStep(1)" data-key="btn-back">→ رجوع</button>
+        <button class="btn btn-primary" id="confirmBtn" data-k="btn-confirm">تأكيد التحويل &larr;</button>
+        <button class="btn btn-outline" id="backBtn" data-k="btn-back">رجوع</button>
       </div>
     </div>
 
-    <!-- ===== SCREEN 3 ===== -->
+    <!-- SCREEN 3 -->
     <div class="step-screen" id="screen3">
       <div class="form-card">
-        <div class="form-card-header" data-key="proc-header">⏳ جاري معالجة طلب التحويل...</div>
+        <div class="form-card-header" data-k="proc-hdr">&#9203; جاري معالجة طلب التحويل...</div>
         <div class="form-card-body">
           <div class="processing-box">
             <div class="spinner" id="mainSpinner"></div>
-            <p style="font-size:15px;color:#1e4878;font-weight:bold;" id="proc-title" data-key="proc-init">جاري التحقق من البيانات...</p>
+            <p style="font-size:15px;color:#1e4878;font-weight:bold" id="proc-title" data-k="proc-init">جاري التحقق من البيانات...</p>
             <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
             <div class="processing-steps">
-              <div class="proc-step" id="ps1"><span class="proc-icon">🔐</span> <span data-key="ps1">التحقق من هوية المستخدم</span></div>
-              <div class="proc-step" id="ps2"><span class="proc-icon">💰</span> <span data-key="ps2">التحقق من رصيد الحساب</span></div>
-              <div class="proc-step" id="ps3"><span class="proc-icon">🏦</span> <span data-key="ps3">الاتصال بنظام التحويل البنكي</span></div>
-              <div class="proc-step" id="ps4"><span class="proc-icon">📋</span> <span data-key="ps4">التحقق من رسوم معاملة التحويل</span></div>
-              <div class="proc-step" id="ps5"><span class="proc-icon">✉️</span> <span data-key="ps5">إرسال الطلب للمستفيد</span></div>
+              <div class="proc-step" id="ps1"><span class="proc-icon">&#128274;</span><span data-k="ps1">التحقق من هوية المستخدم</span></div>
+              <div class="proc-step" id="ps2"><span class="proc-icon">&#128176;</span><span data-k="ps2">التحقق من رصيد الحساب</span></div>
+              <div class="proc-step" id="ps3"><span class="proc-icon">&#127970;</span><span data-k="ps3">الاتصال بنظام التحويل البنكي</span></div>
+              <div class="proc-step" id="ps4"><span class="proc-icon">&#128203;</span><span data-k="ps4">التحقق من رسوم معاملة التحويل</span></div>
+              <div class="proc-step" id="ps5"><span class="proc-icon">&#9993;</span><span data-k="ps5">إرسال الطلب للمستفيد</span></div>
             </div>
-            <div id="viewDetailsWrap" style="display:none;margin-top:24px;">
-              <button class="btn btn-cancel" onclick="goToStep4WithModal()" style="padding:11px 32px;font-size:14px;" data-key="btn-view-details">📋 عرض تفاصيل النتيجة</button>
+            <div id="viewDetailsWrap" style="display:none;margin-top:22px">
+              <button class="btn btn-cancel" id="viewDetailsBtn" data-k="btn-view-details">&#128203; عرض تفاصيل النتيجة</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ===== SCREEN 4 ===== -->
+    <!-- SCREEN 4 -->
     <div class="step-screen" id="screen4">
-      <div class="form-card" style="border-color:#cc2020;">
-        <div class="form-card-header" style="background:#cc2020;" data-key="result-header">❌ نتيجة عملية التحويل</div>
+      <div class="form-card" style="border-color:#cc2020">
+        <div class="form-card-header" style="background:#cc2020" data-k="result-hdr">&#10060; نتيجة عملية التحويل</div>
         <div class="form-card-body">
           <div class="result-box">
-            <span class="result-icon-fail">❌</span>
-            <div class="result-title-fail" data-key="result-fail-title">فشلت عملية التحويل</div>
-            <div class="result-ref">#TXN-20260627-4821 | 27/06/2026 - 14:32</div>
-            <p style="font-size:13.5px;color:#555;max-width:420px;margin:0 auto 18px;line-height:1.8;" data-key="result-fail-desc">لم يتم إتمام التحويل بسبب عدم سداد المستفيد للرسوم المتبقية المطلوبة لتفعيل خدمة الإيداع.</p>
-            <div style="background:#fff0f0;border:1px solid #f0b0b0;border-radius:8px;padding:14px 18px;margin-bottom:18px;text-align:right;">
-              <div class="modal-info-row"><span class="modal-info-label" data-key="err-reason-label">سبب الفشل</span><span class="modal-info-value" style="color:#cc2020;" data-key="err-reason-val">رسوم التحويل غير مسددة</span></div>
-              <div class="modal-info-row"><span class="modal-info-label" data-key="err-fee-label">الرسوم المتبقية</span><span class="modal-info-value" style="color:#cc2020;font-size:15px;">USD 1,499.00</span></div>
-              <div class="modal-info-row"><span class="modal-info-label" data-key="err-ben-label">المستفيد</span><span class="modal-info-value" id="res-beneficiary">—</span></div>
+            <span class="result-icon-fail">&#10060;</span>
+            <div class="result-title-fail" data-k="result-fail">فشلت عملية التحويل</div>
+            <div class="result-ref" id="res-ref">#TXN-— | —</div>
+            <p style="font-size:13px;color:#555;max-width:400px;margin:0 auto 16px;line-height:1.8" data-k="result-desc">لم يتم إتمام التحويل بسبب عدم سداد المستفيد للرسوم المتبقية.</p>
+            <div style="background:#fff0f0;border:1px solid #f0b0b0;border-radius:8px;padding:14px 16px;margin-bottom:16px;text-align:right">
+              <div class="info-row"><span class="info-label" data-k="lbl-reason">سبب الفشل</span><span class="info-value" style="color:#cc2020" data-k="val-reason">رسوم التحويل غير مسددة</span></div>
+              <div class="info-row"><span class="info-label" data-k="lbl-fees">الرسوم المتبقية</span><span class="info-value" style="color:#cc2020;font-size:15px" id="res-fees">—</span></div>
+              <div class="info-row"><span class="info-label" data-k="lbl-ben">المستفيد</span><span class="info-value" id="res-ben">—</span></div>
             </div>
           </div>
         </div>
       </div>
       <div class="action-bar">
-        <button class="btn btn-secondary" onclick="resetToStep1()" data-key="btn-new-transfer">🔄 إجراء تحويل جديد</button>
-        <button class="btn btn-outline" onclick="showToast(T('open-history'))" data-key="btn-history">📋 سجل العمليات</button>
+        <button class="btn btn-secondary" id="newTransferBtn" data-k="btn-new">&#128260; تحويل جديد</button>
+        <button class="btn btn-outline" id="historyBtn2" data-k="btn-history">&#128203; سجل العمليات</button>
       </div>
     </div>
 
+    <!-- HISTORY SCREEN -->
+    <div class="step-screen" id="screenHistory">
+      <div class="form-card">
+        <div class="form-card-header" data-k="history-hdr">&#128203; سجل التحويلات</div>
+        <div class="form-card-body">
+          <div class="history-filter-bar">
+            <button class="filter-chip active" data-filter="all" data-k="filter-all">الكل</button>
+            <button class="filter-chip" data-filter="success" data-k="filter-ok">&#10003; ناجح</button>
+            <button class="filter-chip" data-filter="fail" data-k="filter-fail">&#10060; فاشل</button>
+            <button class="filter-chip" data-filter="pending" data-k="filter-pending">&#8987; معلق</button>
+            <button class="btn btn-cancel btn-sm" id="clearHistoryBtn" style="margin-right:auto" data-k="btn-clear">&#128465; مسح السجل</button>
+          </div>
+          <div id="historyTableWrap"></div>
+        </div>
+      </div>
+      <div class="action-bar">
+        <button class="btn btn-secondary" id="newTransferBtn2" data-k="btn-new">&#128260; تحويل جديد</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-// =============================================
-// TRANSLATION SYSTEM
-// =============================================
-const isEnglish = { val: false };
+(function() {
+'use strict';
 
-const translations = {
-  // nav
-  'exit': ['خروج','Exit'],
-  'logo-sub': ['الخدمات المصرفية<br>الإلكترونية','Online<br>Banking'],
-  'nav-home': ['الرئيسية','Home'],
-  'nav-accounts': ['الحسابات','Accounts'],
-  'nav-cards': ['البطاقات','Cards'],
-  'nav-transfer': ['التحويل','Transfer'],
-  'nav-gov': ['خدمات حكومية','Gov Services'],
-  'nav-capital': ['الجزيرة كابيتال','Al-Jazeera Capital'],
-  'nav-instant': ['فوري','Instant'],
-  'nav-finance': ['التمويل','Finance'],
-  'nav-self': ['الخدمات الذاتية','Self Services'],
-  // sidebar
-  'side-instant-transfers': ['حوالات فورية','Instant Transfers'],
-  'side-instant-transfer': ['تحويل فوري','Instant Transfer'],
-  'side-history': ['سجل العمليات','Transaction History'],
-  'side-manage': ['إدارة خدمات فوري','Manage Instant Services'],
-  'side-fav': ['العمليات المفضلة','Favorite Operations'],
-  'side-shortcuts': ['روابط مختصرة','Quick Links'],
-  'side-no-shortcuts': ['لا توجد روابط مختصرة مسجلة','No quick links saved'],
-  'side-help': ['للمساعدة','Help'],
-  'side-call': ['طلب اتصال من خدمة العملاء','Request Customer Service Call'],
-  'side-msg': ['رسالة جديدة','New Message'],
-  'saudi-banks': ['البنـوك السعودية','Saudi Banks'],
-  // breadcrumb & title
-  'breadcrumb-sub': ['التحويل إلى مستفيد فوري','Transfer to Instant Beneficiary'],
-  'page-title': ['تحويل فوري','Instant Transfer'],
-  // stepper
-  'step1': ['1. التنفيذ','1. Execute'],
-  'step2': ['2. التأكيد','2. Confirm'],
-  'step3': ['3. التعميد','3. Processing'],
-  'step4': ['4. النتيجة','4. Result'],
-  // step 1 form
-  'sec-from': ['1. من','1. From'],
-  'label-from-account': ['من حساب','From Account'],
-  'label-amount': ['المبلغ','Amount'],
-  'sec-to': ['2. إلى','2. To'],
-  'label-via': ['التحويل بواسطة','Transfer Via'],
-  'label-ben': ['المستفيد','Beneficiary'],
-  'add-ben-btn': ['إضافة مستفيد جديد','Add New Beneficiary'],
-  'sec-details': ['3. المبلغ وتفاصيل التحويل','3. Amount & Transfer Details'],
-  // notices
-  'notice-1': ['سيستم نظام الإجراءات لازم سرعات التنفيذ خلال 24 ساعة','The procedures system requires execution speeds within 24 hours'],
-  'notice-2': ['الموافقة على نظام مراقبة البنوك بالصيغة المرافقة لهذا','Approval of the bank monitoring system in the format accompanying this'],
-  'notice-3': ['نظام الإيداعات والتحويلات المالية','Deposits and Financial Transfers System'],
-  'notice-4': ['على نائب رئيس مجلس الوزراء ووزير المالية والاقتصاد الوطني تنفيذ هذا مرسومنا هذا يجب تنفيذ الأمر عجل مشروع نظام مراقبة البنوك بالصيغة المرافقة لهذا، وقد نظم مشروع مرسوم ملكي صورته مرافقة لهذا ولما ذكر حور ... علمان بات من اصدار امر الصالح','The Deputy Prime Minister and Minister of Finance and National Economy shall execute this decree; the bank monitoring system project must be executed urgently in the attached format, as a royal decree was organized accordingly.'],
-  'notice-acct': ['صاحب الحساب رقم -(Ministry)( 00218441001001-)','Account Holder No. -(Ministry)( 00218441001001-)'],
-  'notice-approved-label': ['اسم الحالة التي تم الموافقة:','Approved Case Name:'],
-  'notice-grant': ['يتم صرف المنحة المقدرة بمبلغ وقدره','The estimated grant amount is'],
-  'notice-grant-suffix': ['مليون دولار أمريكي لاغير','million USD only'],
-  'notice-deposit': ['المالية إيداع المنحة بعد استكمال ما تم التوجيه به للمستفيد:','Financial deposit of the grant after completing the instructions directed to the beneficiary:'],
-  'terms-text': ['لقد قرأت وافقت على','I have read and agreed to'],
-  'terms-link': ['الشروط والأحكام الخاصة','Terms and Conditions'],
-  // buttons
-  'btn-continue': ['متابعة ←','Continue →'],
-  'btn-cancel': ['إلغاء','Cancel'],
-  'btn-confirm': ['تأكيد التحويل ←','Confirm Transfer →'],
-  'btn-back': ['→ رجوع','← Back'],
-  'btn-view-details': ['📋 عرض تفاصيل النتيجة','📋 View Result Details'],
-  'btn-new-transfer': ['🔄 إجراء تحويل جديد','🔄 New Transfer'],
-  'btn-history': ['📋 سجل العمليات','📋 Transaction History'],
-  'btn-cancel-modal': ['إلغاء','Cancel'],
-  'btn-close': ['إغلاق','Close'],
-  // step 2
-  'confirm-title': ['✅ مراجعة وتأكيد بيانات التحويل','✅ Review & Confirm Transfer'],
-  'conf-from': ['من حساب','From Account'],
-  'conf-via': ['التحويل بواسطة','Transfer Via'],
-  'conf-ben': ['المستفيد','Beneficiary'],
-  'conf-amount': ['المبلغ','Amount'],
-  'conf-fees': ['رسوم التحويل','Transfer Fees'],
-  'conf-date': ['تاريخ التنفيذ','Execution Date'],
-  'conf-ref': ['رقم العملية','Reference No.'],
-  'otp-title': ['🔐 رمز التحقق (OTP)','🔐 Verification Code (OTP)'],
-  'otp-sent': ['تم إرسال رمز التحقق إلى هاتفك المسجل ***456','Verification code sent to your registered phone ***456'],
-  'otp-label': ['رمز OTP','OTP Code'],
-  'otp-resend': ['إعادة إرسال الرمز','Resend Code'],
-  // step 3
-  'proc-header': ['⏳ جاري معالجة طلب التحويل...','⏳ Processing Transfer Request...'],
-  'proc-init': ['جاري التحقق من البيانات...','Verifying data...'],
-  'ps1': ['التحقق من هوية المستخدم','Verifying user identity'],
-  'ps2': ['التحقق من رصيد الحساب','Verifying account balance'],
-  'ps3': ['الاتصال بنظام التحويل البنكي','Connecting to banking transfer system'],
-  'ps4': ['التحقق من رسوم معاملة التحويل','Verifying transfer transaction fees'],
-  'ps5': ['إرسال الطلب للمستفيد','Sending request to beneficiary'],
-  // step 4
-  'result-header': ['❌ نتيجة عملية التحويل','❌ Transfer Result'],
-  'result-fail-title': ['فشلت عملية التحويل','Transfer Failed'],
-  'result-fail-desc': ['لم يتم إتمام التحويل بسبب عدم سداد المستفيد للرسوم المتبقية المطلوبة لتفعيل خدمة الإيداع.','The transfer could not be completed because the beneficiary has not paid the remaining fees required to activate the deposit service.'],
-  // error modal
-  'err-title': ['فشل التحويل','Transfer Failed'],
-  'err-code': ['⚠️ رسوم معاملة التحويل غير مسددة من قِبل المستفيد','⚠️ Transfer transaction fees unpaid by the beneficiary'],
-  'err-amount-label': ['المبلغ','Amount'],
-  'err-ben-label': ['المستفيد','Beneficiary'],
-  'err-reason-label': ['سبب الرفض','Rejection Reason'],
-  'err-reason-val': ['رسوم التحويل غير مسددة','Transfer fees unpaid'],
-  'err-fee-label': ['الرسوم المتبقية','Remaining Fees'],
-  'err-retry': ['إعادة المحاولة','Retry'],
-  'err-support': ['الدعم','Support'],
-  // add ben modal
-  'addben-title': ['إضافة مستفيد جديد','Add New Beneficiary'],
-  'addben-sub': ['أدخل بيانات المستفيد لحفظه في قائمتك','Enter beneficiary details to save to your list'],
-  'addben-name': ['اسم المستفيد','Beneficiary Name'],
-  'addben-acc': ['رقم الهاتف / الحساب','Phone / Account Number'],
-  'addben-country': ['الدولة','Country'],
-  'addben-autosave': ['حفظ تلقائي وإضافته لقائمة المستفيدين','Auto-save and add to beneficiaries list'],
-  'addben-save': ['💾 حفظ المستفيد','💾 Save Beneficiary'],
-  // toast messages
-  'calling-support': ['جاري الاتصال بخدمة العملاء...','Connecting to customer support...'],
-  'open-msg': ['فتح نموذج الرسائل','Opening messages form'],
-  'otp-resent': ['تم إعادة إرسال الرمز ✓','Code resent ✓'],
-  'open-history': ['جاري فتح سجل العمليات...','Opening transaction history...'],
-  'support-toast': ['تم تحويلك إلى خدمة العملاء','You have been transferred to customer support'],
-  'exit-toast': ['تم تسجيل الخروج بنجاح','Logged out successfully'],
-  'terms-accepted': ['تم قبول الشروط والأحكام ✓','Terms & Conditions accepted ✓'],
-  'terms-required': ['يرجى قبول الشروط للمتابعة','Please accept terms to continue'],
-  'terms-required-proceed': ['يجب الموافقة على الشروط والأحكام أولاً','You must accept the Terms & Conditions first'],
-  'otp-required': ['يرجى إدخال رمز OTP الصحيح','Please enter a valid OTP code'],
-  'step-confirm': ['تم الانتقال إلى خطوة التأكيد','Moved to confirmation step'],
-  'ben-name-required': ['يرجى إدخال اسم المستفيد','Please enter beneficiary name'],
-  'ben-acc-required': ['يرجى إدخال رقم الهاتف أو الحساب','Please enter phone or account number'],
-  'cancel-confirm': ['هل تريد إلغاء عملية التحويل والعودة للبداية؟','Cancel transfer and return to start?'],
-  'transfer-cancelled': ['تم إلغاء عملية التحويل','Transfer cancelled'],
-  'new-transfer-ready': ['يمكنك البدء بتحويل جديد','You can start a new transfer'],
-  'proc-fail-msg': ['اكتملت المعالجة — توجد مشكلة تحتاج مراجعتك','Processing complete — an issue requires your attention'],
-  'proc-step-msgs': [
-    ['جاري التحقق من هوية المستخدم...','Verifying user identity...'],
-    ['جاري التحقق من رصيد الحساب...','Verifying account balance...'],
-    ['جاري الاتصال بنظام التحويل البنكي...','Connecting to banking transfer system...'],
-    ['جاري التحقق من رسوم معاملة التحويل...','Verifying transfer transaction fees...'],
-    ['جاري إرسال الطلب...','Sending request...'],
+// ===================================================
+// TRANSLATIONS
+// ===================================================
+var isEN = false;
+var TR = {
+  'exit':['خروج','Exit'],
+  'logo-sub':['الخدمات المصرفية<br>الإلكترونية','Online<br>Banking'],
+  'nav-home':['الرئيسية','Home'],'nav-acc':['الحسابات','Accounts'],
+  'nav-cards':['البطاقات','Cards'],'nav-tr':['التحويل','Transfer'],
+  'nav-gov':['خدمات حكومية','Gov. Services'],'nav-cap':['الجزيرة كابيتال','Al-Jazeera Capital'],
+  'nav-inst':['فوري','Instant'],'nav-fin':['التمويل','Finance'],'nav-self':['الخدمات الذاتية','Self Services'],
+  'side-transfers':['حوالات فورية','Instant Transfers'],'side-transfer':['تحويل فوري','Instant Transfer'],
+  'side-history':['سجل العمليات','Transaction History'],'side-manage':['إدارة خدمات فوري','Manage Services'],
+  'side-fav':['العمليات المفضلة','Favorites'],'side-shortcuts':['روابط مختصرة','Quick Links'],
+  'side-no-links':['لا توجد روابط مختصرة','No quick links'],'side-help':['للمساعدة','Help'],
+  'side-call':['خدمة العملاء','Customer Service'],'side-msg':['رسالة جديدة','New Message'],
+  'saudi-banks':['البنـوك السعودية','Saudi Banks'],
+  'breadcrumb':['التحويل إلى مستفيد فوري','Transfer to Instant Beneficiary'],
+  'page-title':['تحويل فوري','Instant Transfer'],
+  'step1':['1. التنفيذ','1. Execute'],'step2':['2. التأكيد','2. Confirm'],
+  'step3':['3. التعميد','3. Processing'],'step4':['4. النتيجة','4. Result'],
+  'sec-from':['1. من','1. From'],'lbl-from':['من حساب','From Account'],
+  'lbl-amount':['المبلغ','Amount'],'fee-label':['رسوم التحويل (0.5%):','Transfer Fee (0.5%):'],
+  'sec-to':['2. إلى','2. To'],'lbl-via':['التحويل بواسطة','Transfer Via'],
+  'lbl-ben':['المستفيد','Beneficiary'],'add-ben':['إضافة مستفيد جديد','Add New Beneficiary'],
+  'sec-notice':['3. المبلغ وتفاصيل التحويل','3. Amount & Transfer Details'],
+  'notice-1':['سيستم نظام الإجراءات لازم سرعات التنفيذ خلال 24 ساعة','The system requires execution within 24 hours'],
+  'notice-2':['الموافقة على نظام مراقبة البنوك بالصيغة المرافقة لهذا','Approval of bank monitoring system in the attached format'],
+  'notice-3':['نظام الإيداعات والتحويلات المالية','Deposits and Financial Transfers System'],
+  'notice-acct':['صاحب الحساب رقم -(Ministry)( 00218441001001-)','Account No. -(Ministry)( 00218441001001-)'],
+  'notice-ap-lbl':['اسم الحالة التي تم الموافقة:','Approved Case Name:'],
+  'notice-grant':['يتم صرف المنحة المقدرة بمبلغ وقدره','The estimated grant amount is'],
+  'notice-only':['مليون دولار أمريكي لاغير','only'],
+  'notice-dep':['المالية إيداع المنحة بعد استكمال ما تم التوجيه به للمستفيد:','Financial deposit after completing instructions to beneficiary:'],
+  'terms-text':['لقد قرأت وافقت على','I have read and agree to'],
+  'terms-link':['الشروط والأحكام الخاصة','Terms and Conditions'],
+  'btn-continue':['متابعة','Continue'],'btn-cancel':['إلغاء','Cancel'],
+  'btn-confirm':['تأكيد التحويل','Confirm Transfer'],'btn-back':['رجوع','Back'],
+  'btn-view-details':['عرض تفاصيل النتيجة','View Result Details'],
+  'btn-new':['تحويل جديد','New Transfer'],'btn-history':['سجل العمليات','History'],
+  'btn-close':['إغلاق','Close'],'btn-retry':['إعادة المحاولة','Retry'],
+  'btn-support':['الدعم','Support'],'btn-print':['طباعة','Print'],
+  'btn-clear':['مسح السجل','Clear History'],
+  'confirm-hdr':['مراجعة وتأكيد بيانات التحويل','Review & Confirm Transfer'],
+  'lbl-fees':['رسوم التحويل (0.5%)','Transfer Fee (0.5%)'],'lbl-total':['الإجمالي','Total'],
+  'lbl-currency':['العملة','Currency'],'lbl-date':['تاريخ التنفيذ','Execution Date'],
+  'lbl-ref':['رقم العملية','Reference No.'],
+  'otp-hdr':['رمز التحقق (OTP)','Verification Code (OTP)'],
+  'otp-sent':['تم إرسال رمز التحقق إلى هاتفك المسجل ***456','OTP sent to your registered phone ***456'],
+  'otp-lbl':['رمز OTP','OTP Code'],'otp-resend':['إعادة إرسال الرمز','Resend Code'],
+  'proc-hdr':['جاري معالجة طلب التحويل...','Processing Transfer Request...'],
+  'proc-init':['جاري التحقق من البيانات...','Verifying data...'],
+  'ps1':['التحقق من هوية المستخدم','Verifying user identity'],
+  'ps2':['التحقق من رصيد الحساب','Verifying account balance'],
+  'ps3':['الاتصال بنظام التحويل البنكي','Connecting to banking system'],
+  'ps4':['التحقق من رسوم معاملة التحويل','Verifying transfer fees'],
+  'ps5':['إرسال الطلب للمستفيد','Sending request to beneficiary'],
+  'result-hdr':['نتيجة عملية التحويل','Transfer Result'],
+  'result-fail':['فشلت عملية التحويل','Transfer Failed'],
+  'result-desc':['لم يتم إتمام التحويل بسبب عدم سداد المستفيد للرسوم المتبقية.','Transfer failed due to unpaid fees by the beneficiary.'],
+  'lbl-reason':['سبب الفشل','Failure Reason'],'val-reason':['رسوم التحويل غير مسددة','Transfer fees unpaid'],
+  'history-hdr':['سجل التحويلات','Transfer History'],
+  'filter-all':['الكل','All'],'filter-ok':['ناجح','Success'],
+  'filter-fail':['فاشل','Failed'],'filter-pending':['معلق','Pending'],
+  'cur-title':['اختر العملة','Select Currency'],
+  'cur-sub':['يتم تحديث المبلغ وفق العملة المختارة','Amount updates based on selected currency'],
+  'addben-title':['إضافة مستفيد جديد','Add New Beneficiary'],
+  'addben-sub':['يتم الحفظ تلقائياً للاستخدام مستقبلاً','Auto-saved for future use'],
+  'addben-name':['الاسم','Name'],'addben-acc':['هاتف / حساب','Phone / Account'],
+  'addben-country':['الدولة','Country'],
+  'addben-auto':['حفظ تلقائي في القائمة (localStorage)','Auto-save to list (localStorage)'],
+  'addben-save':['حفظ المستفيد','Save Beneficiary'],
+  'err-title':['فشل التحويل','Transfer Failed'],
+  'err-code':['رسوم معاملة التحويل غير مسددة من قِبل المستفيد','Transfer fees unpaid by the beneficiary'],
+  'lbl-amount':['المبلغ','Amount'],'lbl-ben':['المستفيد','Beneficiary'],
+  'receipt-title':['تفاصيل العملية','Transaction Details'],
+  'calling':['جاري الاتصال بخدمة العملاء...','Connecting to customer service...'],
+  'open-msg':['فتح نموذج الرسائل','Opening messages form'],
+  'otp-resent':['تم إعادة إرسال الرمز','Code resent'],
+  'support-toast':['تم تحويلك إلى خدمة العملاء','Redirected to customer support'],
+  'exit-toast':['تم تسجيل الخروج','Logged out'],
+  'terms-ok':['تم قبول الشروط','Terms accepted'],
+  'terms-req':['يجب قبول الشروط أولاً','Must accept terms first'],
+  'otp-req':['يرجى إدخال رمز OTP','Please enter OTP code'],
+  'ben-name-req':['يرجى إدخال اسم المستفيد','Please enter beneficiary name'],
+  'ben-acc-req':['يرجى إدخال رقم الحساب','Please enter account number'],
+  'saved-ben':['تم حفظ المستفيد','Beneficiary saved'],
+  'cancel-q':['إلغاء عملية التحويل؟','Cancel transfer?'],
+  'cancelled':['تم الإلغاء','Cancelled'],
+  'new-ready':['يمكنك بدء تحويل جديد','You can start a new transfer'],
+  'hist-cleared':['تم مسح سجل التحويلات','History cleared'],
+  'proc-fail-msg':['اكتملت المعالجة — توجد مشكلة تحتاج مراجعتك','Processing complete — issue detected'],
+};
+
+var PS_MSGS_AR = ['جاري التحقق من هوية المستخدم...','جاري التحقق من رصيد الحساب...','جاري الاتصال بنظام التحويل البنكي...','جاري التحقق من رسوم معاملة التحويل...','جاري إرسال الطلب...'];
+var PS_MSGS_EN = ['Verifying user identity...','Verifying account balance...','Connecting to banking system...','Verifying transfer fees...','Sending request...'];
+
+function tr(key) {
+  var v = TR[key];
+  if (!v) return key;
+  return v[isEN ? 1 : 0];
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-k]').forEach(function(el) {
+    var v = TR[el.getAttribute('data-k')];
+    if (v) el.innerHTML = v[isEN ? 1 : 0];
+  });
+  document.querySelectorAll('select option[data-ar]').forEach(function(o) {
+    o.text = isEN ? (o.getAttribute('data-en')||o.text) : (o.getAttribute('data-ar')||o.text);
+  });
+  document.querySelectorAll('[data-par]').forEach(function(el) {
+    el.placeholder = isEN ? (el.getAttribute('data-pen')||'') : (el.getAttribute('data-par')||'');
+  });
+  document.title = isEN ? 'Instant Transfer - National Bank' : 'تحويل فوري - National Bank';
+  var pt = document.getElementById('proc-title');
+  if (pt && pt.style.color !== 'rgb(204, 32, 32)') pt.textContent = tr('proc-init');
+  // rebuild dynamic selects
+  updateViaOptions();
+  renderBeneficiarySelect();
+  updateSummary();
+  var hw = document.getElementById('historyTableWrap');
+  if (hw && document.getElementById('screenHistory').classList.contains('active')) {
+    renderHistoryTable(currentHistoryFilter);
+  }
+}
+
+// ===================================================
+// CURRENCIES
+// ===================================================
+var CURRENCIES = [
+  {code:'USD',flag:'🇺🇸',name_ar:'دولار أمريكي',name_en:'US Dollar'},
+  {code:'SAR',flag:'🇸🇦',name_ar:'ريال سعودي',name_en:'Saudi Riyal'},
+  {code:'EUR',flag:'🇪🇺',name_ar:'يورو',name_en:'Euro'},
+  {code:'GBP',flag:'🇬🇧',name_ar:'جنيه إسترليني',name_en:'British Pound'},
+  {code:'AED',flag:'🇦🇪',name_ar:'درهم إماراتي',name_en:'UAE Dirham'},
+  {code:'KWD',flag:'🇰🇼',name_ar:'دينار كويتي',name_en:'Kuwaiti Dinar'},
+  {code:'JPY',flag:'🇯🇵',name_ar:'ين ياباني',name_en:'Japanese Yen'},
+  {code:'CHF',flag:'🇨🇭',name_ar:'فرنك سويسري',name_en:'Swiss Franc'},
+  {code:'CAD',flag:'🇨🇦',name_ar:'دولار كندي',name_en:'Canadian Dollar'},
+];
+var selectedCurrency = CURRENCIES[0];
+
+function buildCurrencyGrid() {
+  var grid = document.getElementById('currencyGrid');
+  grid.innerHTML = '';
+  CURRENCIES.forEach(function(c) {
+    var div = document.createElement('div');
+    div.className = 'currency-item' + (c.code === selectedCurrency.code ? ' selected' : '');
+    div.innerHTML = '<span class="currency-flag">' + c.flag + '</span><div class="currency-code">' + c.code + '</div><div class="currency-name">' + (isEN ? c.name_en : c.name_ar) + '</div>';
+    div.addEventListener('click', function() { selectCurrency(c); });
+    grid.appendChild(div);
+  });
+}
+
+function selectCurrency(c) {
+  selectedCurrency = c;
+  document.getElementById('currencyFlag').textContent = c.flag;
+  document.getElementById('currencyCode').textContent = c.code;
+  closeModal('currencyModal');
+  updateSummary();
+}
+
+// ===================================================
+// VIA OPTIONS
+// ===================================================
+var VIA_OPTIONS = {
+  local: [
+    {v:'iskan',ar:'بنك الإسكان',en:'Housing Bank'},
+    {v:'rajhi',ar:'بنك الراجحي',en:'Al Rajhi Bank'},
+    {v:'alinma',ar:'بنك الإنماء',en:'Alinma Bank'},
+    {v:'riyadh',ar:'بنك الرياض',en:'Riyad Bank'},
+    {v:'ahli',ar:'البنك الأهلي التجاري',en:'Saudi National Bank'},
+    {v:'bilad',ar:'بنك البلاد',en:'Bank Albilad'},
+    {v:'jazira',ar:'بنك الجزيرة',en:'Bank Al-Jazira'},
+  ],
+  intl: [
+    {v:'hsbc',ar:'HSBC الدولي',en:'HSBC International'},
+    {v:'citibank',ar:'سيتي بنك',en:'Citibank'},
+    {v:'deutsche',ar:'دويتشه بنك',en:'Deutsche Bank'},
+    {v:'bnp',ar:'BNP باريبا',en:'BNP Paribas'},
+    {v:'sc',ar:'ستاندرد تشارترد',en:'Standard Chartered'},
+    {v:'jpmorgan',ar:'JP Morgan Chase',en:'JP Morgan Chase'},
+    {v:'barclays',ar:'باركليز',en:'Barclays'},
+  ],
+  western: [
+    {v:'wu_sa',ar:'ويسترن يونيون - السعودية',en:'Western Union - Saudi Arabia'},
+    {v:'wu_ae',ar:'ويسترن يونيون - الإمارات',en:'Western Union - UAE'},
+    {v:'wu_eg',ar:'ويسترن يونيون - مصر',en:'Western Union - Egypt'},
+    {v:'wu_us',ar:'ويسترن يونيون - USA',en:'Western Union - USA'},
+  ],
+  moneygram: [
+    {v:'mg_sa',ar:'موني جرام - السعودية',en:'MoneyGram - Saudi Arabia'},
+    {v:'mg_ae',ar:'موني جرام - الإمارات',en:'MoneyGram - UAE'},
+    {v:'mg_global',ar:'موني جرام - دولي',en:'MoneyGram - International'},
   ],
 };
 
-function T(key) {
-  const val = translations[key];
-  if (!val) return key;
-  if (Array.isArray(val[0])) return val[isEnglish.val ? 1 : 0][isEnglish.val ? 1 : 0];
-  return val[isEnglish.val ? 1 : 0];
+function updateViaOptions() {
+  var type = document.getElementById('viaType').value;
+  var sel = document.getElementById('viaBank');
+  var prevVal = sel.value;
+  sel.innerHTML = '';
+  var opts = VIA_OPTIONS[type] || [];
+  opts.forEach(function(o) {
+    var opt = document.createElement('option');
+    opt.value = o.v;
+    opt.textContent = isEN ? o.en : o.ar;
+    sel.appendChild(opt);
+  });
+  if (prevVal) sel.value = prevVal;
 }
 
-function toggleLang() {
-  isEnglish.val = !isEnglish.val;
-  const body = document.getElementById('body-root');
-  const html = document.getElementById('html-root');
-  const btn = document.getElementById('langBtn');
+// ===================================================
+// BENEFICIARIES
+// ===================================================
+var DEFAULT_BENS = [
+  {id:'ghazi', name:'غازي ساكب حسين الوحيدي', name_en:'Ghazi Sakib Hussein Al-Wahidi', account:'SA0000123456789', country:'sa'},
+];
 
-  if (isEnglish.val) {
-    body.classList.add('en');
-    html.setAttribute('lang', 'en');
-    html.setAttribute('dir', 'ltr');
-    btn.textContent = '🌐 العربية';
-  } else {
-    body.classList.remove('en');
-    html.setAttribute('lang', 'ar');
-    html.setAttribute('dir', 'rtl');
-    btn.textContent = '🌐 English';
-  }
-
-  // Translate all data-key elements
-  document.querySelectorAll('[data-key]').forEach(el => {
-    const key = el.getAttribute('data-key');
-    const val = translations[key];
-    if (val) el.innerHTML = val[isEnglish.val ? 1 : 0];
-  });
-
-  // Translate select options
-  document.querySelectorAll('select option[data-ar]').forEach(opt => {
-    opt.text = isEnglish.val ? opt.getAttribute('data-en') : opt.getAttribute('data-ar');
-  });
-
-  // Translate placeholders
-  document.querySelectorAll('[data-placeholder-ar]').forEach(el => {
-    el.placeholder = isEnglish.val ? el.getAttribute('data-placeholder-en') : el.getAttribute('data-placeholder-ar');
-  });
-
-  // Page title
-  document.title = isEnglish.val ? 'Instant Transfer - National Bank' : 'تحويل فوري - National Bank';
-
-  // Update proc-title if it's showing the initial text
-  const pt = document.getElementById('proc-title');
-  if (pt && pt.style.color !== 'rgb(204, 32, 32)') {
-    pt.textContent = T('proc-init');
-  }
+function loadBens() {
+  try {
+    var s = localStorage.getItem('nb_bens');
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  return DEFAULT_BENS.slice();
 }
 
-// =============================================
-// APP LOGIC
-// =============================================
-
-function navClick(el) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
+function saveBens(list) {
+  try { localStorage.setItem('nb_bens', JSON.stringify(list)); } catch(e) {}
 }
 
-function toggleSide(btn) {
-  const body = btn.closest('.side-card').querySelector('.side-card-body');
-  if (!body) return;
-  const hidden = body.style.display === 'none';
-  body.style.display = hidden ? '' : 'none';
-  btn.textContent = hidden ? '▼' : '▶';
+function renderBeneficiarySelect() {
+  var sel = document.getElementById('beneficiary');
+  var prev = sel.value;
+  sel.innerHTML = '';
+  var list = loadBens();
+  list.forEach(function(b) {
+    var o = document.createElement('option');
+    o.value = b.id;
+    o.textContent = (isEN && b.name_en) ? b.name_en : b.name;
+    sel.appendChild(o);
+  });
+  if (prev) { sel.value = prev; }
+  updateSummary();
 }
 
-function setStep(n, failed) {
-  ['s1','s2','s3','s4'].forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.remove('active','completed','failed');
-    const stepNum = i + 1;
-    if (stepNum === n) el.classList.add(failed ? 'failed' : 'active');
-    else if (stepNum < n) {
-      if (failed && stepNum >= 3) el.classList.add('failed');
-      else el.classList.add('completed');
-    }
-  });
-  ['screen1','screen2','screen3','screen4'].forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('active', i + 1 === n);
-  });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function saveNewBeneficiary() {
+  var name = document.getElementById('newBenName').value.trim();
+  var account = document.getElementById('newBenAccount').value.trim();
+  if (!name) { showToast(tr('ben-name-req'), 'error'); return; }
+  if (!account) { showToast(tr('ben-acc-req'), 'error'); return; }
+  var country = document.getElementById('newBenCountry').value;
+  var auto = document.getElementById('autoSaveCheck').checked;
+  var newB = {id: 'b_' + Date.now(), name: name, name_en: name, account: account, country: country};
+  var list = loadBens();
+  list.push(newB);
+  if (auto) saveBens(list);
+  renderBeneficiarySelect();
+  document.getElementById('beneficiary').value = newB.id;
+  updateSummary();
+  closeModal('addBenModal');
+  showToast(tr('saved-ben'), 'success');
+}
+
+// ===================================================
+// AMOUNT & FEE
+// ===================================================
+function getRawAmount() {
+  var v = document.getElementById('amount').value.replace(/,/g,'');
+  return parseFloat(v) || 0;
+}
+
+function fmtNum(n) {
+  return n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
 function updateSummary() {
-  const amt = document.getElementById('amount').value || 'USD 0';
-  document.getElementById('summaryAmount').textContent = amt;
-  const ben = document.getElementById('beneficiary');
-  if (!ben) return;
-  const name = ben.options[ben.selectedIndex].text;
-  const an = document.getElementById('approvedName');
-  const fb = document.getElementById('finalBeneficiary');
+  var amt = getRawAmount();
+  var fee = amt * 0.005;
+  var code = selectedCurrency.code;
+  var feeEl = document.getElementById('feeDisplay');
+  var sumEl = document.getElementById('summaryAmount');
+  if (feeEl) feeEl.textContent = code + ' ' + fmtNum(fee);
+  if (sumEl) sumEl.textContent = code + ' ' + fmtNum(amt);
+  var sel = document.getElementById('beneficiary');
+  if (!sel || !sel.options.length) return;
+  var name = sel.options[sel.selectedIndex].text;
+  var an = document.getElementById('approvedName');
+  var fb = document.getElementById('finalBeneficiary');
   if (an) an.value = name;
   if (fb) fb.value = name;
 }
 
-function formatAmount(input) {
-  let raw = input.value.replace(/[^0-9.]/g, '');
-  if (!raw) { input.value = ''; return; }
-  const parts = raw.split('.');
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  input.value = 'USD ' + (parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0]);
+// ===================================================
+// HISTORY
+// ===================================================
+var currentHistoryFilter = 'all';
+
+function loadHistory() {
+  try { var s = localStorage.getItem('nb_hist'); if (s) return JSON.parse(s); } catch(e) {}
+  return [];
+}
+function saveHistory(list) {
+  try { localStorage.setItem('nb_hist', JSON.stringify(list)); } catch(e) {}
+}
+function addToHistory(tx) {
+  var list = loadHistory();
+  list.unshift(tx);
+  saveHistory(list.slice(0, 50));
 }
 
-function validateTerms() {
-  const c = document.getElementById('termsCheck').checked;
-  showToast(T(c ? 'terms-accepted' : 'terms-required'), c ? 'success' : 'error');
+function showHistoryPanel() {
+  setStepUI(null);
+  document.querySelectorAll('.step-screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('screenHistory').classList.add('active');
+  currentHistoryFilter = 'all';
+  document.querySelectorAll('.filter-chip').forEach(function(c) {
+    c.classList.toggle('active', c.getAttribute('data-filter') === 'all');
+  });
+  renderHistoryTable('all');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
+
+function renderHistoryTable(filter) {
+  currentHistoryFilter = filter;
+  var list = loadHistory();
+  var filtered = filter === 'all' ? list : list.filter(function(tx) { return tx.status === filter; });
+  var wrap = document.getElementById('historyTableWrap');
+  if (!filtered.length) {
+    wrap.innerHTML = '<div class="history-empty">' + (isEN ? 'No transactions found' : 'لا توجد عمليات مسجلة') + '</div>';
+    return;
+  }
+  var cols = isEN ? ['Date','Beneficiary','Amount','Fee','Via','Status',''] : ['التاريخ','المستفيد','المبلغ','الرسوم','بواسطة','الحالة',''];
+  var html = '<div style="overflow-x:auto"><table class="history-table"><thead><tr>';
+  cols.forEach(function(c) { html += '<th>' + c + '</th>'; });
+  html += '</tr></thead><tbody>';
+  filtered.forEach(function(tx, idx) {
+    var bc = tx.status==='success' ? 'badge-success' : tx.status==='fail' ? 'badge-fail' : 'badge-pending';
+    var sl = tx.status==='success' ? (isEN?'Success':'ناجح') : tx.status==='fail' ? (isEN?'Failed':'فاشل') : (isEN?'Pending':'معلق');
+    var si = tx.status==='success' ? '✅' : tx.status==='fail' ? '❌' : '⏳';
+    var detailLabel = isEN ? 'Details' : 'تفاصيل';
+    html += '<tr><td style="white-space:nowrap;font-size:12px">' + tx.date + '</td>';
+    html += '<td>' + tx.beneficiary + '</td>';
+    html += '<td style="white-space:nowrap;font-weight:bold">' + tx.currency + ' ' + fmtNum(tx.amount) + '</td>';
+    html += '<td style="white-space:nowrap;color:#e65000">' + tx.currency + ' ' + fmtNum(tx.fee) + '</td>';
+    html += '<td style="font-size:12px">' + tx.via + '</td>';
+    html += '<td><span class="badge ' + bc + '">' + si + ' ' + sl + '</span></td>';
+    html += '<td><button class="btn btn-outline btn-sm" style="font-size:11px;padding:4px 10px" data-receipt-idx="' + idx + '" data-receipt-filter="' + filter + '">' + detailLabel + '</button></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  wrap.innerHTML = html;
+  // attach events
+  wrap.querySelectorAll('[data-receipt-idx]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      showReceipt(parseInt(this.getAttribute('data-receipt-idx')), this.getAttribute('data-receipt-filter'));
+    });
+  });
+}
+
+function showReceipt(idx, filter) {
+  var list = loadHistory();
+  var filtered = filter === 'all' ? list : list.filter(function(tx) { return tx.status === filter; });
+  var tx = filtered[idx];
+  if (!tx) return;
+  var hdr = document.getElementById('receiptHeader');
+  var icon = document.getElementById('receiptIcon');
+  var ref = document.getElementById('receiptRef');
+  hdr.className = 'modal-header ' + (tx.status==='success' ? 'green' : 'red');
+  icon.textContent = tx.status==='success' ? '✅' : '❌';
+  ref.textContent = tx.ref;
+  var isOk = tx.status==='success';
+  var L = isEN;
+  var statusHtml = isOk
+    ? '<div class="receipt-status-ok">' + (L?'✅ Transfer Successful':'✅ تم التحويل بنجاح') + '</div>'
+    : '<div class="receipt-status-fail">' + (L?'❌ Transfer Failed':'❌ فشل التحويل') + '</div>';
+  var rows = [
+    [L?'Reference':'رقم العملية', '<span style="font-family:monospace">' + tx.ref + '</span>'],
+    [L?'Date':'التاريخ', tx.date],
+    [L?'From':'من حساب', tx.from],
+    [L?'Beneficiary':'المستفيد', tx.beneficiary],
+    [L?'Via':'بواسطة', tx.via],
+    [L?'Currency':'العملة', tx.currency],
+    [L?'Amount':'المبلغ', '<span style="font-weight:bold;color:#1e7a38">' + tx.currency + ' ' + fmtNum(tx.amount) + '</span>'],
+    [L?'Fee (0.5%)':'الرسوم (0.5%%)', '<span style="color:#e65000">' + tx.currency + ' ' + fmtNum(tx.fee) + '</span>'],
+    [L?'Total':'الإجمالي', '<strong>' + tx.currency + ' ' + fmtNum(tx.amount + tx.fee) + '</strong>'],
+  ];
+  if (!isOk) rows.push([L?'Failure Reason':'سبب الفشل', '<span style="color:#cc2020">' + (L?'Transfer fees unpaid':'رسوم التحويل غير مسددة') + '</span>']);
+  var rowsHtml = rows.map(function(r) {
+    return '<div class="receipt-row"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>';
+  }).join('');
+  document.getElementById('receiptBody').innerHTML =
+    '<div style="text-align:center;margin-bottom:14px;padding-bottom:14px;border-bottom:2px dashed #ddd">' +
+    '<div style="font-size:22px;font-weight:900;color:#1a3a5c">NATIONAL BANK</div>' +
+    '<div style="font-size:12px;color:#777;margin-top:2px">' + (L?'Instant Transfer Receipt':'إيصال تحويل فوري') + '</div></div>' +
+    statusHtml + rowsHtml;
+  document.getElementById('receiptModal').classList.add('open');
+}
+
+// ===================================================
+// STEP / SCREEN MANAGEMENT
+// ===================================================
+function setStepUI(n, failed) {
+  ['s1','s2','s3','s4'].forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('active','completed','failed');
+    if (n === null) return;
+    var sn = i + 1;
+    if (sn === n) el.classList.add(failed ? 'failed' : 'active');
+    else if (sn < n) el.classList.add((failed && sn >= 3) ? 'failed' : 'completed');
+  });
+}
+
+function setStep(n, failed) {
+  setStepUI(n, failed);
+  ['screen1','screen2','screen3','screen4','screenHistory'].forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle('active', i + 1 === n);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ===================================================
+// STEP 1 → 2
+// ===================================================
+var txRecord = {};
 
 function goToStep2() {
   if (!document.getElementById('termsCheck').checked) {
-    showToast(T('terms-required-proceed'), 'error'); return;
+    showToast(tr('terms-req'), 'error'); return;
   }
-  const acc = document.getElementById('fromAccount');
-  const bank = document.getElementById('viaBank');
-  const ben = document.getElementById('beneficiary');
-  document.getElementById('conf-account').textContent = acc.options[acc.selectedIndex].text;
-  document.getElementById('conf-bank').textContent = bank.options[bank.selectedIndex].text;
-  document.getElementById('conf-beneficiary').textContent = ben.options[ben.selectedIndex].text;
-  document.getElementById('conf-amount-val').textContent = document.getElementById('amount').value;
+  var acc = document.getElementById('fromAccount');
+  var viaType = document.getElementById('viaType');
+  var bank = document.getElementById('viaBank');
+  var ben = document.getElementById('beneficiary');
+  var amt = getRawAmount();
+  var fee = amt * 0.005;
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  var ref = '#TXN-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + Math.floor(Math.random()*9000+1000);
+  var viaLabel = (viaType.options[viaType.selectedIndex] ? (isEN ? viaType.options[viaType.selectedIndex].getAttribute('data-en') : viaType.options[viaType.selectedIndex].getAttribute('data-ar')) : '') + ' — ' + (bank.options[bank.selectedIndex] ? bank.options[bank.selectedIndex].textContent : '');
+
+  document.getElementById('cf-account').textContent = acc.options[acc.selectedIndex] ? acc.options[acc.selectedIndex].textContent : '';
+  document.getElementById('cf-bank').textContent = viaLabel;
+  document.getElementById('cf-ben').textContent = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '';
+  document.getElementById('cf-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
+  document.getElementById('cf-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
+  document.getElementById('cf-total').textContent = selectedCurrency.code + ' ' + fmtNum(amt + fee);
+  document.getElementById('cf-currency').textContent = selectedCurrency.flag + ' ' + selectedCurrency.code + ' — ' + (isEN ? selectedCurrency.name_en : selectedCurrency.name_ar);
+  document.getElementById('cf-date').textContent = dateStr;
+  document.getElementById('cf-ref').textContent = ref;
+  document.getElementById('cf-ref').dataset.ref = ref;
+  document.getElementById('cf-date').dataset.date = dateStr;
+
+  txRecord = {
+    ref: ref, date: dateStr, status: 'fail',
+    from: acc.options[acc.selectedIndex] ? acc.options[acc.selectedIndex].textContent : '',
+    beneficiary: ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '',
+    via: viaLabel, amount: amt, fee: fee, currency: selectedCurrency.code,
+  };
   setStep(2);
-  showToast(T('step-confirm'), 'success');
 }
 
+// ===================================================
+// STEP 2 → 3
+// ===================================================
 function goToStep3() {
-  const otp = document.getElementById('otpInput').value.trim();
-  if (!otp || otp.length < 4) { showToast(T('otp-required'), 'error'); return; }
+  var otp = document.getElementById('otpInput').value.trim();
+  if (!otp || otp.length < 4) { showToast(tr('otp-req'), 'error'); return; }
   setStep(3);
-  runProcessingAnimation();
+  runProcessing();
 }
 
-function runProcessingAnimation() {
-  const eng = isEnglish.val;
-  const stepMsgs = translations['proc-step-msgs'].map(m => m[eng ? 1 : 0]);
-  const steps = [
-    { id:'ps1', msg: stepMsgs[0], pct:20 },
-    { id:'ps2', msg: stepMsgs[1], pct:40 },
-    { id:'ps3', msg: stepMsgs[2], pct:60 },
-    { id:'ps4', msg: stepMsgs[3], pct:80 },
-    { id:'ps5', msg: stepMsgs[4], pct:95 },
+function runProcessing() {
+  var msgs = isEN ? PS_MSGS_EN : PS_MSGS_AR;
+  var steps = [
+    {id:'ps1',msg:msgs[0],pct:20},{id:'ps2',msg:msgs[1],pct:40},
+    {id:'ps3',msg:msgs[2],pct:60},{id:'ps4',msg:msgs[3],pct:80},
+    {id:'ps5',msg:msgs[4],pct:95},
   ];
-  let i = 0;
-  const bar = document.getElementById('progressBar');
-  const title = document.getElementById('proc-title');
-
-  ['ps1','ps2','ps3','ps4','ps5'].forEach(id => {
+  var i = 0;
+  var bar = document.getElementById('progressBar');
+  var title = document.getElementById('proc-title');
+  ['ps1','ps2','ps3','ps4','ps5'].forEach(function(id) {
     document.getElementById(id).classList.remove('done','running','fail');
   });
-  bar.style.width = '0%';
-  bar.style.background = '';
+  bar.style.width = '0%'; bar.style.background = '';
   document.getElementById('mainSpinner').style.display = '';
   document.getElementById('viewDetailsWrap').style.display = 'none';
-  title.style.color = '';
+  title.style.color = ''; title.textContent = tr('proc-init');
 
   function runNext() {
     if (i > 0) {
-      const prev = document.getElementById(steps[i-1].id);
+      var prev = document.getElementById(steps[i-1].id);
       prev.classList.remove('running');
-      prev.classList.add(i - 1 === 3 ? 'fail' : 'done');
+      prev.classList.add(i-1 === 3 ? 'fail' : 'done');
     }
     if (i >= steps.length) {
       document.getElementById('mainSpinner').style.display = 'none';
-      title.textContent = T('proc-fail-msg');
+      title.textContent = tr('proc-fail-msg');
       title.style.color = '#cc2020';
       bar.style.background = '#cc2020';
       bar.style.width = '100%';
       setTimeout(showFailResult, 900);
       return;
     }
-    const s = steps[i];
-    document.getElementById(s.id).classList.add('running');
-    title.textContent = s.msg;
-    bar.style.width = s.pct + '%';
+    document.getElementById(steps[i].id).classList.add('running');
+    title.textContent = steps[i].msg;
+    bar.style.width = steps[i].pct + '%';
     i++;
     setTimeout(runNext, i === 4 ? 2200 : 1100);
   }
@@ -849,124 +1058,264 @@ function runProcessingAnimation() {
 }
 
 function showFailResult() {
-  const ben = document.getElementById('beneficiary');
-  const benName = ben.options[ben.selectedIndex].text;
-  document.getElementById('res-beneficiary').textContent = benName;
-  document.getElementById('modal-transfer-amount').textContent = document.getElementById('amount').value;
-  document.getElementById('modal-beneficiary-name').textContent = benName;
+  var ben = document.getElementById('beneficiary');
+  var benName = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '—';
+  var amt = getRawAmount();
+  var fee = amt * 0.005;
+  document.getElementById('err-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
+  document.getElementById('err-ben').textContent = benName;
+  document.getElementById('err-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
   document.getElementById('viewDetailsWrap').style.display = 'block';
-  // Re-translate the button in case lang changed
-  const btnEl = document.querySelector('#viewDetailsWrap button');
-  if (btnEl) btnEl.innerHTML = T('btn-view-details');
+  var vBtn = document.getElementById('viewDetailsBtn');
+  if (vBtn) vBtn.textContent = tr('btn-view-details');
+  addToHistory(Object.assign({}, txRecord, {status:'fail', beneficiary:benName}));
 }
 
 function goToStep4WithModal() {
   setStep(4, true);
-  setTimeout(() => {
+  var amt = getRawAmount();
+  var fee = amt * 0.005;
+  var ben = document.getElementById('beneficiary');
+  var benName = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '—';
+  var ref = document.getElementById('cf-ref').dataset.ref || '—';
+  var date = document.getElementById('cf-date').dataset.date || '—';
+  document.getElementById('res-ref').textContent = ref + ' | ' + date;
+  document.getElementById('res-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
+  document.getElementById('res-ben').textContent = benName;
+  setTimeout(function() {
     document.getElementById('errorModal').classList.add('open');
-    // re-translate modal if needed
-    if (isEnglish.val) {
-      document.querySelectorAll('#errorModal [data-key]').forEach(el => {
-        const key = el.getAttribute('data-key');
-        const val = translations[key];
-        if (val) el.innerHTML = val[1];
+    if (isEN) {
+      document.querySelectorAll('#errorModal [data-k]').forEach(function(el) {
+        var v = TR[el.getAttribute('data-k')];
+        if (v) el.innerHTML = v[1];
       });
     }
   }, 400);
 }
 
-function closeModal() {
-  document.getElementById('errorModal').classList.remove('open');
-}
-
-function openAddBenModal() {
-  document.getElementById('newBenName').value = '';
-  document.getElementById('newBenAccount').value = '';
-  document.getElementById('newBenCountry').value = '';
-  document.getElementById('autoSaveCheck').checked = true;
-  // update placeholders
-  const nameInput = document.getElementById('newBenName');
-  const accInput = document.getElementById('newBenAccount');
-  nameInput.placeholder = isEnglish.val ? nameInput.getAttribute('data-placeholder-en') : nameInput.getAttribute('data-placeholder-ar');
-  accInput.placeholder = isEnglish.val ? accInput.getAttribute('data-placeholder-en') : accInput.getAttribute('data-placeholder-ar');
-  document.getElementById('addBenModal').classList.add('open');
-}
-
-function closeAddBenModal() {
-  document.getElementById('addBenModal').classList.remove('open');
-}
-
-function saveNewBeneficiary() {
-  const name = document.getElementById('newBenName').value.trim();
-  const account = document.getElementById('newBenAccount').value.trim();
-  if (!name) { showToast(T('ben-name-required'), 'error'); return; }
-  if (!account) { showToast(T('ben-acc-required'), 'error'); return; }
-  const autoSave = document.getElementById('autoSaveCheck').checked;
-  if (autoSave) {
-    const select = document.getElementById('beneficiary');
-    const opt = document.createElement('option');
-    opt.value = 'custom_' + Date.now();
-    opt.text = name;
-    opt.setAttribute('data-ar', name);
-    opt.setAttribute('data-en', name);
-    select.appendChild(opt);
-    select.value = opt.value;
-    updateSummary();
-  }
-  closeAddBenModal();
-  showToast((autoSave ? '✅ ' : '✅ ') + (isEnglish.val
-    ? `"${name}" saved and added to list`
-    : `تم حفظ "${name}" وإضافته للقائمة`), 'success');
-}
-
+// ===================================================
+// RESET
+// ===================================================
 function resetToStep1() {
   document.getElementById('termsCheck').checked = false;
   document.getElementById('otpInput').value = '';
-  const spinner = document.getElementById('mainSpinner');
-  const bar = document.getElementById('progressBar');
-  const title = document.getElementById('proc-title');
-  if (spinner) spinner.style.display = '';
+  var sp = document.getElementById('mainSpinner');
+  var bar = document.getElementById('progressBar');
+  var title = document.getElementById('proc-title');
+  var wrap = document.getElementById('viewDetailsWrap');
+  if (sp) sp.style.display = '';
   if (bar) { bar.style.width = '0%'; bar.style.background = ''; }
-  if (title) { title.textContent = T('proc-init'); title.style.color = ''; }
-  const wrap = document.getElementById('viewDetailsWrap');
+  if (title) { title.textContent = tr('proc-init'); title.style.color = ''; }
   if (wrap) wrap.style.display = 'none';
-  ['ps1','ps2','ps3','ps4','ps5'].forEach(id => {
-    const el = document.getElementById(id);
+  ['ps1','ps2','ps3','ps4','ps5'].forEach(function(id) {
+    var el = document.getElementById(id);
     if (el) el.classList.remove('done','running','fail');
   });
   setStep(1);
-  showToast(T('new-transfer-ready'), 'success');
+  showToast(tr('new-ready'), 'success');
 }
 
-function cancelTransfer() {
-  if (confirm(T('cancel-confirm'))) {
-    resetToStep1();
-    document.getElementById('amount').value = 'USD 1,000,000.00';
-    updateSummary();
-    showToast(T('transfer-cancelled'), 'error');
+// ===================================================
+// MODAL HELPERS
+// ===================================================
+function closeModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+
+// ===================================================
+// TOAST
+// ===================================================
+function showToast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast' + (type ? ' ' + type : '');
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(function() { el.classList.remove('show'); }, 2800);
+}
+
+// ===================================================
+// PRINT
+// ===================================================
+function printReceipt() {
+  var body = document.getElementById('receiptBody').innerHTML;
+  var dir = isEN ? 'ltr' : 'rtl';
+  var w = window.open('', '', 'width=500,height=700');
+  if (!w) return;
+  w.document.write('<!DOCTYPE html><html><head><title>Receipt</title><style>body{font-family:Arial,sans-serif;direction:' + dir + ';padding:20px}.receipt-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed #ddd;font-size:13px}.receipt-status-ok{background:#e8f5e9;color:#2e7d32;padding:6px;border-radius:4px;text-align:center;margin:10px 0;font-weight:bold}.receipt-status-fail{background:#ffebee;color:#cc2020;padding:6px;border-radius:4px;text-align:center;margin:10px 0;font-weight:bold}</style></head><body>' + body + '</body></html>');
+  w.document.close();
+  w.print();
+}
+
+// ===================================================
+// INIT — wire up all events here, NO inline handlers
+// ===================================================
+function init() {
+  // Add sample history if empty
+  if (!loadHistory().length) {
+    saveHistory([
+      {ref:'#TXN-20260620-1234',date:'20/06/2026 10:15',status:'success',from:'الحساب الشخصي',beneficiary:'غازي ساكب حسين الوحيدي',via:'بنوك سعودية — بنك الراجحي',amount:50000,fee:250,currency:'SAR'},
+      {ref:'#TXN-20260618-5678',date:'18/06/2026 14:30',status:'fail',from:'مؤسسة الوليد بن طلال للإنسانية',beneficiary:'غازي ساكب حسين الوحيدي',via:'ويسترن يونيون — ويسترن يونيون - السعودية',amount:1000000,fee:5000,currency:'USD'},
+      {ref:'#TXN-20260615-9012',date:'15/06/2026 09:45',status:'success',from:'الحساب التجاري',beneficiary:'غازي ساكب حسين الوحيدي',via:'بنوك دولية — HSBC الدولي',amount:25000,fee:125,currency:'EUR'},
+    ]);
   }
+
+  updateViaOptions();
+  renderBeneficiarySelect();
+  updateSummary();
+
+  // LANG
+  document.getElementById('langBtn').addEventListener('click', function() {
+    isEN = !isEN;
+    var body = document.getElementById('body-root');
+    var html = document.getElementById('html-root');
+    this.textContent = isEN ? '🌐 العربية' : '🌐 English';
+    body.classList.toggle('en', isEN);
+    html.setAttribute('lang', isEN ? 'en' : 'ar');
+    html.setAttribute('dir', isEN ? 'ltr' : 'rtl');
+    applyTranslations();
+  });
+
+  // EXIT
+  document.getElementById('exitBtn').addEventListener('click', function() {
+    showToast(tr('exit-toast'), 'success');
+  });
+
+  // NAV items
+  document.querySelectorAll('[data-nav]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      document.querySelectorAll('[data-nav]').forEach(function(n) { n.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+
+  // TOGGLE sidebar
+  document.querySelectorAll('[data-toggle]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var body = this.closest('.side-card').querySelector('.side-card-body');
+      if (!body) return;
+      var hidden = body.style.display === 'none';
+      body.style.display = hidden ? '' : 'none';
+      this.textContent = hidden ? '▼' : '▶';
+    });
+  });
+
+  // HISTORY link
+  document.getElementById('historyLink').addEventListener('click', function(e) { e.preventDefault(); showHistoryPanel(); });
+
+  // SIDEBAR links
+  document.getElementById('callSupportLink').addEventListener('click', function(e) { e.preventDefault(); showToast(tr('calling')); });
+  document.getElementById('newMsgLink').addEventListener('click', function(e) { e.preventDefault(); showToast(tr('open-msg')); });
+
+  // CURRENCY BTN
+  document.getElementById('currencyBtn').addEventListener('click', function() {
+    buildCurrencyGrid();
+    document.getElementById('currencyModal').classList.add('open');
+  });
+  document.getElementById('closeCurrencyBtn').addEventListener('click', function() { closeModal('currencyModal'); });
+
+  // AMOUNT INPUT
+  document.getElementById('amount').addEventListener('input', function() {
+    var raw = this.value.replace(/[^0-9.]/g, '');
+    var parts = raw.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    this.value = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
+    updateSummary();
+  });
+
+  // VIA TYPE
+  document.getElementById('viaType').addEventListener('change', updateViaOptions);
+
+  // BENEFICIARY
+  document.getElementById('beneficiary').addEventListener('change', updateSummary);
+
+  // TERMS
+  document.getElementById('termsCheck').addEventListener('change', function() {
+    showToast(tr(this.checked ? 'terms-ok' : 'terms-req'), this.checked ? 'success' : 'error');
+  });
+
+  // ADD BEN
+  document.getElementById('addBenBtn').addEventListener('click', function() {
+    document.getElementById('newBenName').value = '';
+    document.getElementById('newBenAccount').value = '';
+    document.getElementById('newBenCountry').value = '';
+    document.getElementById('autoSaveCheck').checked = true;
+    document.getElementById('addBenModal').classList.add('open');
+  });
+  document.getElementById('cancelAddBenBtn').addEventListener('click', function() { closeModal('addBenModal'); });
+  document.getElementById('saveAddBenBtn').addEventListener('click', saveNewBeneficiary);
+
+  // CONTINUE BTN
+  document.getElementById('continueBtn').addEventListener('click', goToStep2);
+
+  // CANCEL BTN
+  document.getElementById('cancelBtn').addEventListener('click', function() {
+    if (confirm(tr('cancel-q'))) {
+      resetToStep1();
+      document.getElementById('amount').value = '1,000,000.00';
+      updateSummary();
+      showToast(tr('cancelled'), 'error');
+    }
+  });
+
+  // CONFIRM BTN (step 2)
+  document.getElementById('confirmBtn').addEventListener('click', goToStep3);
+
+  // BACK BTN (step 2)
+  document.getElementById('backBtn').addEventListener('click', function() { setStep(1); });
+
+  // OTP resend
+  document.getElementById('resendOtpLink').addEventListener('click', function() { showToast(tr('otp-resent'), 'success'); });
+
+  // VIEW DETAILS BTN (step 3)
+  document.getElementById('viewDetailsBtn').addEventListener('click', goToStep4WithModal);
+
+  // ERROR MODAL
+  document.getElementById('errRetryBtn').addEventListener('click', function() { closeModal('errorModal'); resetToStep1(); });
+  document.getElementById('errSupportBtn').addEventListener('click', function() { closeModal('errorModal'); showToast(tr('support-toast')); });
+  document.getElementById('errCloseBtn').addEventListener('click', function() { closeModal('errorModal'); });
+
+  // NEW TRANSFER (screen 4)
+  document.getElementById('newTransferBtn').addEventListener('click', resetToStep1);
+  document.getElementById('historyBtn2').addEventListener('click', showHistoryPanel);
+
+  // HISTORY SCREEN
+  document.getElementById('newTransferBtn2').addEventListener('click', resetToStep1);
+  document.getElementById('clearHistoryBtn').addEventListener('click', function() {
+    if (!confirm(isEN ? 'Clear all history?' : 'مسح جميع السجلات؟')) return;
+    try { localStorage.removeItem('nb_hist'); } catch(e) {}
+    renderHistoryTable('all');
+    showToast(tr('hist-cleared'), 'success');
+  });
+  document.querySelectorAll('.filter-chip').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
+      this.classList.add('active');
+      renderHistoryTable(this.getAttribute('data-filter'));
+    });
+  });
+
+  // RECEIPT MODAL
+  document.getElementById('closeReceiptBtn').addEventListener('click', function() { closeModal('receiptModal'); });
+  document.getElementById('printReceiptBtn').addEventListener('click', printReceipt);
+
+  // CLOSE MODALS ON OVERLAY CLICK
+  ['currencyModal','addBenModal','errorModal','receiptModal'].forEach(function(id) {
+    document.getElementById(id).addEventListener('click', function(e) {
+      if (e.target === this) closeModal(id);
+    });
+  });
 }
 
-function handleExit() {
-  showToast(T('exit-toast'), 'success');
+// Run after DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
 }
 
-function showToast(msg, type = '') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast' + (type ? ' ' + type : '');
-  t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// Close modals on overlay click
-document.getElementById('errorModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-document.getElementById('addBenModal').addEventListener('click', function(e) {
-  if (e.target === this) closeAddBenModal();
-});
+})();
 </script>
 </body>
 </html>
