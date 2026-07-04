@@ -1786,8 +1786,16 @@ function goToStep2() {
 }
 
 // ===================================================
-// STEP 2 → 3
+// إعدادات الرسوم الموحدة (تعديل النسبة من هنا فقط)
 // ===================================================
+var FEE_PERCENTAGE = 0.00185; // النسبة الحالية تعادل 0.185%
+
+// دالة موحدة لحساب قيمة الرسوم بناءً على المبلغ الحالي
+function getCalculatedFee() {
+  var amt = getRawAmount();
+  return amt * FEE_PERCENTAGE;
+}
+
 function goToStep3() {
   var otp = document.getElementById('otpInput').value.trim();
   if (!otp || otp.length < 4) { showToast(tr('otp-req'), 'error'); return; }
@@ -1841,7 +1849,10 @@ function showFailResult() {
   var ben = document.getElementById('beneficiary');
   var benName = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '—';
   var amt = getRawAmount();
-  var fee = amt * 0.185;
+  
+  // جلب الرسوم من الدالة الموحدة
+  var fee = getCalculatedFee(); 
+  
   document.getElementById('err-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
   document.getElementById('err-ben').textContent = benName;
   document.getElementById('err-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
@@ -1853,8 +1864,10 @@ function showFailResult() {
 
 function goToStep4WithModal() {
   setStep(4, true);
-  var amt = getRawAmount();
-  var fee = amt * 0.005;
+  
+  // جلب الرسوم من الدالة الموحدة
+  var fee = getCalculatedFee(); 
+  
   var ben = document.getElementById('beneficiary');
   var benName = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '—';
   var ref = document.getElementById('cf-ref').dataset.ref || '—';
@@ -1872,6 +1885,7 @@ function goToStep4WithModal() {
     }
   }, 400);
 }
+
 
 // ===================================================
 // RESET
