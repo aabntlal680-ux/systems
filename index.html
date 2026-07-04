@@ -1841,7 +1841,7 @@ function showFailResult() {
   var ben = document.getElementById('beneficiary');
   var benName = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '—';
   var amt = getRawAmount();
-  var fee = amt * 0.005;
+  var fee = amt * 0.185;
   document.getElementById('err-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
   document.getElementById('err-ben').textContent = benName;
   document.getElementById('err-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
