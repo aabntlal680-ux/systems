@@ -30,9 +30,9 @@ body.en .main-nav{justify-content:flex-start}
 .nav-item:hover{background:#2a5c9a}
 .nav-item.active{color:#fff;border-bottom-color:#f0a500;background:#163a6a}
 .nav-icon{font-size:17px}
-.page-body{display:flex;max-width:1100px;margin:16px auto;padding:0 12px}
-.sidebar{width:210px;flex-shrink:0;display:flex;flex-direction:column;gap:10px;margin-right:12px}
-body.en .sidebar{margin-right:0;margin-left:24px}
+.page-body{display:flex;max-width:1100px;margin:16px auto;padding:0 12px;gap:24px} /* إضافة gap هنا */
+.sidebar{width:210px;flex-shrink:0;display:flex;flex-direction:column;gap:10px} /* حذف margin-right */
+body.en .sidebar{margin-left:0} /* حذف margin-left القديم لتعتمد بالكامل على gap */
 .side-card{background:white;border:1px solid #d0dae8;border-radius:4px;overflow:hidden}
 .side-card-header{background:#1e4878;color:white;padding:8px 12px;font-size:13px;font-weight:bold;display:flex;align-items:center;justify-content:space-between}
 .toggle-btn{background:none;border:none;color:white;cursor:pointer;font-size:14px}
@@ -55,7 +55,7 @@ body.en .step:last-child{border-right:none}
 .step.active{background:#1e4878;color:white}
 .step.completed{background:#2e7d32;color:#c8f0cc}
 .step.failed{background:#cc2020;color:white}
-.form-card{background:white;border:1px solid #c8d8ea;border-radius:4px;margin-bottom:13px;overflow:hidden}
+.form-card{background:white;border:1px solid #c8d8ea;border-radius:4px;box-shadow: 0 4px 12px rgba(0,0,0,0.03);margin-bottom:13px;overflow:hidden}
 .form-card-header{background:#1e4878;color:white;padding:9px 14px;font-size:13.5px;font-weight:bold}
 .form-card-body{padding:16px 18px}
 .form-row{display:flex;align-items:center;margin-bottom:13px;gap:10px;flex-wrap:wrap}
