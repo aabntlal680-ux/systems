@@ -1042,9 +1042,35 @@ body.en .sadad-cat-arrow{margin-right:0;margin-left:auto}
     </div>
 
     <!-- SCREEN 1 -->
+    <div class="form-card">
+        <div class="form-card-header" data-k="sec-to">1. إلى</div>
+        <div class="form-card-body">
+          <div class="form-row">
+            <label class="form-label" data-k="lbl-via">التحويل بواسطة <span class="required">*</span></label>
+            <div class="via-wrap">
+              <select class="via-type-select" id="viaType">
+                <option value="local" data-ar="بنوك سعودية" data-en="Saudi Banks">بنوك سعودية</option>
+                <option value="intl" data-ar="بنوك دولية" data-en="International Banks">بنوك دولية</option>
+                <option value="western" data-ar="ويسترن يونيون" data-en="Western Union">ويسترن يونيون</option>
+                <option value="moneygram" data-ar="موني جرام" data-en="MoneyGram">موني جرام</option>
+              </select>
+              <select class="form-control via-bank-select" id="viaBank"></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label" data-k="lbl-ben">المستفيد <span class="required">*</span></label>
+            <select class="form-control" id="beneficiary"></select>
+          </div>
+          <button class="add-beneficiary" id="addBenBtn">
+            <span class="plus-icon">+</span> <span data-k="add-ben">إضافة مستفيد جديد</span>
+          </button>
+        </div>
+      </div>
+
+    
     <div class="step-screen active" id="screen1">
       <div class="form-card">
-        <div class="form-card-header" data-k="sec-from">1. من</div>
+        <div class="form-card-header" data-k="sec-from">2. من</div>
         <div class="form-card-body">
           <div class="form-row">
             <label class="form-label" data-k="lbl-from">من حساب <span class="required">*</span></label>
@@ -1072,31 +1098,7 @@ body.en .sadad-cat-arrow{margin-right:0;margin-left:auto}
         </div>
       </div>
 
-      <div class="form-card">
-        <div class="form-card-header" data-k="sec-to">2. إلى</div>
-        <div class="form-card-body">
-          <div class="form-row">
-            <label class="form-label" data-k="lbl-via">التحويل بواسطة <span class="required">*</span></label>
-            <div class="via-wrap">
-              <select class="via-type-select" id="viaType">
-                <option value="local" data-ar="بنوك سعودية" data-en="Saudi Banks">بنوك سعودية</option>
-                <option value="intl" data-ar="بنوك دولية" data-en="International Banks">بنوك دولية</option>
-                <option value="western" data-ar="ويسترن يونيون" data-en="Western Union">ويسترن يونيون</option>
-                <option value="moneygram" data-ar="موني جرام" data-en="MoneyGram">موني جرام</option>
-              </select>
-              <select class="form-control via-bank-select" id="viaBank"></select>
-            </div>
-          </div>
-          <div class="form-row">
-            <label class="form-label" data-k="lbl-ben">المستفيد <span class="required">*</span></label>
-            <select class="form-control" id="beneficiary"></select>
-          </div>
-          <button class="add-beneficiary" id="addBenBtn">
-            <span class="plus-icon">+</span> <span data-k="add-ben">إضافة مستفيد جديد</span>
-          </button>
-        </div>
-      </div>
-
+      
       <div class="notice-card">
         <div class="notice-title" data-k="sec-notice">3. تفاصيل التحويل</div>
         <div class="notice-body">
