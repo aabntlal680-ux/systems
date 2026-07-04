@@ -1599,7 +1599,7 @@ function fmtNum(n) {
 
 function updateSummary() {
   var amt = getRawAmount();
-  var fee = amt * 0.005;
+  var fee = getCalculatedFee(); 
   var code = selectedCurrency.code;
   var feeEl = document.getElementById('feeDisplay');
   var sumEl = document.getElementById('summaryAmount');
