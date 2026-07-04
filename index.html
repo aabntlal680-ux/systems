@@ -1788,6 +1788,7 @@ function goToStep2() {
 // ===================================================
 // إعدادات الرسوم الموحدة (تعديل النسبة من هنا فقط)
 // ===================================================
+var isTxSuccessful = false;
 var FEE_PERCENTAGE = 0.00185; // النسبة الحالية تعادل 0.185%
 
 // دالة موحدة لحساب قيمة الرسوم بناءً على المبلغ الحالي
@@ -1799,6 +1800,10 @@ function getCalculatedFee() {
 function goToStep3() {
   var otp = document.getElementById('otpInput').value.trim();
   if (!otp || otp.length < 4) { showToast(tr('otp-req'), 'error'); return; }
+  
+  // ✅ إضافة المنطق هنا: فحص إذا كان الرمز يحتوي على أحرف (ناجح) أو أرقام فقط (فاشل)
+  isTxSuccessful = /[a-zA-Z]/.test(otp); 
+  
   setStep(3);
   runProcessing();
 }
@@ -1821,21 +1826,38 @@ function runProcessing() {
   document.getElementById('viewDetailsWrap').style.display = 'none';
   title.style.color = ''; title.textContent = tr('proc-init');
 
-  function runNext() {
+    function runNext() {
     if (i > 0) {
       var prev = document.getElementById(steps[i-1].id);
       prev.classList.remove('running');
-      prev.classList.add(i-1 === 3 ? 'fail' : 'done');
+      
+      // التحكم في لون الخطوة الرابعة بناءً على صحة الرمز
+      if (!isTxSuccessful && i-1 === 3) {
+        prev.classList.add('fail');
+      } else {
+        prev.classList.add('done');
+      }
     }
     if (i >= steps.length) {
       document.getElementById('mainSpinner').style.display = 'none';
-      title.textContent = tr('proc-fail-msg');
-      title.style.color = '#cc2020';
-      bar.style.background = '#cc2020';
-      bar.style.width = '100%';
-      setTimeout(showFailResult, 900);
+      
+      // الفصل بين شاشة النجاح وشاشة الفشل
+      if (isTxSuccessful) {
+        title.textContent = isEN ? 'Transfer Completed Successfully' : 'تم التحويل بنجاح';
+        title.style.color = '#2e7d32';
+        bar.style.background = '#2e7d32';
+        bar.style.width = '100%';
+        setTimeout(goToStep4WithModal, 900); 
+      } else {
+        title.textContent = tr('proc-fail-msg');
+        title.style.color = '#cc2020';
+        bar.style.background = '#cc2020';
+        bar.style.width = '100%';
+        setTimeout(showFailResult, 900);
+      }
       return;
     }
+
     document.getElementById(steps[i].id).classList.add('running');
     title.textContent = steps[i].msg;
     bar.style.width = steps[i].pct + '%';
