@@ -1762,7 +1762,7 @@ function setStep(n, failed) {
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/// ===================================================
+// ===================================================
 // STEP 1 → 2
 // ===================================================
 var txRecord = {};
@@ -1784,7 +1784,7 @@ function goToStep2() {
 
   document.getElementById('cf-account').textContent = acc.options[acc.selectedIndex] ? acc.options[acc.selectedIndex].textContent : '';
   document.getElementById('cf-bank').textContent = viaLabel;
-  document.getElementById('cf-ben').textContent = beneficiaryName ||  
+  document.getElementById('cf-ben').textContent = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '';
   document.getElementById('cf-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
   document.getElementById('cf-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
   document.getElementById('cf-total').textContent = selectedCurrency.code + ' ' + fmtNum(amt + fee);
@@ -1804,10 +1804,11 @@ function goToStep2() {
 }
 
 // ===================================================
-// دالة جلب بيانات المستفيد تلقائياً (النسخة الآمنة والذكية)
+// دالة جلب بيانات المستفيد تلقائياً عند إدخال رقمه
 // ===================================================
-// 1. قاعدة البيانات التجريبية للمستفيدين
-Const beneficiariesDatabase = {
+
+// 1. قاعدة بيانات تجريبية للمستفيدين داخل النظام
+const beneficiariesDatabase = {
     "0500000001": "غازي ساكب حسين الوحيدي",
     "0500000002": "مؤسسة الوليد بن طلال للإنسانية",
     "1002003004": "شركة الجزيرة المحدودة"
@@ -1826,6 +1827,7 @@ document.getElementById('newBenAccount').addEventListener('input', function(e) {
         nameField.style.backgroundColor = "#ffffff"; // إعادة اللون الأبيض الافتراضي
     }
 });
+
 
 
 // ===================================================
@@ -1942,118 +1944,94 @@ function showFailResult() {
   // تسجيل العملية في السجل كفاشلة
   addToHistory(Object.assign({}, txRecord, {status:'fail', beneficiary:benName, fee: fee}));
 
-// ===================================================
-// دالة تحويل الواجهة والنافذة المنبثقة إلى حالة الفشل (الأحمر)
-// ===================================================
-function showFailureModal() {
+  // 🔴 تعديل وتعبئة النافذة المنبثقة لتظهر بحالة الفشل (الأحمر)
   var modalHeader = document.querySelector('#errorModal .modal-header');
+  var modalAlert = document.querySelector('#errorModal .alert-danger-box') || document.querySelector('#errorModal style + div');
+  
   if (modalHeader) {
-    modalHeader.className = 'modal-header red'; 
     modalHeader.style.background = '#cc2020';
     modalHeader.innerHTML = 'فشل التحويل <span style="font-size:11px;display:block;opacity:0.8">ERR-4821: BENEFICIARY_FEE_PENDING</span>';
   }
-
-  var modalAlert = document.querySelector('#errorModal .modal-err-code') || document.querySelector('#errorModal .alert-danger-box');
   if (modalAlert) {
     modalAlert.style.background = '#fff0f0';
     modalAlert.style.color = '#cc2020';
     modalAlert.style.borderColor = '#f0b0b0';
-    modalAlert.innerHTML = '⚠️ رسوم معاملة التحويل غير مسددة من قبل المستفيد';
-    modalAlert.style.display = 'flex';
+    modalAlert.textContent = '⚠️ رسوم معاملة التحويل غير مسددة من قبل المستفيد';
+    modalAlert.style.display = 'block';
   }
 
-  var activeStep = document.querySelector('.step.active');
-  if (activeStep) {
-    activeStep.classList.remove('active', 'completed');
-    activeStep.classList.add('failed');
-    activeStep.style.background = '#cc2020';
-    activeStep.style.color = 'white';
-  }
+  // ملء الحقول داخل المودال برقم الفشل الحالي والبيانات الموحدة
+  document.getElementById('err-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
+  document.getElementById('err-ben').textContent = benName;
+  document.getElementById('err-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
   
-  // فتح النافذة المنبثقة بحالة الفشل
-  var errModal = document.getElementById('errorModal');
-  if (errModal) errModal.classList.add('open');
+  var reasonLabel = document.getElementById('lbl-reason') || document.querySelector('#err-fees').parentElement.previousElementSibling?.querySelector('.info-label');
+  var reasonVal = document.getElementById('val-reason') || document.querySelector('#err-fees').parentElement.previousElementSibling?.querySelector('.info-value');
+  if (reasonLabel) reasonLabel.textContent = 'سبب الرفض';
+  if (reasonVal) { reasonVal.textContent = 'رسوم التحويل غير مسددة'; reasonVal.style.color = '#cc2020'; }
+
+  // فتح النافذة المنبثقة
+  setTimeout(function() {
+    document.getElementById('errorModal').classList.add('open');
+  }, 400);
 }
 
-// ===================================================
-// دالة الانتقال للخطوة 4 وتحويل الواجهة لحالة النجاح (الأخضر)
-// ===================================================
 function goToStep4WithModal() {
-  setStep(4, true); 
+  setStep(4, true); // الانتقال للشاشة الرابعة كشاشة نتيجة
 
-  var resCard = document.getElementById('resultCard');
-  if (resCard) resCard.style.borderColor = '#2e7d32';
-  
+  // ضبط ألوان النجاح (الأخضر) لبطاقة النتيجة والعنوان
+  document.getElementById('resultCard').style.borderColor = '#2e7d32';
   var header = document.getElementById('resultHeader');
-  if (header) {
-    header.style.background = '#2e7d32';
-    header.innerHTML = '✔️ نتيجة عملية التحويل';
-  }
+  header.style.background = '#2e7d32';
+  header.innerHTML = '✔️ نتيجة عملية التحويل';
 
-  if (document.getElementById('successBox')) document.getElementById('successBox').style.display = 'block';
-  if (document.getElementById('failBox')) document.getElementById('failBox').style.display = 'none';
+  // تبديل ظهور الصناديق داخل الكارد
+  document.getElementById('successBox').style.display = 'block';
+  document.getElementById('failBox').style.display = 'none';
 
-  // جلب البيانات بأمان وحمايتها من الانهيار (Null Protection)
+  // جلب البيانات وتحديث واجهة النجاح الخلفية
   var ben = document.getElementById('beneficiary');
-  var benName = '—';
-  if (ben && ben.options && ben.selectedIndex !== -1 && ben.options[ben.selectedIndex]) {
-    benName = ben.options[ben.selectedIndex].textContent;
-  } else {
-    var targetNameField = document.getElementById('newBenName');
-    if (targetNameField) benName = targetNameField.value || 'مستفيد جديد';
-  }
-  
-  var refEl = document.getElementById('cf-ref');
-  var dateEl = document.getElementById('cf-date');
-  var ref = (refEl && refEl.dataset) ? refEl.dataset.ref || '—' : '—';
-  var date = (dateEl && dateEl.dataset) ? dateEl.dataset.date || '—' : '—';
-  
-  var fee = typeof getCalculatedFee === 'function' ? getCalculatedFee() : (typeof getRawAmount === 'function' ? getRawAmount() * 0.005 : 0);
-  var amt = typeof getRawAmount === 'function' ? getRawAmount() : 0;
+  var benName = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '—';
+  var ref = document.getElementById('cf-ref').dataset.ref || '—';
+  var date = document.getElementById('cf-date').dataset.date || '—';
+  var fee = getCalculatedFee();
+  var amt = getRawAmount();
 
-  if (document.getElementById('res-ref-success')) document.getElementById('res-ref-success').textContent = ref + ' | ' + date;
-  if (document.getElementById('res-ben-success')) document.getElementById('res-ben-success').textContent = benName;
+  document.getElementById('res-ref-success').textContent = ref + ' | ' + date;
+  document.getElementById('res-ben-success').textContent = benName;
 
-  if (typeof addToHistory === 'function') {
-    addToHistory(Object.assign({}, txRecord || {}, {status:'success', beneficiary:benName, fee: fee}));
-  }
+  // تسجيل العملية في السجل كناجحة
+  addToHistory(Object.assign({}, txRecord, {status:'success', beneficiary:benName, fee: fee}));
   
+  // 🟢 تعديل وتعبئة النافذة المنبثقة لتتحول بالكامل إلى حالة النجاح (الأخضر)
   var modalHeader = document.querySelector('#errorModal .modal-header');
+  var modalAlert = document.querySelector('#errorModal .alert-danger-box') || document.querySelector('#errorModal style + div');
+  
   if (modalHeader) {
-    modalHeader.className = 'modal-header green'; 
     modalHeader.style.background = '#2e7d32';
     modalHeader.innerHTML = 'نجاح عملية التحويل <span style="font-size:11px;display:block;opacity:0.8">SUCCESS: TRANSACTION_COMPLETED</span>';
   }
-
-  var modalAlert = document.querySelector('#errorModal .modal-err-code') || document.querySelector('#errorModal .alert-danger-box');
   if (modalAlert) {
-    modalAlert.style.display = 'none'; 
+    modalAlert.style.background = '#f4fbf7';
+    modalAlert.style.color = '#2e7d32';
+    modalAlert.style.borderColor = '#b7e4c7';
+    modalAlert.textContent = '✔️ تم اكتمال وإجراءات عملية التحويل بنجاح وبشكل آمن';
   }
 
-  var activeStep = document.querySelector('.step.active');
-  if (activeStep) {
-    activeStep.classList.remove('active', 'failed');
-    activeStep.classList.add('completed');
-    activeStep.style.background = '#2e7d32';
-    activeStep.style.color = 'white';
-  }
-
-  if (document.getElementById('err-amount')) document.getElementById('err-amount').textContent = (typeof selectedCurrency !== 'undefined' ? selectedCurrency.code : '') + ' ' + fmtNum(amt);
-  if (document.getElementById('err-ben')) document.getElementById('err-ben').textContent = benName;
-  if (document.getElementById('err-fees')) document.getElementById('err-fees').textContent = (typeof selectedCurrency !== 'undefined' ? selectedCurrency.code : '') + ' ' + fmtNum(fee);
+  // ملء الحقول داخل النافذة المنبثقة بالبيانات الحقيقية بدلاً من الخطوط الفارغة
+  document.getElementById('err-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
+  document.getElementById('err-ben').textContent = benName;
+  document.getElementById('err-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
   
-  var reasonLabel = document.getElementById('lbl-reason') || document.querySelector('#err-fees')?.parentElement?.previousElementSibling?.querySelector('.info-label');
-  var reasonVal = document.getElementById('val-reason') || document.querySelector('#err-fees')?.parentElement?.previousElementSibling?.querySelector('.info-value');
+  var reasonLabel = document.getElementById('lbl-reason') || document.querySelector('#err-fees').parentElement.previousElementSibling?.querySelector('.info-label');
+  var reasonVal = document.getElementById('val-reason') || document.querySelector('#err-fees').parentElement.previousElementSibling?.querySelector('.info-value');
   if (reasonLabel) reasonLabel.textContent = 'حالة العملية';
-  if (reasonVal) { 
-    reasonVal.textContent = 'مكتملة بنجاح'; 
-    reasonVal.style.color = '#2e7d32'; 
-  }
+  if (reasonVal) { reasonVal.textContent = 'مكتملة بنجاح'; reasonVal.style.color = '#2e7d32'; }
 
+  // فتح النافذة المنبثقة بشكلها الأخضر الجديد
   setTimeout(function() {
-    var errModal = document.getElementById('errorModal');
-    if (errModal) errModal.classList.add('open');
-    if (typeof isEN !== 'undefined' && isEN && typeof TR !== 'undefined') {
+    document.getElementById('errorModal').classList.add('open');
+    if (isEN) {
       document.querySelectorAll('#errorModal [data-k]').forEach(function(el) {
         var v = TR[el.getAttribute('data-k')];
         if (v) el.innerHTML = v[1];
