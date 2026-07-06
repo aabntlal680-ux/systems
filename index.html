@@ -1830,24 +1830,29 @@ function goToStep2() {
 // ===================================================
 // دالة جلب بيانات المستفيد تلقائياً عند إدخال رقمه
 // ===================================================
+// تأكد أن كلمة const مكتوبة بحروف صغيرة تماماً
 const beneficiariesDatabase = {
   "0500000001": "غازي ساكب حسين الوحيدي",
   "0500000002": "مؤسسة الوليد بن طلال للإنسانية",
   "1002003004": "شركة الجزيرة المحدودة"
 };
 
-document.getElementById('newBenAccount').addEventListener('input', function(e) {
-  const inputValue = e.target.value.trim();
-  const nameField = document.getElementById('newBenName');
-  
-  if (beneficiariesDatabase[inputValue]) {
-    nameField.value = beneficiariesDatabase[inputValue];
-    nameField.style.backgroundColor = "#e8f5e9"; // تمييز باللون الأخضر عند النجاح
-  } else {
-    nameField.value = ""; // تفريغ الحقل إذا لم يطابق أي سجل
-    nameField.style.backgroundColor = "#ffffff"; // إعادة اللون الأبيض الافتراضي
-  }
-});
+// التحقق من وجود الحقول أولاً لتجنب توقف السكربت في الصفحات الأخرى
+var accountField = document.getElementById('newBenAccount');
+var nameField = document.getElementById('newBenName');
+
+if (accountField && nameField) {
+  accountField.addEventListener('input', function(e) {
+    const inputValue = e.target.value.trim();
+    
+    if (beneficiariesDatabase[inputValue]) {
+      nameField.value = beneficiariesDatabase[inputValue];
+      nameField.style.backgroundColor = "#e8f5e9"; // تمييز باللون الأخضر عند النجاح
+    } else {
+      nameField.value = ""; // تفريغ الحقل إذا لم يطابق أي سجل
+      nameField.style.backgroundColor = "#ffffff"; // إعادة اللون الأبيض الافتراضي
+    }
+  });
 }
 
 
