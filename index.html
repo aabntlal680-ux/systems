@@ -1762,7 +1762,7 @@ function setStep(n, failed) {
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ===================================================
+/// ===================================================
 // STEP 1 → 2
 // ===================================================
 var txRecord = {};
@@ -1786,10 +1786,13 @@ function goToStep2() {
 
   var viaLabel = (viaType.options[viaType.selectedIndex] ? (isEN ? viaType.options[viaType.selectedIndex].getAttribute('data-en') : viaType.options[viaType.selectedIndex].getAttribute('data-ar')) : '') + ' — ' + (bank.options[bank.selectedIndex] ? bank.options[bank.selectedIndex].textContent : '');
   
-  // جلب اسم المستفيد سواء من القائمة أو من الحقل التلقائي الجديد
-  var beneficiaryName = (ben && ben.options[ben.selectedIndex] && ben.value !== "") ? ben.options[ben.selectedIndex].textContent : document.getElementById('newBenName').value;
-  // جلب رقم الحساب أو الهاتف المدخل
-  var accountNum = document.getElementById('newBenAccount') ? document.getElementById('newBenAccount').value.trim() : '';
+  // جلب اسم المستفيد سواء من القائمة أو من الحقل التلقائي الجديد الآمن
+  var targetNameField = document.getElementById('newBenName');
+  var beneficiaryName = (ben && ben.options[ben.selectedIndex] && ben.value !== "") ? ben.options[ben.selectedIndex].textContent : (targetNameField ? targetNameField.value : '');
+  
+  // جلب رقم الحساب أو الهاتف المدخل بأمان
+  var targetAccField = document.getElementById('newBenAccount');
+  var accountNum = targetAccField ? targetAccField.value.trim() : '';
 
   // ربط وعرض البيانات في شاشة التأكيد (Screen 2)
   document.getElementById('cf-account').textContent = acc.options[acc.selectedIndex] ? acc.options[acc.selectedIndex].textContent : '';
@@ -1810,14 +1813,14 @@ function goToStep2() {
   document.getElementById('cf-ref').dataset.ref = ref;
   document.getElementById('cf-date').dataset.date = dateStr;
 
-  // حفظ رقم الحساب داخل كائن العملية ليعرض في الإيصال النهائي (السطر 1719)
+  // حفظ رقم الحساب داخل كائن العملية ليعرض في الإيصال النهائي
   txRecord = {
     ref: ref,
     date: dateStr,
     status: 'fail',
     from: acc.options[acc.selectedIndex] ? acc.options[acc.selectedIndex].textContent : '',
     beneficiary: beneficiaryName || 'مستفيد جديد',
-    account: accountNum, // تم إضافة الحساب هنا
+    account: accountNum,
     via: viaLabel,
     amount: amt,
     fee: fee,
@@ -1828,31 +1831,31 @@ function goToStep2() {
 }
 
 // ===================================================
-// دالة جلب بيانات المستفيد تلقائياً عند إدخال رقمه
+// دالة جلب بيانات المستفيد تلقائياً (النسخة الآمنة والذكية)
 // ===================================================
-// تأكد أن كلمة const مكتوبة بحروف صغيرة تماماً
 const beneficiariesDatabase = {
   "0500000001": "غازي ساكب حسين الوحيدي",
   "0500000002": "مؤسسة الوليد بن طلال للإنسانية",
   "1002003004": "شركة الجزيرة المحدودة"
 };
 
-// التحقق من وجود الحقول أولاً لتجنب توقف السكربت في الصفحات الأخرى
-var accountField = document.getElementById('newBenAccount');
-var nameField = document.getElementById('newBenName');
-
-if (accountField && nameField) {
-  accountField.addEventListener('input', function(e) {
+// الاستماع لكافة المستند بشكل ديناميكي لضمان عدم تجمد أي صفحة أخرى
+document.addEventListener('input', function(e) {
+  if (e.target && e.target.id === 'newBenAccount') {
     const inputValue = e.target.value.trim();
+    const nameField = document.getElementById('newBenName');
     
-    if (beneficiariesDatabase[inputValue]) {
-      nameField.value = beneficiariesDatabase[inputValue];
-      nameField.style.backgroundColor = "#e8f5e9"; // تمييز باللون الأخضر عند النجاح
-    } else {
-      nameField.value = ""; // تفريغ الحقل إذا لم يطابق أي سجل
-      nameField.style.backgroundColor = "#ffffff"; // إعادة اللون الأبيض الافتراضي
+    if (nameField) {
+      if (beneficiariesDatabase[inputValue]) {
+        nameField.value = beneficiariesDatabase[inputValue];
+        nameField.style.backgroundColor = "#e8f5e9"; // تمييز باللون الأخضر
+      } else {
+        nameField.value = ""; // تفريغ الحقل
+        nameField.style.backgroundColor = "#ffffff"; // اللون الافتراضي
+      }
     }
-  });
+  }
+});
 }
 
 
