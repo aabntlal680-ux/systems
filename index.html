@@ -1769,8 +1769,10 @@ var txRecord = {};
 
 function goToStep2() {
   if (!document.getElementById('termsCheck').checked) {
-    showToast(tr('terms-req'), 'error'); return;
+    showToast(tr('terms-req'), 'error');
+    return;
   }
+
   var acc = document.getElementById('fromAccount');
   var viaType = document.getElementById('viaType');
   var bank = document.getElementById('viaBank');
@@ -1778,13 +1780,27 @@ function goToStep2() {
   var amt = getRawAmount();
   var fee = getCalculatedFee();
   var now = new Date();
-  var dateStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-  var ref = '#TXN-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + Math.floor(Math.random()*9000+1000);
-  var viaLabel = (viaType.options[viaType.selectedIndex] ? (isEN ? viaType.options[viaType.selectedIndex].getAttribute('data-en') : viaType.options[viaType.selectedIndex].getAttribute('data-ar')) : '') + ' — ' + (bank.options[bank.selectedIndex] ? bank.options[bank.selectedIndex].textContent : '');
+  
+  var dateStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
+  var ref = '#TXN-' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '-' + Math.floor(Math.random() * 9000 + 1000);
 
+  var viaLabel = (viaType.options[viaType.selectedIndex] ? (isEN ? viaType.options[viaType.selectedIndex].getAttribute('data-en') : viaType.options[viaType.selectedIndex].getAttribute('data-ar')) : '') + ' — ' + (bank.options[bank.selectedIndex] ? bank.options[bank.selectedIndex].textContent : '');
+  
+  // جلب اسم المستفيد سواء من القائمة أو من الحقل التلقائي الجديد
+  var beneficiaryName = (ben && ben.options[ben.selectedIndex] && ben.value !== "") ? ben.options[ben.selectedIndex].textContent : document.getElementById('newBenName').value;
+  // جلب رقم الحساب أو الهاتف المدخل
+  var accountNum = document.getElementById('newBenAccount') ? document.getElementById('newBenAccount').value.trim() : '';
+
+  // ربط وعرض البيانات في شاشة التأكيد (Screen 2)
   document.getElementById('cf-account').textContent = acc.options[acc.selectedIndex] ? acc.options[acc.selectedIndex].textContent : '';
   document.getElementById('cf-bank').textContent = viaLabel;
-  document.getElementById('cf-ben').textContent = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '';
+  document.getElementById('cf-ben').textContent = beneficiaryName || 'مستفيد جديد';
+  
+  // إرسال رقم الحساب/الهاتف إلى شاشة التأكيد
+  if(document.getElementById('cf-phone')) {
+    document.getElementById('cf-phone').textContent = accountNum || '—';
+  }
+
   document.getElementById('cf-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
   document.getElementById('cf-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
   document.getElementById('cf-total').textContent = selectedCurrency.code + ' ' + fmtNum(amt + fee);
@@ -1794,38 +1810,43 @@ function goToStep2() {
   document.getElementById('cf-ref').dataset.ref = ref;
   document.getElementById('cf-date').dataset.date = dateStr;
 
+  // حفظ رقم الحساب داخل كائن العملية ليعرض في الإيصال النهائي (السطر 1719)
   txRecord = {
-    ref: ref, date: dateStr, status: 'fail',
+    ref: ref,
+    date: dateStr,
+    status: 'fail',
     from: acc.options[acc.selectedIndex] ? acc.options[acc.selectedIndex].textContent : '',
-    beneficiary: ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '',
-    via: viaLabel, amount: amt, fee: fee, currency: selectedCurrency.code,
+    beneficiary: beneficiaryName || 'مستفيد جديد',
+    account: accountNum, // تم إضافة الحساب هنا
+    via: viaLabel,
+    amount: amt,
+    fee: fee,
+    currency: selectedCurrency.code,
   };
+
   setStep(2);
 }
 
 // ===================================================
 // دالة جلب بيانات المستفيد تلقائياً عند إدخال رقمه
 // ===================================================
-
-// 1. قاعدة بيانات تجريبية للمستفيدين داخل النظام
 const beneficiariesDatabase = {
-    "0500000001": "غازي ساكب حسين الوحيدي",
-    "0500000002": "مؤسسة الوليد بن طلال للإنسانية",
-    "1002003004": "شركة الجزيرة المحدودة"
+  "0500000001": "غازي ساكب حسين الوحيدي",
+  "0500000002": "مؤسسة الوليد بن طلال للإنسانية",
+  "1002003004": "شركة الجزيرة المحدودة"
 };
 
-// 2. ربط الحدث بالـ id الصحيح الموجود في الـ HTML (newBenAccount و newBenName)
 document.getElementById('newBenAccount').addEventListener('input', function(e) {
-    const inputValue = e.target.value.trim();
-    const nameField = document.getElementById('newBenName');
-    
-    if (beneficiariesDatabase[inputValue]) {
-        nameField.value = beneficiariesDatabase[inputValue];
-        nameField.style.backgroundColor = "#e8f5e9"; // تمييز باللون الأخضر عند النجاح
-    } else {
-        nameField.value = ""; // تفريغ الحقل إذا لم يطابق أي سجل
-        nameField.style.backgroundColor = "#ffffff"; // إعادة اللون الأبيض الافتراضي
-    }
+  const inputValue = e.target.value.trim();
+  const nameField = document.getElementById('newBenName');
+  
+  if (beneficiariesDatabase[inputValue]) {
+    nameField.value = beneficiariesDatabase[inputValue];
+    nameField.style.backgroundColor = "#e8f5e9"; // تمييز باللون الأخضر عند النجاح
+  } else {
+    nameField.value = ""; // تفريغ الحقل إذا لم يطابق أي سجل
+    nameField.style.backgroundColor = "#ffffff"; // إعادة اللون الأبيض الافتراضي
+  }
 });
 
 
@@ -1945,35 +1966,31 @@ function showFailResult() {
   addToHistory(Object.assign({}, txRecord, {status:'fail', beneficiary:benName, fee: fee}));
 
   // 🔴 تعديل وتعبئة النافذة المنبثقة لتظهر بحالة الفشل (الأحمر)
-  var modalHeader = document.querySelector('#errorModal .modal-header');
-  var modalAlert = document.querySelector('#errorModal .alert-danger-box') || document.querySelector('#errorModal style + div');
-  
-  if (modalHeader) {
-    modalHeader.style.background = '#cc2020';
-    modalHeader.innerHTML = 'فشل التحويل <span style="font-size:11px;display:block;opacity:0.8">ERR-4821: BENEFICIARY_FEE_PENDING</span>';
-  }
-  if (modalAlert) {
-    modalAlert.style.background = '#fff0f0';
-    modalAlert.style.color = '#cc2020';
-    modalAlert.style.borderColor = '#f0b0b0';
-    modalAlert.textContent = '⚠️ رسوم معاملة التحويل غير مسددة من قبل المستفيد';
-    modalAlert.style.display = 'block';
-  }
+var modalHeader = document.querySelector('#errorModal .modal-header');
+// تحديث الكلاس ليكون red وإزالة blue أو green
+if (modalHeader) {
+  modalHeader.className = 'modal-header red'; 
+  modalHeader.style.background = '#cc2020';
+  modalHeader.innerHTML = 'فشل التحويل <span style="font-size:11px;display:block;opacity:0.8">ERR-4821: BENEFICIARY_FEE_PENDING</span>';
+}
 
-  // ملء الحقول داخل المودال برقم الفشل الحالي والبيانات الموحدة
-  document.getElementById('err-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
-  document.getElementById('err-ben').textContent = benName;
-  document.getElementById('err-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
-  
-  var reasonLabel = document.getElementById('lbl-reason') || document.querySelector('#err-fees').parentElement.previousElementSibling?.querySelector('.info-label');
-  var reasonVal = document.getElementById('val-reason') || document.querySelector('#err-fees').parentElement.previousElementSibling?.querySelector('.info-value');
-  if (reasonLabel) reasonLabel.textContent = 'سبب الرفض';
-  if (reasonVal) { reasonVal.textContent = 'رسوم التحويل غير مسددة'; reasonVal.style.color = '#cc2020'; }
+// التحكم بصندوق إشعار الرسوم (الملاحظة الحمراء بالداخل)
+var modalAlert = document.querySelector('#errorModal .modal-err-code') || document.querySelector('#errorModal .alert-danger-box');
+if (modalAlert) {
+  modalAlert.style.background = '#fff0f0';
+  modalAlert.style.color = '#cc2020';
+  modalAlert.style.borderColor = '#f0b0b0';
+  modalAlert.innerHTML = '⚠️ رسوم معاملة التحويل غير مسددة من قبل المستفيد';
+  modalAlert.style.display = 'flex'; // إظهاره في حالة الفشل
+}
 
-  // فتح النافذة المنبثقة
-  setTimeout(function() {
-    document.getElementById('errorModal').classList.add('open');
-  }, 400);
+// 🔴 تحديث أزرار الخطوات (Stepper) لتظهر باللون الأحمر (فاشلة)
+var activeStep = document.querySelector('.step.active');
+if (activeStep) {
+  activeStep.classList.remove('active', 'completed');
+  activeStep.classList.add('failed');
+  activeStep.style.background = '#cc2020';
+  activeStep.style.color = 'white';
 }
 
 function goToStep4WithModal() {
@@ -1982,10 +1999,12 @@ function goToStep4WithModal() {
   // ضبط ألوان النجاح (الأخضر) لبطاقة النتيجة والعنوان
   document.getElementById('resultCard').style.borderColor = '#2e7d32';
   var header = document.getElementById('resultHeader');
-  header.style.background = '#2e7d32';
-  header.innerHTML = '✔️ نتيجة عملية التحويل';
+  if (header) {
+    header.style.background = '#2e7d32';
+    header.innerHTML = '✔️ نتيجة عملية التحويل';
+  }
 
-  // تبديل ظهور الصناديق داخل الكارد
+  // تبديل ظهور الصناديق داخل الكارد الرئيسي
   document.getElementById('successBox').style.display = 'block';
   document.getElementById('failBox').style.display = 'none';
 
@@ -2005,17 +2024,25 @@ function goToStep4WithModal() {
   
   // 🟢 تعديل وتعبئة النافذة المنبثقة لتتحول بالكامل إلى حالة النجاح (الأخضر)
   var modalHeader = document.querySelector('#errorModal .modal-header');
-  var modalAlert = document.querySelector('#errorModal .alert-danger-box') || document.querySelector('#errorModal style + div');
-  
   if (modalHeader) {
+    modalHeader.className = 'modal-header green'; // تحويل الكلاس للأخضر ديناميكياً
     modalHeader.style.background = '#2e7d32';
     modalHeader.innerHTML = 'نجاح عملية التحويل <span style="font-size:11px;display:block;opacity:0.8">SUCCESS: TRANSACTION_COMPLETED</span>';
   }
+
+  // ❌ إخفاء إشعار الرسوم تماماً في حالة النجاح لكي لا يظهر للمستخدم
+  var modalAlert = document.querySelector('#errorModal .modal-err-code') || document.querySelector('#errorModal .alert-danger-box');
   if (modalAlert) {
-    modalAlert.style.background = '#f4fbf7';
-    modalAlert.style.color = '#2e7d32';
-    modalAlert.style.borderColor = '#b7e4c7';
-    modalAlert.textContent = '✔️ تم اكتمال وإجراءات عملية التحويل بنجاح وبشكل آمن';
+    modalAlert.style.display = 'none'; // إخفاء تام
+  }
+
+  // 🟢 تحديث أزرار الخطوات (Stepper) لتظهر باللون الأخضر (ناجحة)
+  var activeStep = document.querySelector('.step.active');
+  if (activeStep) {
+    activeStep.classList.remove('active', 'failed');
+    activeStep.classList.add('completed');
+    activeStep.style.background = '#2e7d32';
+    activeStep.style.color = 'white';
   }
 
   // ملء الحقول داخل النافذة المنبثقة بالبيانات الحقيقية بدلاً من الخطوط الفارغة
@@ -2026,7 +2053,10 @@ function goToStep4WithModal() {
   var reasonLabel = document.getElementById('lbl-reason') || document.querySelector('#err-fees').parentElement.previousElementSibling?.querySelector('.info-label');
   var reasonVal = document.getElementById('val-reason') || document.querySelector('#err-fees').parentElement.previousElementSibling?.querySelector('.info-value');
   if (reasonLabel) reasonLabel.textContent = 'حالة العملية';
-  if (reasonVal) { reasonVal.textContent = 'مكتملة بنجاح'; reasonVal.style.color = '#2e7d32'; }
+  if (reasonVal) { 
+    reasonVal.textContent = 'مكتملة بنجاح'; 
+    reasonVal.style.color = '#2e7d32'; 
+  }
 
   // فتح النافذة المنبثقة بشكلها الأخضر الجديد
   setTimeout(function() {
