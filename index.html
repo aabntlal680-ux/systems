@@ -1807,29 +1807,26 @@ function goToStep2() {
 // دالة جلب بيانات المستفيد تلقائياً (النسخة الآمنة والذكية)
 // ===================================================
 // 1. قاعدة البيانات التجريبية للمستفيدين
-const beneficiariesDatabase = {
-  "0500000001": "غازي ساكب حسين الوحيدي",
-  "0500000002": "مؤسسة الوليد بن طلال للإنسانية",
-  "1002003004": "شركة الجزيرة المحدودة"
+Const beneficiariesDatabase = {
+    "0500000001": "غازي ساكب حسين الوحيدي",
+    "0500000002": "مؤسسة الوليد بن طلال للإنسانية",
+    "1002003004": "شركة الجزيرة المحدودة"
 };
 
-// 2. الاستماع لحدث الكتابة وجلب البيانات تلقائياً
+// 2. ربط الحدث بالـ id الصحيح الموجود في الـ HTML (newBenAccount و newBenName)
 document.getElementById('newBenAccount').addEventListener('input', function(e) {
     const inputValue = e.target.value.trim();
     const nameField = document.getElementById('newBenName');
     
     if (beneficiariesDatabase[inputValue]) {
-        // إذا تطابق الرقم، يتم وضع الاسم وتلوين الحقل بالأخضر
         nameField.value = beneficiariesDatabase[inputValue];
-        nameField.style.backgroundColor = "#e8f5e9"; 
-        nameField.style.borderColor = "#2e7d32";
+        nameField.style.backgroundColor = "#e8f5e9"; // تمييز باللون الأخضر عند النجاح
     } else {
-        // إذا لم يتطابق، يتم تفريغ الحقل وإعادة اللون الافتراضي
-        nameField.value = ""; 
-        nameField.style.backgroundColor = "#ffffff";
-        nameField.style.borderColor = "#ccc";
+        nameField.value = ""; // تفريغ الحقل إذا لم يطابق أي سجل
+        nameField.style.backgroundColor = "#ffffff"; // إعادة اللون الأبيض الافتراضي
     }
 });
+
 
 // ===================================================
 // الإعدادات العامة والدوال الموحدة للرسوم وحالة العملية
