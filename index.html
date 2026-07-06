@@ -1784,7 +1784,7 @@ function goToStep2() {
 
   document.getElementById('cf-account').textContent = acc.options[acc.selectedIndex] ? acc.options[acc.selectedIndex].textContent : '';
   document.getElementById('cf-bank').textContent = viaLabel;
-  document.getElementById('cf-ben').textContent = beneficiaryName || 'مستفيد جديد';
+  document.getElementById('cf-ben').textContent = ben.options[ben.selectedIndex] ? ben.options[ben.selectedIndex].textContent : '';
   document.getElementById('cf-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
   document.getElementById('cf-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
   document.getElementById('cf-total').textContent = selectedCurrency.code + ' ' + fmtNum(amt + fee);
