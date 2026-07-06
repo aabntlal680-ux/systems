@@ -2010,7 +2010,7 @@ function showFailResult() {
   // تسجيل العملية فاشلة
   addToHistory(Object.assign({}, txRecord, {status:'fail', beneficiary:benName, fee: fee}));
 
-  // 2. تحديث كلي لأزرار الخطوات العلويّة (Stepper) إلى اللون الأحمر
+  // 2. تحويل أزرار الخطوات (Stepper) بالكامل إلى اللون الأحمر
   document.querySelectorAll('.step').forEach(function(stepEl) {
     stepEl.classList.remove('active', 'completed');
     stepEl.classList.add('failed');
@@ -2018,20 +2018,35 @@ function showFailResult() {
     stepEl.style.color = 'white';
   });
 
-  // 3. تعديل وتعبئة النافذة المنبثقة لتظهر بحالة الفشل (الأحمر) والملاحظة
+  // 3. تعديل وتعبئة النافذة المنبثقة لتظهر بحالة الفشل (الأحمر) وإظهار الملاحظة والرسوم المتبقية
   var modalHeader = document.querySelector('#errorModal .modal-header');
-  var modalAlert = document.querySelector('#errorModal .alert-danger-box') || document.querySelector('#errorModal style + div');
-  
   if (modalHeader) {
     modalHeader.style.background = '#cc2020';
     modalHeader.innerHTML = 'فشل التحويل <span style="font-size:11px;display:block;opacity:0.8">ERR-4821: BENEFICIARY_FEE_PENDING</span>';
   }
+
+  // إظهار صندوق الملاحظة الحمراء وتحديث نصه
+  var modalAlert = document.querySelector('#errorModal .alert-danger-box') || document.querySelector('#errorModal .modal-err-code');
   if (modalAlert) {
     modalAlert.style.background = '#fff0f0';
     modalAlert.style.color = '#cc2020';
     modalAlert.style.borderColor = '#f0b0b0';
-    modalAlert.textContent = '⚠️ رسوم معاملة التحويل غير مسددة من قبل المستفيد';
-    modalAlert.style.display = 'block'; // تثبيت ظهور الملاحظة بالفشل
+    modalAlert.innerHTML = '⚠️ رسوم معاملة التحويل غير مسددة من قبل المستفيد';
+    modalAlert.style.display = 'block'; 
+  }
+
+  // إظهار سطر الرسوم المتبقية في جدول النافذة المنبثقة
+  var feesRow = document.getElementById('err-fees')?.closest('.info-row') || document.getElementById('err-fees')?.parentElement;
+  if (feesRow) {
+    feesRow.style.display = 'flex'; 
+  }
+
+  // تحويل زر التأكيد (الزر الرئيسي في المودال) إلى اللون الأحمر ليناسب حالة الفشل
+  var confirmBtn = document.querySelector('#errorModal .btn-primary') || document.querySelector('#errorModal .modal-footer .btn');
+  if (confirmBtn) {
+    confirmBtn.style.background = '#cc2020';
+    confirmBtn.style.borderColor = '#cc2020';
+    confirmBtn.textContent = 'إغلاق';
   }
 
   // ملء الحقول الموحدة
@@ -2081,7 +2096,7 @@ function goToStep4WithModal() {
   // تسجيل العملية ناجحة
   addToHistory(Object.assign({}, txRecord, {status:'success', beneficiary:benName, fee: fee}));
   
-  // 2. تحديث كلي لأزرار الخطوات العلويّة (Stepper) إلى اللون الأخضر
+  // 2. تحويل أزرار الخطوات (Stepper) بالكامل إلى اللون الأخضر
   document.querySelectorAll('.step').forEach(function(stepEl) {
     stepEl.classList.remove('active', 'failed');
     stepEl.classList.add('completed');
@@ -2089,25 +2104,40 @@ function goToStep4WithModal() {
     stepEl.style.color = 'white';
   });
 
-  // 3. تعديل وتعبئة النافذة المنبثقة لتتحول كلياً للأخضر مع حذف/إخفاء التحذير تماماً
+  // 3. تعديل وتعبئة النافذة المنبثقة لتتحول كلياً للأخضر
   var modalHeader = document.querySelector('#errorModal .modal-header');
-  var modalAlert = document.querySelector('#errorModal .alert-danger-box') || document.querySelector('#errorModal style + div');
-  
   if (modalHeader) {
     modalHeader.style.background = '#2e7d32';
     modalHeader.innerHTML = 'نجاح عملية التحويل <span style="font-size:11px;display:block;opacity:0.8">SUCCESS: TRANSACTION_COMPLETED</span>';
   }
+
+  // 🔴 التعديل الحاسم: إخفاء وحذف صندوق الملاحظة الحمراء تماماً في حالة النجاح
+  var modalAlert = document.querySelector('#errorModal .alert-danger-box') || document.querySelector('#errorModal .modal-err-code');
   if (modalAlert) {
-    modalAlert.style.display = 'none'; // حذف وإخفاء تحذير الرسوم المتبقية نهائياً في النجاح
+    modalAlert.style.innerHTML = '';
+    modalAlert.style.display = 'none'; 
+  }
+
+  // 🔴 التعديل الحاسم: إخفاء سطر خيار الرسوم المتبقية نهائياً من داخل جدول البيانات في النجاح
+  var feesRow = document.getElementById('err-fees')?.closest('.info-row') || document.getElementById('err-fees')?.parentElement;
+  if (feesRow) {
+    feesRow.style.display = 'none'; 
+  }
+
+  // 🔴 التعديل الحاسم: تحويل زر التأكيد/الاستمرار داخل النافذة المنبثقة إلى اللون الأخضر عند النجاح
+  var confirmBtn = document.querySelector('#errorModal .btn-primary') || document.querySelector('#errorModal .modal-footer .btn');
+  if (confirmBtn) {
+    confirmBtn.style.background = '#2e7d32';
+    confirmBtn.style.borderColor = '#2e7d32';
+    confirmBtn.textContent = 'موافق';
   }
 
   // ملء الحقول بالبيانات الموحدة
   if (document.getElementById('err-amount')) document.getElementById('err-amount').textContent = selectedCurrency.code + ' ' + fmtNum(amt);
   if (document.getElementById('err-ben')) document.getElementById('err-ben').textContent = benName;
-  if (document.getElementById('err-fees')) document.getElementById('err-fees').textContent = selectedCurrency.code + ' ' + fmtNum(fee);
   
-  var reasonLabel = document.getElementById('lbl-reason') || document.querySelector('#err-fees')?.parentElement.previousElementSibling?.querySelector('.info-label');
-  var reasonVal = document.getElementById('val-reason') || document.querySelector('#err-fees')?.parentElement.previousElementSibling?.querySelector('.info-value');
+  var reasonLabel = document.getElementById('lbl-reason') || document.querySelector('#err-ben')?.parentElement.nextElementSibling?.querySelector('.info-label');
+  var reasonVal = document.getElementById('val-reason') || document.querySelector('#err-ben')?.parentElement.nextElementSibling?.querySelector('.info-value');
   if (reasonLabel) reasonLabel.textContent = 'حالة العملية';
   if (reasonVal) { reasonVal.textContent = 'مكتملة بنجاح'; reasonVal.style.color = '#2e7d32'; }
 
@@ -2115,12 +2145,6 @@ function goToStep4WithModal() {
   setTimeout(function() {
     var modal = document.getElementById('errorModal');
     if (modal) modal.classList.add('open');
-    if (typeof isEN !== 'undefined' && isEN) {
-      document.querySelectorAll('#errorModal [data-k]').forEach(function(el) {
-        var v = TR[el.getAttribute('data-k')];
-        if (v) el.innerHTML = v[1];
-      });
-    }
   }, 400);
 }
 
