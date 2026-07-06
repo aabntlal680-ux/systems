@@ -177,6 +177,29 @@ body.en .modal-box{direction:ltr}
 .receipt-status-fail{background:#ffebee;color:#cc2020;padding:6px 16px;border-radius:20px;font-weight:bold;font-size:13px;text-align:center;margin:12px 0}
 @media(max-width:700px){.sidebar{display:none}.main-nav .nav-item{padding:7px 7px;font-size:10px}.via-wrap{flex-direction:column}.via-type-select{flex:none;width:100%}.currency-grid{grid-template-columns:repeat(2,1fr)}}
 
+/* avatar upload */
+.avatar-upload-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:4px}
+.avatar-preview{width:80px;height:80px;border-radius:50%;border:3px solid #1e4878;object-fit:cover;background:#e8f0ff;display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;cursor:pointer;position:relative}
+.avatar-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.avatar-upload-btn{font-size:11px;color:#1e4878;text-decoration:underline;cursor:pointer;background:none;border:none;font-family:inherit}
+
+/* finance request history table */
+.fin-history-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.fin-history-table th{background:#1e4878;color:white;padding:9px 12px;text-align:right;font-weight:bold}
+body.en .fin-history-table th{text-align:left}
+.fin-history-table td{padding:9px 12px;border-bottom:1px solid #eef2f8;vertical-align:middle}
+.fin-history-table tr:hover td{background:#f5f9ff}
+
+/* fee highlight box */
+.fee-box{background:linear-gradient(135deg,#fff8e1,#fffde7);border:2px solid #f0a500;border-radius:8px;padding:14px 18px;margin:12px 0}
+.fee-box-title{font-size:12px;color:#b07800;font-weight:bold;margin-bottom:6px}
+.fee-box-amount{font-size:22px;font-weight:900;color:#b07800}
+.fee-box-note{font-size:11px;color:#888;margin-top:4px}
+
+/* service cards */
+@media(max-width:700px){.sidebar{display:none}.main-nav .nav-item{padding:7px 7px;font-size:10px}.via-wrap{flex-direction:column}.via-type-select{flex:none;width:100%}.currency-grid{grid-template-columns:repeat(2,1fr)}}
+
+
 /* ===== PAGES SYSTEM ===== */
 .page-container{display:none;max-width:1100px;margin:16px auto;padding:0 12px;animation:fadeInPage .3s ease}
 .page-container.active{display:block}
@@ -294,6 +317,25 @@ body.en .rate-table th{text-align:left}
 .sadad-cat-arrow{color:#1e4878;font-size:16px;margin-right:auto}
 body.en .sadad-cat-arrow{margin-right:0;margin-left:auto}
 
+/* finance special styles */
+.fin-service-card{background:white;border:1px solid #d0dae8;border-radius:8px;padding:20px 16px;text-align:center;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.fin-service-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(30,72,120,.15);border-color:#a0b8d8}
+.fin-service-card.highlight{border:2px solid #f0a500;background:linear-gradient(135deg,#fffde7,#fff8e1)}
+.fin-service-card.highlight:hover{border-color:#d48a00;box-shadow:0 8px 24px rgba(212,138,0,.2)}
+.fin-service-card-icon{font-size:36px;margin-bottom:10px;display:block}
+.fin-service-card-title{font-size:13px;font-weight:bold;color:#1a3a5c}
+.fin-service-card-sub{font-size:11px;color:#888;margin-top:4px}
+.fin-badge-new{position:absolute;top:10px;left:10px;background:#cc2020;color:white;font-size:10px;font-weight:bold;padding:2px 8px;border-radius:10px}
+body.en .fin-badge-new{left:auto;right:10px}
+
+/* sub-panel inside finance */
+.fin-panel{background:white;border:1px solid #c8d8ea;border-radius:8px;padding:0;margin-bottom:16px;overflow:hidden;display:none}
+.fin-panel.active{display:block;animation:fadeInPage .3s ease}
+.fin-panel-header{background:linear-gradient(135deg,#b07800,#d4a010);color:white;padding:12px 18px;font-size:14px;font-weight:bold;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.fin-panel-body{padding:18px}
+.fin-panel-close{background:none;border:none;color:white;cursor:pointer;font-size:18px;line-height:1}
+
+
 /* page-body hidden when pages active */
 .pages-mode .page-body{display:none}
 .pages-mode .page-container{display:none}
@@ -301,6 +343,15 @@ body.en .sadad-cat-arrow{margin-right:0;margin-left:auto}
 /* instant page wraps inside page-container */
 #page-instant .page-body{display:flex;margin:0;padding:0;max-width:none}
 #page-instant .sidebar{display:flex}
+
+/* image preview */
+.img-preview-box{width:100%;height:140px;border:2px dashed #b0c4d8;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#f8fbff;transition:all .2s;overflow:hidden;position:relative}
+.img-preview-box:hover{border-color:#1e4878;background:#eef5ff}
+.img-preview-box img{width:100%;height:100%;object-fit:cover}
+.img-preview-placeholder{text-align:center;color:#888;pointer-events:none}
+.img-preview-placeholder div:first-child{font-size:36px;margin-bottom:6px}
+.img-preview-placeholder div:last-child{font-size:12px}
+
 </style>
 </head>
 <body id="body-root">
@@ -631,6 +682,105 @@ body.en .sadad-cat-arrow{margin-right:0;margin-left:auto}
   </div>
 </div>
 
+<!-- FINANCE REQUEST MODAL -->
+<div class="modal-overlay" id="finRequestModal">
+  <div class="modal-box extra-wide">
+    <div class="modal-header gold">
+      <span class="modal-header-icon">💼</span>
+      <div>
+        <div class="modal-header-title" id="finModalTitle">طلب تمويل مشروع</div>
+        <div class="modal-header-sub">رسوم إدارية وتنفيذية 10% من المبلغ المطلوب</div>
+      </div>
+    </div>
+    <div class="modal-body" style="max-height:75vh;overflow-y:auto">
+      <!-- Photo upload -->
+      <div class="avatar-upload-wrap">
+        <div class="img-preview-box" id="finAvatarPreview" onclick="document.getElementById('finAvatarInput').click()">
+          <div class="img-preview-placeholder">
+            <div>📷</div>
+            <div>انقر لرفع صورة شخصية للمستفيد</div>
+          </div>
+        </div>
+        <input type="file" id="finAvatarInput" accept="image/*" style="display:none">
+        <button class="avatar-upload-btn" onclick="document.getElementById('finAvatarInput').click()">📎 تغيير الصورة</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <label style="font-size:12px;font-weight:bold;color:#2a4a6a;display:block;margin-bottom:4px">الاسم الكامل <span class="required">*</span></label>
+          <input type="text" class="form-control" id="fin-name" placeholder="اسم المستفيد الكامل">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:bold;color:#2a4a6a;display:block;margin-bottom:4px">رقم الهوية / الإقامة <span class="required">*</span></label>
+          <input type="text" class="form-control" id="fin-id" placeholder="1XXXXXXXXX">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:bold;color:#2a4a6a;display:block;margin-bottom:4px">البريد الإلكتروني <span class="required">*</span></label>
+          <input type="email" class="form-control" id="fin-email" placeholder="email@example.com" style="direction:ltr;text-align:right">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:bold;color:#2a4a6a;display:block;margin-bottom:4px">رقم الجوال <span class="required">*</span></label>
+          <input type="text" class="form-control" id="fin-phone" placeholder="05XXXXXXXX">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:bold;color:#2a4a6a;display:block;margin-bottom:4px">نوع التمويل</label>
+          <select class="form-control" id="fin-type">
+            <option value="project">تمويل مشروع</option>
+            <option value="home">تمويل عقاري</option>
+            <option value="car">تمويل سيارة</option>
+            <option value="personal">تمويل شخصي</option>
+            <option value="business">تمويل تجاري</option>
+            <option value="digital">تمويل رقمي</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:bold;color:#2a4a6a;display:block;margin-bottom:4px">المبلغ المطلوب (SAR) <span class="required">*</span></label>
+          <input type="text" class="form-control" id="fin-amount" placeholder="0.00" oninput="updateFinFee()">
+        </div>
+      </div>
+
+      <div style="margin-bottom:10px">
+        <label style="font-size:12px;font-weight:bold;color:#2a4a6a;display:block;margin-bottom:4px">وصف المشروع / الغرض من التمويل <span class="required">*</span></label>
+        <textarea class="form-control" id="fin-desc" rows="3" placeholder="اكتب وصفاً مختصراً للمشروع أو الغرض من التمويل..." style="resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:10px">
+        <label style="font-size:12px;font-weight:bold;color:#2a4a6a;display:block;margin-bottom:4px">الجهة التي سيُنفَّذ بها التمويل</label>
+        <input type="text" class="form-control" id="fin-entity" placeholder="اسم الشركة أو الجهة التنفيذية">
+      </div>
+
+<!-- Fee calculation box -->
+      <div class="fee-box">
+        <div class="fee-box-title">💰 الرسوم الإدارية والتنفيذية (10% من المبلغ)</div>
+        <div class="fee-box-amount" id="finFeeDisplay">SAR 0.00</div>
+        <div class="fee-box-note">يتم خصم الرسوم مسبقاً قبل صرف مبلغ التمويل للمستفيد</div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#444;margin-top:8px">
+        <input type="checkbox" id="fin-terms" style="width:15px;height:15px;accent-color:#1e4878;cursor:pointer;flex-shrink:0">
+        <label for="fin-terms" style="cursor:pointer">أوافق على الشروط والأحكام والرسوم الإدارية المقررة بنسبة 10%</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" id="finCancelBtn">إلغاء</button>
+      <button class="btn btn-primary btn-sm" id="finSubmitBtn">📋 تقديم طلب التمويل</button>
+    </div>
+  </div>
+</div>
+
+<!-- FINANCE RECEIPT MODAL -->
+<div class="modal-overlay" id="finReceiptModal">
+  <div class="modal-box wide">
+    <div class="modal-header green"><span class="modal-header-icon">✅</span><div><div class="modal-header-title">تم استلام طلب التمويل</div><div class="modal-header-sub" id="finReceiptRef">—</div></div></div>
+    <div class="modal-body" id="finReceiptBody" style="max-height:65vh;overflow-y:auto"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" id="closeFinReceiptBtn">إغلاق</button>
+      <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ طباعة</button>
+    </div>
+  </div>
+</div>
+
+
 <!-- ===== ALL PAGES ===== -->
 <div id="all-pages">
 
@@ -911,38 +1061,95 @@ body.en .sadad-cat-arrow{margin-right:0;margin-left:auto}
 </div>
 
 <!-- ============================================================ -->
-<!-- FINANCE PAGE -->
+<!-- FINANCE PAGE - FULLY ENHANCED -->
 <!-- ============================================================ -->
-<div class="page-container" id="page-finance">
+<div class="page-container active" id="page-finance">
   <div class="pg-header">
     <span class="pg-header-icon">💰</span>
-    <div class="pg-header-title" data-k2="fin-title">خدمات التمويل</div>
-    <div class="pg-header-sub" data-k2="fin-sub">حلول تمويلية متنوعة تناسب احتياجاتك</div>
+    <div class="pg-header-title">خدمات التمويل</div>
+    <div class="pg-header-sub">حلول تمويلية متنوعة تناسب احتياجاتك — تمويل المشاريع برسوم 10% فقط</div>
   </div>
-  <div class="services-grid">
-    <div class="service-card"><span class="service-card-icon">🏠</span><div class="service-card-title" data-k2="fin-home">تمويل عقاري</div><div class="service-card-sub">حتى 90% من قيمة العقار</div></div>
-    <div class="service-card"><span class="service-card-icon">🚗</span><div class="service-card-title" data-k2="fin-car">تمويل سيارات</div><div class="service-card-sub">بدون رسوم إدارية</div></div>
-    <div class="service-card"><span class="service-card-icon">💼</span><div class="service-card-title" data-k2="fin-personal">تمويل شخصي</div><div class="service-card-sub">حتى SAR 500,000</div></div>
-    <div class="service-card"><span class="service-card-icon">🏢</span><div class="service-card-title" data-k2="fin-biz">تمويل تجاري</div><div class="service-card-sub">للشركات والمؤسسات</div></div>
-    <div class="service-card"><span class="service-card-icon">🔄</span><div class="service-card-title" data-k2="fin-refin">إعادة التمويل</div><div class="service-card-sub">تحويل القروض</div></div>
-    <div class="service-card"><span class="service-card-icon">📱</span><div class="service-card-title" data-k2="fin-digital">تمويل رقمي</div><div class="service-card-sub">خلال 5 دقائق</div></div>
+
+  <!-- Service Cards Grid -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px" id="finServicesGrid">
+    <div class="fin-service-card" data-fin="home" onclick="openFinRequest('home')">
+      <span class="fin-service-card-icon">🏠</span>
+      <div class="fin-service-card-title">تمويل عقاري</div>
+      <div class="fin-service-card-sub">حتى 90% من قيمة العقار</div>
+    </div>
+    <div class="fin-service-card" data-fin="car" onclick="openFinRequest('car')">
+      <span class="fin-service-card-icon">🚗</span>
+      <div class="fin-service-card-title">تمويل سيارات</div>
+      <div class="fin-service-card-sub">بدون رسوم تسجيل</div>
+    </div>
+    <div class="fin-service-card" data-fin="personal" onclick="openFinRequest('personal')">
+      <span class="fin-service-card-icon">💼</span>
+      <div class="fin-service-card-title">تمويل شخصي</div>
+      <div class="fin-service-card-sub">حتى SAR 500,000</div>
+    </div>
+    <div class="fin-service-card" data-fin="business" onclick="openFinRequest('business')">
+      <span class="fin-service-card-icon">🏢</span>
+      <div class="fin-service-card-title">تمويل تجاري</div>
+      <div class="fin-service-card-sub">للشركات والمؤسسات</div>
+    </div>
+    <div class="fin-service-card" data-fin="refin" onclick="openFinRequest('refin')">
+      <span class="fin-service-card-icon">🔄</span>
+      <div class="fin-service-card-title">إعادة التمويل</div>
+      <div class="fin-service-card-sub">تحويل القروض</div>
+    </div>
+    <div class="fin-service-card" data-fin="digital" onclick="openFinRequest('digital')">
+      <span class="fin-service-card-icon">📱</span>
+      <div class="fin-service-card-title">تمويل رقمي</div>
+      <div class="fin-service-card-sub">خلال 5 دقائق</div>
+    </div>
+    <!-- HIGHLIGHTED NEW: Project Finance -->
+    <div class="fin-service-card highlight" data-fin="project" onclick="openFinRequest('project')" style="position:relative">
+      <span class="fin-badge-new">جديد ✨</span>
+      <span class="fin-service-card-icon">🌟</span>
+      <div class="fin-service-card-title">تمويل المشاريع</div>
+      <div class="fin-service-card-sub">رسوم إدارية 10% فقط</div>
+    </div>
   </div>
+<!-- Info banner about project finance -->
+<div style="background:linear-gradient(135deg,#fff8e1,#fffde7); border:2px solid #f0a500; border-radius:10px; padding:16px 20px; margin-bottom:20px; display:flex; align-items:center; gap:16px;">
+  <div style="font-size:40px; flex-shrink:0;">💡</div>
+  <div>
+    <div style="font-size:14px; font-weight:bold; color:#b07800; margin-bottom:4px;">تمويل المشاريع وتمكين المستفيدين</div>
+    <div style="font-size:12.5px; color:#555; line-height:1.7;">يمكنك تقديم طلب تمويل لأي مستفيد بمبالغ نقدية لدعم مشاريعه. تُحتسب رسوم إدارية وتنفيذية بنسبة <strong style="color:#cc2020">10%</strong> من إجمالي المبلغ المطلوب، مع إمكانية رفع صورة شخصية للمستفيد وحفظ العملية في السجل.</div>
+  </div>
+  <button class="btn btn-primary btn-sm" onclick="openFinRequest('project')" style="flex-shrink:0; white-space:nowrap;">طلب تمويل مشروع ←</button>
+</div>
+
+
+  <!-- Active Loans -->
   <div class="pg-section">
-    <div class="pg-section-hdr">📊 <span data-k2="my-loans">تمويلاتي الحالية</span></div>
+    <div class="pg-section-hdr">📊 تمويلاتي الحالية</div>
     <div class="pg-section-body">
       <div style="margin-bottom:18px">
-        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span data-k2="loan-home-lbl">🏠 التمويل العقاري - فيلا الرياض</span><span style="color:#1e4878;font-weight:bold">SAR 1,200,000 / SAR 2,000,000</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>🏠 التمويل العقاري - فيلا الرياض</span><span style="color:#1e4878;font-weight:bold">SAR 1,200,000 / SAR 2,000,000</span></div>
         <div class="loan-bar"><div class="loan-bar-fill" style="width:60%"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:#888"><span data-k2="paid">مدفوع: 40%</span><span data-k2="remaining">متبقٍ: SAR 800,000</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#888"><span>مدفوع: 40%</span><span>متبقٍ: SAR 800,000</span></div>
       </div>
       <div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span data-k2="loan-car-lbl">🚗 تمويل السيارة - لكزس LX</span><span style="color:#1e4878;font-weight:bold">SAR 85,000 / SAR 180,000</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>🚗 تمويل السيارة - لكزس LX</span><span style="color:#1e4878;font-weight:bold">SAR 85,000 / SAR 180,000</span></div>
         <div class="loan-bar"><div class="loan-bar-fill" style="width:47%"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:#888"><span data-k2="paid">مدفوع: 53%</span><span data-k2="remaining2">متبقٍ: SAR 95,000</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#888"><span>مدفوع: 53%</span><span>متبقٍ: SAR 95,000</span></div>
       </div>
     </div>
   </div>
+
+  <!-- Finance Requests History -->
+  <div class="pg-section">
+    <div class="pg-section-hdr" style="justify-content:space-between">
+      <span>📋 سجل طلبات التمويل</span>
+      <button class="btn btn-cancel btn-sm" id="clearFinHistBtn" style="font-size:11px">🗑️ مسح السجل</button>
+    </div>
+    <div class="pg-section-body" id="finHistoryWrap">
+      <!-- Populated by JS -->
+    </div>
+  </div>
 </div>
+
 
 <!-- ============================================================ -->
 <!-- SELF SERVICES PAGE -->
@@ -1464,8 +1671,149 @@ function applyTranslations() {
   var hw = document.getElementById('historyTableWrap');
   if (hw && document.getElementById('screenHistory').classList.contains('active')) {
     renderHistoryTable(currentHistoryFilter);
-  }
+  };
 }
+
+// ================================================================
+// TOAST
+// ================================================================
+function showToast(msg,type){
+  var el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className='toast'+(type?' '+type:'');
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t=setTimeout(function(){el.classList.remove('show');},2800);
+}
+
+// ================================================================
+// FINANCE HISTORY
+// ================================================================
+function loadFinHistory(){try{var s=localStorage.getItem('nb_fin_hist');if(s)return JSON.parse(s);}catch(e){}return[];}
+function saveFinHistory(list){try{localStorage.setItem('nb_fin_hist',JSON.stringify(list));}catch(e){}}
+function addFinHistory(rec){var list=loadFinHistory();list.unshift(rec);saveFinHistory(list.slice(0,50));}
+
+function renderFinHistory(){
+  var list=loadFinHistory();
+  var wrap=document.getElementById('finHistoryWrap');
+  if(!wrap)return;
+  if(!list.length){
+    wrap.innerHTML='<div style="text-align:center;padding:28px;color:#999;font-size:14px">لا توجد طلبات تمويل مسجلة حتى الآن</div>';
+    return;
+  }
+  var html='<div style="overflow-x:auto"><table class="fin-history-table"><thead><tr><th>التاريخ</th><th>المستفيد</th><th>نوع التمويل</th><th>المبلغ</th><th>الرسوم (10%)</th><th>البريد</th><th>الحالة</th><th></th></tr></thead><tbody>';
+  list.forEach(function(r,i){
+    var typeLabel={'project':'تمويل مشروع','home':'تمويل عقاري','car':'تمويل سيارة','personal':'تمويل شخصي','business':'تمويل تجاري','refin':'إعادة تمويل','digital':'تمويل رقمي'}[r.finType]||r.finType;
+    html+='<tr>';
+    html+='<td style="font-size:11px;white-space:nowrap">'+r.date+'</td>';
+    html+='<td style="font-weight:bold">'+r.name+'</td>';
+    html+='<td>'+typeLabel+'</td>';
+    html+='<td style="font-weight:bold;color:#1e7a38">SAR '+fmtNum(r.amount)+'</td>';
+    html+='<td style="color:#cc2020;font-weight:bold">SAR '+fmtNum(r.fee)+'</td>';
+    html+='<td style="font-size:11px;direction:ltr;text-align:right">'+r.email+'</td>';
+    html+='<td><span class="badge badge-pending">⏳ قيد المراجعة</span></td>';
+    html+='<td><button class="btn btn-outline btn-sm" style="font-size:11px;padding:4px 10px" onclick="showFinReceipt('+i+')">إيصال</button></td>';
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+  wrap.innerHTML=html;
+}
+
+function showFinReceipt(idx){
+  var list=loadFinHistory();
+  var r=list[idx];
+  if(!r)return;
+  document.getElementById('finReceiptRef').textContent=r.ref;
+  var typeLabel={'project':'تمويل مشروع','home':'تمويل عقاري','car':'تمويل سيارة','personal':'تمويل شخصي','business':'تمويل تجاري','refin':'إعادة تمويل','digital':'تمويل رقمي'}[r.finType]||r.finType;
+  var photoHtml=r.photoUrl?'<img src="'+r.photoUrl+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #1e4878;display:block;margin:0 auto 12px">':'<div style="width:80px;height:80px;border-radius:50%;background:#e8f0ff;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px">👤</div>';
+  var rows=[
+    ['رقم المرجع','<span style="font-family:monospace">'+r.ref+'</span>'],
+    ['التاريخ',r.date],
+    ['المستفيد','<strong>'+r.name+'</strong>'],
+    ['رقم الهوية',r.idNum||'—'],
+    ['البريد الإلكتروني','<span style="direction:ltr;display:inline-block">'+r.email+'</span>'],
+    ['الجوال',r.phone||'—'],
+    ['نوع التمويل',typeLabel],
+    ['المبلغ المطلوب','<strong style="color:#1e7a38;font-size:16px">SAR '+fmtNum(r.amount)+'</strong>'],
+    ['الرسوم الإدارية (10%)','<strong style="color:#cc2020">SAR '+fmtNum(r.fee)+'</strong>'],
+    ['المبلغ الصافي للمستفيد','<strong>SAR '+fmtNum(r.amount-r.fee)+'</strong>'],
+    ['الغرض / الوصف',r.desc||'—'],
+    ['الجهة التنفيذية',r.entity||'—'],
+  ];
+  var rowsHtml=rows.map(function(rw){return'<div class="receipt-row"><span style="color:#777">'+rw[0]+'</span><span>'+rw[1]+'</span></div>';}).join('');
+  document.getElementById('finReceiptBody').innerHTML=
+    photoHtml+
+    '<div style="text-align:center;padding-bottom:14px;border-bottom:2px dashed #ddd;margin-bottom:12px">'+
+    '<div style="font-size:18px;font-weight:900;color:#1a3a5c">إيصال طلب التمويل</div>'+
+    '<div class="receipt-status-ok">✅ تم استلام الطلب — قيد المراجعة</div>'+
+    '</div>'+rowsHtml;
+  document.getElementById('finReceiptModal').classList.add('open');
+}
+
+// ================================================================
+// FINANCE REQUEST MODAL
+// ================================================================
+var _finType='project';
+// دالة فتح نافذة التمويل وتحديد نوعه
+function openFinRequest(type) {
+    // 1. حفظ نوع التمويل في متغير عام لاستخدامه لاحقاً عند الإرسال
+    window._finType = type; 
+    
+    // 2. إظهار قسم أو نافذة نموذج التمويل (تأكد من مطابقة الـ ID للـ Form لديك)
+    var finFormSection = document.getElementById('finRequestModal'); 
+    if (finFormSection) {
+        finFormSection.style.display = 'block'; // أو 'flex' حسب التصميم لديك
+        
+        // التمرير السلس للأسفل ليظهر النموذج للمستخدم
+        finFormSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        console.error("لم يتم العثور على عنصر الواجهة الخاص بالنموذج!");
+    }
+}
+
+
+function updateFinFee(){
+  var val=parseFloat((document.getElementById('fin-amount').value||'0').replace(/,/g,''))||0;
+  var fee=val*0.1;
+  document.getElementById('finFeeDisplay').textContent='SAR '+fmtNum(fee);
+}
+
+function submitFinRequest(){
+  var name=document.getElementById('fin-name').value.trim();
+  var id=document.getElementById('fin-id').value.trim();
+  var email=document.getElementById('fin-email').value.trim();
+  var phone=document.getElementById('fin-phone').value.trim();
+  var amtRaw = parseFloat((document.getElementById('fin-amount').value || '0').replace(/,/g, '')) || 0;
+  var desc=document.getElementById('fin-desc').value.trim();
+  var terms=document.getElementById('fin-terms').checked;
+  if(!name){showToast('يرجى إدخال اسم المستفيد','error');return;}
+  if(!email||!email.includes('@')){showToast('يرجى إدخال بريد إلكتروني صحيح','error');return;}
+  if(!amtRaw||amtRaw<=0){showToast('يرجى إدخال المبلغ المطلوب','error');return;}
+  if(!terms){showToast('يجب الموافقة على الشروط والرسوم الإدارية أولاً','error');return;}
+  var fee=amtRaw*0.1;
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('ar-SA')+' '+now.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+  var ref='#FIN-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*9000+1000);
+  var rec={
+    ref,date:dateStr,finType:_finType,
+    name,idNum:id,email,phone,
+    amount:amtRaw,fee,
+    desc,entity:document.getElementById('fin-entity').value.trim(),
+    photoUrl:window._finPhotoUrl||null,
+    status:'pending'
+  };
+  addFinHistory(rec);
+  closeModal('finRequestModal');
+  renderFinHistory();
+  // Show receipt
+  setTimeout(function(){
+    document.getElementById('finReceiptRef').textContent=ref;
+    showFinReceipt(0);
+    showToast('تم تقديم طلب التمويل بنجاح ✅','success');
+  },300);
+}
+
+
 
 // ===================================================
 // CURRENCIES
@@ -2319,7 +2667,7 @@ if (document.readyState === 'loading') {
       if (NAV_KEYS[i]) el.setAttribute('data-nav-key', NAV_KEYS[i]);
     });
   }
-  function afterInit() { TXN
+  function afterInit() { 
     patchNav();
     App.init();
     window._bankAppInited = true;
@@ -2328,7 +2676,7 @@ if (document.readyState === 'loading') {
     if (typeof updateViaOptions === 'function') updateViaOptions();
     if (typeof updateSummary === 'function') updateSummary();
   }
-  if (document.readyState === 'loading') {
+  if (document.readyState === 'loading') { 
     document.addEventListener('DOMContentLoaded', afterInit);
   } else {
     afterInit();
@@ -2347,4 +2695,4 @@ if (document.readyState === 'loading') {
 </script>
 
 </body>
-</html>
+</html> 
