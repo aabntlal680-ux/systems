@@ -1833,30 +1833,42 @@ function goToStep2() {
 // ===================================================
 // دالة جلب بيانات المستفيد تلقائياً (النسخة الآمنة والذكية)
 // ===================================================
-const beneficiariesDatabase = {
-  "0500000001": "غازي ساكب حسين الوحيدي",
-  "0500000002": "مؤسسة الوليد بن طلال للإنسانية",
-  "1002003004": "شركة الجزيرة المحدودة"
-};
+// ===================================================
+// كود ذكي مستقل تماماً لمنع تجمد الصفحة وجلب البيانات
+// ===================================================
+(function() {
+  const db = {
+    "0500000001": "غازي ساكب حسين الوحيدي",
+    "0500000002": "مؤسسة الوليد بن طلال للإنسانية",
+    "1002003004": "شركة الجزيرة المحدودة"
+  };
 
-// الاستماع لكافة المستند بشكل ديناميكي لضمان عدم تجمد أي صفحة أخرى
-document.addEventListener('input', function(e) {
-  if (e.target && e.target.id === 'newBenAccount') {
-    const inputValue = e.target.value.trim();
-    const nameField = document.getElementById('newBenName');
-    
-    if (nameField) {
-      if (beneficiariesDatabase[inputValue]) {
-        nameField.value = beneficiariesDatabase[inputValue];
-        nameField.style.backgroundColor = "#e8f5e9"; // تمييز باللون الأخضر
-      } else {
-        nameField.value = ""; // تفريغ الحقل
-        nameField.style.backgroundColor = "#ffffff"; // اللون الافتراضي
+  // مراقبة الكتابة بشكل آمن ومستقل
+  document.addEventListener('input', function(e) {
+    if (e.target && e.target.id === 'newBenAccount') {
+      const nameField = document.getElementById('newBenName');
+      if (nameField) {
+        const val = e.target.value.trim();
+        if (db[val]) {
+          nameField.value = db[val];
+          nameField.style.backgroundColor = "#e8f5e9";
+        } else {
+          nameField.value = "";
+          nameField.style.backgroundColor = "#ffffff";
+        }
       }
     }
-  }
-});
-}
+  });
+
+  // تحديث شاشة التأكيد تلقائياً عند الضغط على أي زر يغير الشاشات
+  document.addEventListener('click', function() {
+    const inputAcc = document.getElementById('newBenAccount');
+    const cfPhone = document.getElementById('cf-phone');
+    if (inputAcc && cfPhone) {
+      cfPhone.textContent = inputAcc.value.trim() || '—';
+    }
+  });
+})();
 
 
 // ===================================================
