@@ -149,9 +149,43 @@ body.en .history-table th{text-align:left}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.success{background:#1e7a38}
 .toast.error{background:#cc2020}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal-box{background:white;border-radius:8px;width:92%;max-width:390px;overflow:hidden;animation:slideUp .28s ease;box-shadow:0 16px 50px rgba(0,0,0,.35);direction:rtl}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;overflow-y:auto;padding:20px 0;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex !important;}
+.modal-box{background:white;border-radius:14px;width:90%;max-width:480px;overflow:hidden;animation:slideUp 0.3sease-in-out;box-shadow:0 16px 40px rgba(0,0,0,0.2);max-height: 85vh;display: flex;margin: auto;flex-direction: column;direction:rtl}
+.modal-box, .modal-box * {
+    box-sizing: border-box;
+}
+/* 2. التأكد من وجود مسافة أمان داخلية (Padding) في جسم المودال */
+.modal-body {
+    padding: 20px 24px; /* مسافة مريحة ومنظمة من اليمين واليسار */
+    width: 100%;
+}
+
+/* 3. ضبط حقول الإدخال لكي لا تخرج عن السيطرة */
+.modal-body input, 
+.modal-body select, 
+.modal-body textarea {
+    width: 100% !important; /* ملء المساحة المتاحة له فقط داخل البادينج */
+    max-width: 100%;
+    box-sizing: border-box; /* يمنع الحقل من الخروج عن الحدود عند إضافة Padding له */
+    border: 1px solid #ccc; /* تحديد شكل المربع المكتمل */
+    border-radius: 6px; /* زوايا ناعمة للمربع */
+    padding: 10px; /* مسافة النص الداخلية */
+}
+
+/* 4. إذا كنت تستخدم نظام الصفوف (Rows) لتوزيع الحقول بجانب بعضها */
+.form-row {
+    display: flex;
+    gap: 15px; /* مسافة مرنة ومنظمة بين الحقلين المتجاورين */
+    width: 100%;
+    margin-bottom: 15px; /* مسافة بين الصفوف */
+}
+
+.form-group {
+    flex: 1; /* جعل كل حقل يأخذ نصف المساحة بالتساوي دون زيادة */
+    min-width: 0; /* يمنع تمدد الحقول بشكل مفاجئ */
+}
+
 body.en .modal-box{direction:ltr}
 .modal-box.wide{max-width:450px}
 @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
@@ -160,10 +194,11 @@ body.en .modal-box{direction:ltr}
 .modal-header.blue{background:#1e4878}
 .modal-header.green{background:#2e7d32}
 .modal-header-icon{font-size:22px}
-.modal-header-title{font-size:15px;font-weight:900}
-.modal-header-sub{font-size:11px;opacity:.85;margin-top:2px}
+.modal-header-title{font-size:15px;color: #1e4878;font-weight:900;z-index: 1001}
+.modal-header-sub{font-size:11px;color: #1e4878;opacity:.85;margin-top:2px}
 .modal-body{padding:15px 17px 10px}
-.modal-footer{padding:10px 17px 15px;display:flex;gap:8px;justify-content:flex-end;background:#fafbfd;border-top:1px solid #eee;flex-wrap:wrap}
+.modal-footer{padding:10px 17px 15px;z-index: 10005 !important;position: relative !important;display:flex;gap:8px;justify-content:flex-end;background:#fafbfd;border-top:1px solid #eee;flex-wrap:wrap}
+.modal-footer button {cursor: pointer !important;pointer-events: auto !important}
 .modal-err-code{background:#fff0f0;border:1px solid #f0b0b0;border-radius:5px;padding:8px 12px;font-size:11px;color:#cc2020;margin-bottom:11px;display:flex;align-items:center;gap:8px}
 .currency-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:4px 0}
 .currency-item{border:2px solid #d0dae8;border-radius:6px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;background:#f8fbff}
@@ -334,6 +369,7 @@ body.en .fin-badge-new{left:auto;right:10px}
 .fin-panel-header{background:linear-gradient(135deg,#b07800,#d4a010);color:white;padding:12px 18px;font-size:14px;font-weight:bold;display:flex;align-items:center;gap:8px;justify-content:space-between}
 .fin-panel-body{padding:18px}
 .fin-panel-close{background:none;border:none;color:white;cursor:pointer;font-size:18px;line-height:1}
+
 
 
 /* page-body hidden when pages active */
@@ -756,10 +792,16 @@ body.en .fin-badge-new{left:auto;right:10px}
         <div class="fee-box-note">يتم خصم الرسوم مسبقاً قبل صرف مبلغ التمويل للمستفيد</div>
       </div>
 
-      <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#444;margin-top:8px">
-        <input type="checkbox" id="fin-terms" style="width:15px;height:15px;accent-color:#1e4878;cursor:pointer;flex-shrink:0">
-        <label for="fin-terms" style="cursor:pointer">أوافق على الشروط والأحكام والرسوم الإدارية المقررة بنسبة 10%</label>
+      <div style="display:flex !important; align-items:center; gap:8px; font-size:12.5px; color:#444; margin-top:8px; width:100%; direction:rtl;">
+    
+        <input type="checkbox" id="fin-terms" style="width:16px !important; height:16px !important; accent-color:#1e4878; cursor:pointer; flex-shrink:0;">
+    
+        <label for="fin-terms" style="cursor:pointer; width:auto !important; white-space:normal; line-height:1.4;">
+        أوافق على الشروط والأحكام والرسوم الإدارية المقررة بنسبة 10%
+        </label>
+    
       </div>
+
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline btn-sm" id="finCancelBtn">إلغاء</button>
@@ -1753,65 +1795,129 @@ function showFinReceipt(idx){
 // ================================================================
 // FINANCE REQUEST MODAL
 // ================================================================
-var _finType='project';
-// دالة فتح نافذة التمويل وتحديد نوعه
-function openFinRequest(type) {
-    // 1. حفظ نوع التمويل في متغير عام لاستخدامه لاحقاً عند الإرسال
+// ================================================================
+// FINANCE REQUEST MODAL (CORRECTED & EXPOSED)
+// ================================================================
+window._finType = 'project';
+
+// 1. دالة فتح نافذة التمويل وتحديد نوعه (مكشوفة للنظام الخارجي)
+window.openFinRequest = function(type) {
     window._finType = type; 
     
-    // 2. إظهار قسم أو نافذة نموذج التمويل (تأكد من مطابقة الـ ID للـ Form لديك)
-    var finFormSection = document.getElementById('finRequestModal'); 
-    if (finFormSection) {
-        finFormSection.style.display = 'block'; // أو 'flex' حسب التصميم لديك
+    // جلب النافذة المودال
+    var finModal = document.getElementById('finRequestModal'); 
+    if (finModal) {
+        // إظهار النافذة عبر الكلاس المستخدم في مشروعك
+        finModal.classList.add('open');
+        finModal.style.display = 'block'; 
         
-        // التمرير السلس للأسفل ليظهر النموذج للمستخدم
-        finFormSection.scrollIntoView({ behavior: 'smooth' });
+        // التمرير السلس إلى موضع الفورم ليراه المستخدم فوراً
+        finModal.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
-        console.error("لم يتم العثور على عنصر الواجهة الخاص بالنموذج!");
+        console.error("لم يتم العثور على عنصر الواجهة الخاص بالنموذج (finRequestModal)!");
     }
-}
+};
+
+// 2. دالة تحديث الرسوم الإدارية تلقائياً
+window.updateFinFee = function() {
+    var amtEl = document.getElementById('fin-amount');
+    var feeDisplay = document.getElementById('finFeeDisplay');
+    if (!amtEl || !feeDisplay) return;
+
+    var val = parseFloat((amtEl.value || '0').replace(/,/g, '')) || 0;
+    var fee = val * 0.1;
+    
+    // التأكد من وجود دالة التنسيق الرقمي fmtNum
+    if (typeof fmtNum === 'function') {
+        feeDisplay.textContent = 'SAR ' + fmtNum(fee);
+    } else {
+        feeDisplay.textContent = 'SAR ' + fee.toFixed(2);
+    }
+};
 
 
-function updateFinFee(){
-  var val=parseFloat((document.getElementById('fin-amount').value||'0').replace(/,/g,''))||0;
-  var fee=val*0.1;
-  document.getElementById('finFeeDisplay').textContent='SAR '+fmtNum(fee);
-}
+// 3. دالة فحص وإرسال طلب التمويل
+window.submitFinRequest = function() {
+    var name = document.getElementById('fin-name').value.trim();
+    var id = document.getElementById('fin-id').value.trim();
+    var email = document.getElementById('fin-email').value.trim();
+    var phone = document.getElementById('fin-phone').value.trim();
+    var amtRaw = parseFloat((document.getElementById('fin-amount').value || '0').replace(/,/g, '')) || 0;
+    var desc = document.getElementById('fin-desc').value.trim();
+    var terms = document.getElementById('fin-terms').checked;
 
-function submitFinRequest(){
-  var name=document.getElementById('fin-name').value.trim();
-  var id=document.getElementById('fin-id').value.trim();
-  var email=document.getElementById('fin-email').value.trim();
-  var phone=document.getElementById('fin-phone').value.trim();
-  var amtRaw = parseFloat((document.getElementById('fin-amount').value || '0').replace(/,/g, '')) || 0;
-  var desc=document.getElementById('fin-desc').value.trim();
-  var terms=document.getElementById('fin-terms').checked;
-  if(!name){showToast('يرجى إدخال اسم المستفيد','error');return;}
-  if(!email||!email.includes('@')){showToast('يرجى إدخال بريد إلكتروني صحيح','error');return;}
-  if(!amtRaw||amtRaw<=0){showToast('يرجى إدخال المبلغ المطلوب','error');return;}
-  if(!terms){showToast('يجب الموافقة على الشروط والرسوم الإدارية أولاً','error');return;}
-  var fee=amtRaw*0.1;
-  var now=new Date();
-  var dateStr=now.toLocaleDateString('ar-SA')+' '+now.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
-  var ref='#FIN-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*9000+1000);
-  var rec={
-    ref,date:dateStr,finType:_finType,
-    name,idNum:id,email,phone,
-    amount:amtRaw,fee,
-    desc,entity:document.getElementById('fin-entity').value.trim(),
-    photoUrl:window._finPhotoUrl||null,
-    status:'pending'
-  };
-  addFinHistory(rec);
-  closeModal('finRequestModal');
-  renderFinHistory();
-  // Show receipt
-  setTimeout(function(){
-    document.getElementById('finReceiptRef').textContent=ref;
-    showFinReceipt(0);
-    showToast('تم تقديم طلب التمويل بنجاح ✅','success');
-  },300);
-}
+    if (!name) { showToast('يرجى إدخال اسم المستفيد', 'error'); return; }
+    if (!email || !email.includes('@')) { showToast('يرجى إدخال بريد إلكتروني صحيح', 'error'); return; }
+    if (!amtRaw || amtRaw <= 0) { showToast('يرجى إدخال المبلغ المطلوب', 'error'); return; }
+    if (!terms) { showToast('يجب الموافقة على الشروط والرسوم الإدارية أولاً', 'error'); return; }
+
+    var fee = amtRaw * 0.1;
+    var now = new Date();
+    var dateStr = now.toLocaleDateString('ar-SA') + ' ' + now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+    var ref = '#FIN-' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '-' + Math.floor(Math.random() * 9000 + 1000);
+
+    var rec = {
+        ref: ref,
+        date: dateStr,
+        finType: window._finType,
+        name: name,
+        idNum: id,
+        email: email,
+        phone: phone,
+        amount: amtRaw,
+        fee: fee,
+        desc: desc,
+        entity: document.getElementById('fin-entity') ? document.getElementById('fin-entity').value.trim() : '—',
+        photoUrl: window._finPhotoUrl || null,
+        status: 'pending'
+    };
+
+    // حفظ وتحديث السجل
+    if (typeof addFinHistory === 'function') addFinHistory(rec);
+    
+    // إغلاق المودال
+    var finModal = document.getElementById('finRequestModal');
+    if (finModal) {
+        finModal.classList.remove('open');
+    }
+    
+    if (typeof renderFinHistory === 'function') renderFinHistory();
+
+    // عرض الإيصال المالي بعد نجاح العملية
+    setTimeout(function() {
+        var receiptRef = document.getElementById('finReceiptRef');
+        if (receiptRef) receiptRef.textContent = ref;
+        if (typeof showFinReceipt === 'function') showFinReceipt(0);
+        showToast('تم تقديم طلب التمويل بنجاح ✅', 'success');
+    }, 300);
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. الحصول على العناصر من الصفحة
+    const modalOverlay = document.querySelector(".modal-overlay");
+    const cancelBtn = document.getElementById("finCancelBtn");
+    const submitBtn = document.getElementById("finSubmitBtn");
+
+    // 2. تفعيل زر الإغلاق / الإلغاء
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", function(e) {
+            e.preventDefault(); // منع أي سلوك افتراضي
+            modalOverlay.classList.remove("open"); // إخفاء المودال
+        });
+    }
+
+    // 3. تفعيل زر تقديم طلب التمويل
+    if (submitBtn) {
+        submitBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            
+            // هنا يمكنك كتابة الأكواد الخاصة بك عند إرسال البيانات (مثل التحقق من الحقول)
+            alert("تم تقديم طلب التمويل بنجاح!");
+            
+            modalOverlay.classList.remove("open"); // إغفاء المودال بعد التقديم
+        });
+    }
+});
 
 
 
