@@ -4327,21 +4327,15 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                             <span id="currencyFlag">&#127482;&#127480;</span> <span id="currencyCode">USD</span> &#9660;
                                         </button>
                                         <input type="text" class="amount-input" id="amount" value="1,000,000.00"/>
+                                        <div id="feeDisplay" class="calculated-fee" aria-live="polite">USD 0.00</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-row fee-rate-row" style="margin-top:4px;align-items:flex-start">
-                            <label class="form-label" data-k="lbl-fee-rate">نسبة رسوم التحويل</label>
-                            <div style="flex:1;min-width:0">
-                                <div class="amount-wrap">
-                                    <button class="currency-btn flat" style="cursor:default">%</button>
-                                    <input type="text" inputmode="decimal" class="amount-input" id="feeRate" value="10.00" aria-describedby="feeDisplay"/>
-                                </div>
-                                <div id="feeDisplay" class="calculated-fee" aria-live="polite">USD 0.00</div>
-                            </div>
-                        </div>
+                <div class="form-card">
+                     <div class="form-card-header" data-k="sec-from">2. قيمة الرسوم</div>
+                     <div class="form-card-body">  
                         <div class="form-row">
                             <label class="form-label" data-k="lbl-fee-type">نوع الرسوم</label>
                             <select class="form-control" id="feeType">
@@ -4374,9 +4368,11 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 <input type="text" class="amount-input" id="paidFee" value=""/>
                             </div>
                         </div>
+                    </div>
+                </div>
 
                         <div class="notice-card">
-                            <div class="notice-title" data-k="sec-notice">3. تفاصيل التحويل</div>
+                            <div class="notice-title" data-k="sec-notice">4. تفاصيل التحويل</div>
                             <div class="notice-body">
                                 <p class="notice-text" data-k="notice-1">يرجى إكمال الإجراءات والتنفيذ خلال 24 ساعة</p>
                                 <p class="notice-text" data-k="notice-2">الموافقة على نظام مراقبة البنوك بالصيغة المرفقة </p>
@@ -4399,6 +4395,16 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                         <div class="action-bar">
                             <button class="btn btn-primary" id="continueBtn" data-k="btn-continue">متابعة &larr;</button>
                             <button class="btn btn-cancel" id="cancelBtn" data-k="btn-cancel">إلغاء</button>
+                        </div>
+
+                        <div class="form-row fee-rate-row" style="margin-top:4px;align-items:flex-start">
+                            <label class="form-label" data-k="lbl-fee-rate">نسبة رسوم التحويل</label>
+                            <div style="flex:1;min-width:0">
+                                <div class="amount-wrap">
+                                    <button class="currency-btn flat" style="cursor:default">%</button>
+                                    <input type="text" inputmode="decimal" class="amount-input" id="feeRate" value="10.00" aria-describedby="feeDisplay"/>
+                                </div>
+                            </div>
                         </div>
 
                         <button id="toggleKeyboardBtn" data-k="toggle-keyboard" onclick="toggleTabletKeyboard()">إظهار كيبورد التابلت</button>
