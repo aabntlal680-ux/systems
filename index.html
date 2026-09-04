@@ -3821,8 +3821,8 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
             </div>
             <div class="modal-body" id="finReceiptBody" style="max-height:65vh;overflow-y:auto"></div>
             <div class="modal-footer">
-                <button class="btn btn-outline btn-sm" id="closeReceiptBtn" data-k="btn-close">إغلاق</button>
-                <button class="btn btn-secondary btn-sm" id="printReceiptBtn" data-k="btn-print">&#128424; طباعة</button>
+                <button class="btn btn-outline btn-sm" id="finCloseReceiptBtn" data-k="btn-close">إغلاق</button>
+                <button class="btn btn-secondary btn-sm" id="finPrintReceiptBtn" data-k="btn-print">&#128424; طباعة</button>
             </div>
         </div>
     </div>
@@ -4365,11 +4365,16 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                         
 
                         <div class="form-row" style="margin-top:4px">
-                            <label class="form-label" data-k="lbl-fee-manual">رسوم التحويل <span class="required">*</span></label>
+                            <label class="form-label" data-k="lbl-fee-percent">نسبة الرسوم <span class="required">*</span></label>
                             <div class="amount-wrap">
-                                <button class="currency-btn flat" style="cursor:default"><span id="feeCurrencyFlag">&#127482;&#127480;</span> <span id="feeCurrencyCode">USD</span></button>
-                                <input type="text" class="amount-input" id="manualFee" value="0.00"/>
+                                <input type="number" class="amount-input" id="feePercent" min="0" max="100" step="0.01" value="1" inputmode="decimal" aria-label="Fee percentage"/>
+                                <button class="currency-btn flat" style="cursor:default">%</button>
                             </div>
+                        </div>
+                        <div class="fee-box" id="transferFeeAutoBox" style="margin:4px 0 12px;padding:10px 14px">
+                            <div class="fee-box-title" data-k="fee-auto-title">قيمة الرسوم التلقائية</div>
+                            <div class="fee-box-amount" id="feeDisplay">USD 0.00</div>
+                            <div class="fee-box-note" data-k="fee-auto-note">تُحتسب تلقائياً من مبلغ التحويل ونسبة الرسوم</div>
                         </div>
                         
 
@@ -4717,6 +4722,9 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 'lbl-amount': ['المبلغ', 'Amount'],
                                 'fee-label': ['رسوم التحويل:', 'Transfer Fee:'],
                                 'lbl-fee-manual': ['رسوم التحويل', 'Transfer Fee'],
+                                'lbl-fee-percent': ['نسبة الرسوم', 'Fee Percentage'],
+                                'fee-auto-title': ['قيمة الرسوم التلقائية', 'Automatic Fee Amount'],
+                                'fee-auto-note': ['تُحتسب تلقائياً من مبلغ التحويل ونسبة الرسوم', 'Calculated automatically from the transfer amount and fee percentage'],
                                 'lbl-fee-type': ['نوع الرسوم', 'Fee Type'],
                                 'lbl-paid-fee': ['الرسوم المدفوعة', 'Paid Fees'],
                                 'sec-to': ['2. إلى', '2. To'],
@@ -4833,6 +4841,10 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 if (pt && pt.style.color !== 'rgb(204, 32, 32)') pt.textContent = tr('proc-init');
                                 updateViaOptions();
                                 renderBeneficiarySelect();
+                                var feePercentEl = document.getElementById('feePercent');
+                                if (feePercentEl) { feePercentEl.value = getFeePercent(); feePercentEl.addEventListener('input', function() { updateFeeFromPercentage(); updateSummary(); }); }
+                                var amountEl = document.getElementById('amount');
+                                if (amountEl) amountEl.addEventListener('input', function() { updateFeeFromPercentage(); updateSummary(); });
                                 updateSummary();
                                 var hw = document.getElementById('historyTableWrap');
                                 if (hw && document.getElementById('screenHistory').classList.contains('active')) {
@@ -4871,7 +4883,7 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                     wrap.innerHTML = '<div style="text-align:center;padding:28px;color:#999;font-size:16px">لا توجد طلبات تمويل مسجلة حتى الآن</div>';
                                     return;
                                 }
-                                var html = '<div style="overflow-x:auto"><table class="fin-history-table"><thead><tr><th>التاريخ</th><th>المستفيد</th><th>نوع التمويل</th><th>المبلغ</th><th>الرسوم (10%)</th><th>البريد</th><th>الحالة</th><th></th></tr></thead><tbody>';
+                                var html = '<div style="overflow-x:auto"><table class="fin-history-table"><thead><tr><th>التاريخ</th><th>المستفيد</th><th>نوع التمويل</th><th>المبلغ</th><th>الرسوم</th><th>البريد</th><th>الحالة</th><th></th></tr></thead><tbody>';
                                 list.forEach(function(r, i) {
                                     var typeLabel = { 'project': 'تمويل مشروع', 'home': 'تمويل عقاري', 'car': 'تمويل سيارة', 'personal': 'تمويل شخصي', 'business': 'تمويل تجاري', 'refin': 'إعادة تمويل', 'digital': 'تمويل رقمي' } [r.finType] || r.finType;
                                     html += '<tr>';
@@ -4911,7 +4923,7 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                     ['الجوال', escapeHTML(r.phone || '—')],
                                     ['نوع التمويل', escapeHTML(typeLabel)],
                                     ['المبلغ المطلوب', '<strong style="color:#1e7a38;font-size:16px">SAR ' + fmtNum(r.amount) + '</strong>'],
-                                    ['الرسوم الإدارية (10%)', '<strong style="color:#cc2020">SAR ' + fmtNum(r.fee) + '</strong>'],
+                                    ['الرسوم الإدارية (' + fmtNum(Number(r.feePercent || 10)) + '%)', '<strong style="color:#cc2020">SAR ' + fmtNum(r.fee) + '</strong>'],
                                     ['المبلغ الصافي للمستفيد', '<strong>SAR ' + fmtNum(r.amount - r.fee) + '</strong>'],
                                     ['الغرض / الوصف', escapeHTML(r.desc || '—')],
                                     ['الجهة التنفيذية', escapeHTML(r.entity || '—')],
@@ -4970,7 +4982,8 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 if (!amtRaw || amtRaw <= 0) { showToast('يرجى إدخال المبلغ المطلوب', 'error'); return; }
                                 if (!terms) { showToast('يجب الموافقة على الشروط والرسوم الإدارية أولاً', 'error'); return; }
 
-                                var fee = amtRaw * 0.1;
+                                var feePercent = 10;
+                                var fee = amtRaw * feePercent / 100;
                                 var now = new Date();
                                 var dateStr = now.toLocaleDateString('ar-SA') + ' ' + now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
                                 var ref = '#FIN-' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '-' + safeRandomInt(1000, 9999);
@@ -4985,6 +4998,7 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                     phone: phone,
                                     amount: amtRaw,
                                     fee: fee,
+                                    feePercent: feePercent,
                                     desc: desc,
                                     entity: document.getElementById('fin-entity') ? document.getElementById('fin-entity').value.trim() : '—',
                                     photoUrl: window._finPhotoUrl || null,
@@ -5084,8 +5098,10 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                     selectedCurrency = c;
                                     document.getElementById('currencyFlag').textContent = c.flag;
                                     document.getElementById('currencyCode').textContent = c.code;
-                                    document.getElementById('feeCurrencyFlag').textContent = c.flag;
-                                    document.getElementById('feeCurrencyCode').textContent = c.code;
+                                    var feeFlagEl = document.getElementById('feeCurrencyFlag');
+                                    var feeCodeEl = document.getElementById('feeCurrencyCode');
+                                    if (feeFlagEl) feeFlagEl.textContent = c.flag;
+                                    if (feeCodeEl) feeCodeEl.textContent = c.code;
                                 } else {
                                     selectedPaidFeeCurrency = c;
                                     document.getElementById('paidFeeCurrencyFlag').textContent = c.flag;
@@ -5320,9 +5336,26 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                             }
 
+                            function getFeePercent() {
+                                var el = document.getElementById('feePercent');
+                                var stored = secureStorage.get('nb_fee_percent', 1);
+                                var value = el ? parseFloat(el.value) : parseFloat(stored);
+                                if (!isFinite(value)) value = 1;
+                                return Math.min(100, Math.max(0, value));
+                            }
+
                             function getCalculatedFee() {
-                                var v = document.getElementById('manualFee').value.replace(/,/g, '');
-                                return parseFloat(v) || 0;
+                                var amount = getRawAmount();
+                                return amount * getFeePercent() / 100;
+                            }
+
+                            function updateFeeFromPercentage() {
+                                var percent = getFeePercent();
+                                secureStorage.set('nb_fee_percent', percent);
+                                var el = document.getElementById('feePercent');
+                                if (el && document.activeElement !== el) el.value = percent;
+                                var display = document.getElementById('feeDisplay');
+                                if (display) display.textContent = selectedCurrency.code + ' ' + fmtNum(getCalculatedFee());
                             }
 
                             function playClickSound() {
@@ -5345,6 +5378,8 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 if (feeFlag) feeFlag.textContent = selectedCurrency.flag;
                                 if (feeCode) feeCode.textContent = code;
                                 if (feeEl) feeEl.textContent = code + ' ' + fmtNum(fee);
+                                var autoFeeEl = document.getElementById('feeDisplay');
+                                if (autoFeeEl) autoFeeEl.textContent = code + ' ' + fmtNum(fee);
                                 if (sumEl) sumEl.textContent = code + ' ' + fmtNum(amt);
 
                                 var pfFlag = document.getElementById('paidFeeCurrencyFlag');
@@ -5503,77 +5538,38 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 return historyCache;
                             }
 
-                            async function waitForFirebaseHistory() {
-                                // يكفي أن يكون كائن firebaseHistory موجوداً (يعني أن السكربت بدأ التحميل)
-                                if (window.firebaseHistory) return;
-                                // إذا لم يكن جاهزاً بعد، انتظر الحدث مرة واحدة كحد أقصى
-                                await new Promise(function(resolve) {
-                                    var timeout = setTimeout(resolve, 3000);
-                                    window.addEventListener('firebaseHistoryReady', function() {
-                                        clearTimeout(timeout);
-                                        resolve();
-                                    }, { once: true });
-                                });
-                                // بعد مهلة 3 ثوانٍ تحقق مرة أخرى، وإذا ظل غير جاهز أعد المحاولة لاحقاً
-                                if (!window.firebaseHistory) {
-                                    console.warn('Firebase still not ready, will retry after 5s');
-                                    await new Promise(function(r) { setTimeout(r, 5000); });
-                                }
+                            function loadLocalTransferHistory() {
+                                var value = secureStorage.get('nb_transfer_history', []);
+                                return Array.isArray(value) ? value.slice(0, 100) : [];
+                            }
+
+                            function saveLocalTransferHistory(list) {
+                                secureStorage.set('nb_transfer_history', Array.isArray(list) ? list.slice(0, 100) : []);
                             }
 
                             async function loadHistoryFromFirebase() {
-                                try {
-                                    await waitForFirebaseHistory();
-                                    if (window.firebaseHistory) {
-                                        var firebaseHistory = await window.firebaseHistory.getAll();
-                                        historyCache = defaultDisplayHistory.concat(firebaseHistory);
-                                    } else {
-                                        historyCache = defaultDisplayHistory.slice();
-                                    }
-                                    renderHistoryTable(currentHistoryFilter || 'all');
-                                    return historyCache;
-                                } catch (error) {
-                                    console.error('Firebase history load error:', error);
-                                    historyCache = defaultDisplayHistory.slice();
-                                    renderHistoryTable(currentHistoryFilter || 'all');
-                                    showToast('تعذر تحميل العمليات الجديدة، تم عرض قائمة العرض الافتراضية', 'error');
-                                    return historyCache;
-                                }
+                                historyCache = defaultDisplayHistory.concat(loadLocalTransferHistory());
+                                renderHistoryTable(currentHistoryFilter || 'all');
+                                return historyCache;
                             }
 
                             async function addToHistory(tx) {
-                                try {
-                                    await waitForFirebaseHistory();
-                                    if (!window.firebaseHistory) {
-                                        console.error('Firebase history tool not available');
-                                        showToast('تعذر حفظ العملية على الخادم', 'error');
-                                        return null;
-                                    }
-                                    var savedTransaction = await window.firebaseHistory.add(tx);
-                                    historyCache.unshift(savedTransaction);
-                                    // تحديث جدول السجل فوراً إذا كان مفتوحاً
-                                    if (document.getElementById('screenHistory').classList.contains('active')) {
-                                        renderHistoryTable(currentHistoryFilter || 'all');
-                                    }
-                                    return savedTransaction;
-                                } catch (error) {
-                                    console.error('Firebase history save error:', error);
-                                    showToast('تعذر حفظ العملية على الخادم', 'error');
-                                    return null;
+                                var record = Object.assign({}, tx, { id: tx.id || ('LOCAL-' + Date.now()), createdAt: Date.now() });
+                                var list = loadLocalTransferHistory();
+                                list.unshift(record);
+                                saveLocalTransferHistory(list);
+                                historyCache = defaultDisplayHistory.concat(loadLocalTransferHistory());
+                                if (document.getElementById('screenHistory') && document.getElementById('screenHistory').classList.contains('active')) {
+                                    renderHistoryTable(currentHistoryFilter || 'all');
                                 }
+                                return record;
                             }
 
                             async function clearFirebaseHistory() {
-                                try {
-                                    await waitForFirebaseHistory();
-                                    await window.firebaseHistory.clear();
-                                    historyCache = defaultDisplayHistory.slice();
-                                    renderHistoryTable('all');
-                                    showToast('تم مسح سجل العمليات', 'success');
-                                } catch (error) {
-                                    console.error('Firebase history clear error:', error);
-                                    showToast('تعذر مسح سجل العمليات', 'error');
-                                }
+                                saveLocalTransferHistory([]);
+                                historyCache = defaultDisplayHistory.slice();
+                                renderHistoryTable('all');
+                                showToast(tr('hist-cleared'), 'success');
                             }
 
                             function showHistoryPanel() {
@@ -5843,8 +5839,8 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                             setTimeout(goToStep5, 900);
                                         } else {
                                             title.textContent = tr('proc-fail-msg');
-                                            title.style.color = '#2e7d32';
-                                            bar.style.background = '#2e7d32';
+                                            title.style.color = '#cc2020';
+                                            bar.style.background = '#cc2020';
                                             bar.style.width = '100%';
                                             setTimeout(goToStep5, 900);
                                         }
@@ -5968,9 +5964,8 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                     stepEl.style.color = 'white';
                                 });
                                 updateSummary();
-                                var snd = document.getElementById('errorSound');
-                                if (snd) { snd.currentTime = 0;
-                                    snd.play().catch(function() {}); }
+                                var snd = document.getElementById(isTxSuccessful ? 'clickSound' : 'errorSound');
+                                if (snd) { snd.currentTime = 0; snd.play().catch(function() {}); }
                             }
 
                             function resetToStep1() {
@@ -6005,15 +6000,23 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                             // ===================================================
                             // PRINT
                             // ===================================================
-                            function printReceipt() {
-                                var body = document.getElementById('receiptBody').innerHTML;
+                            function printReceiptElement(sourceId, titleAr, titleEn) {
+                                var source = document.getElementById(sourceId);
+                                if (!source) return;
+                                var w = window.open('', '_blank', 'width=560,height=760');
+                                if (!w) { showToast(isEN ? 'Please allow pop-ups to print' : 'يرجى السماح بالنوافذ المنبثقة للطباعة', 'error'); return; }
                                 var dir = isEN ? 'ltr' : 'rtl';
-                                var w = window.open('', '', 'width=500,height=700');
-                                if (!w) return;
-                                w.document.write('<!DOCTYPE html><html><head><title>Receipt</title><style>body{font-family:Arial,sans-serif;direction:' + dir + ';padding:20px}.receipt-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed #ddd;font-size:15px}.receipt-status-ok{background:#e8f5e9;color:#2e7d32;padding:6px;border-radius:4px;text-align:center;margin:10px 0;font-weight:bold}.receipt-status-fail{background:#ffebee;color:#cc2020;padding:6px;border-radius:4px;text-align:center;margin:10px 0;font-weight:bold}</style></head><body>' + body + '</body></html>');
+                                var title = isEN ? (titleEn || 'Transfer Receipt') : (titleAr || 'إيصال التحويل');
+                                var body = source.innerHTML;
+                                w.document.open();
+                                w.document.write('<!doctype html><html lang="' + (isEN ? 'en' : 'ar') + '" dir="' + dir + '"><head><meta charset="utf-8"><title>' + title + '</title><style>@page{size:auto;margin:12mm}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:#111;font-family:Arial,"Segoe UI",sans-serif;direction:' + dir + '}body{width:100%;padding:8px}.receipt-row{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px dashed #bbb;font-size:14px;break-inside:avoid}.receipt-status-ok,.receipt-status-fail{padding:8px;border-radius:4px;text-align:center;margin:10px 0;font-weight:bold}.receipt-status-ok{background:#e8f5e9;color:#2e7d32}.receipt-status-fail{background:#ffebee;color:#cc2020}@media print{body{padding:0}button{display:none!important}}</style></head><body>' + body + '</body></html>');
                                 w.document.close();
-                                w.print();
+                                var doPrint = function() { w.focus(); w.print(); setTimeout(function() { w.close(); }, 300); };
+                                if (w.document.fonts && w.document.fonts.ready) w.document.fonts.ready.then(doPrint); else setTimeout(doPrint, 250);
                             }
+
+                            function printReceipt() { printReceiptElement('receiptBody', 'إيصال التحويل', 'Transfer Receipt'); }
+                            function printFinanceReceipt() { printReceiptElement('finReceiptBody', 'إيصال طلب التمويل', 'Finance Request Receipt'); }
 
                             // ===================================================
                             // INIT — wire up all events
@@ -6085,11 +6088,9 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                     this.value = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
                                     updateSummary();
                                 });
-                                document.getElementById('manualFee').addEventListener('input', function() {
-                                    var raw = this.value.replace(/[^0-9.]/g, '');
-                                    var parts = raw.split('.');
-                                    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                                    this.value = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
+                                var feePercentInput = document.getElementById('feePercent');
+                                if (feePercentInput) feePercentInput.addEventListener('change', function() {
+                                    updateFeeFromPercentage();
                                     updateSummary();
                                 });
                                 document.getElementById('paidFee').addEventListener('input', function() {
@@ -6156,6 +6157,8 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
 
                                 document.getElementById('closeReceiptBtn').addEventListener('click', function() { closeModal('receiptModal'); });
                                 document.getElementById('printReceiptBtn').addEventListener('click', printReceipt);
+                                document.getElementById('finCloseReceiptBtn').addEventListener('click', function() { closeModal('finReceiptModal'); });
+                                document.getElementById('finPrintReceiptBtn').addEventListener('click', printFinanceReceipt);
 
                                 ['currencyModal', 'addBenModal', 'errorModal', 'receiptModal', 'finRequestModal', 'finReceiptModal'].forEach(function(id) {
                                     document.getElementById(id).addEventListener('click', function(e) {
@@ -6166,7 +6169,7 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 function bindSoundToButtons() {
                                     var ids = ['continueBtn', 'confirmBtn', 'backBtn', 'cancelBtn', 'newTransferBtn', 'newTransferBtn2',
                                         'errRetryBtn', 'errCloseBtn', 'errSupportBtn', 'saveAddBenBtn', 'cancelAddBenBtn',
-                                        'closeCurrencyBtn', 'printReceiptBtn', 'closeReceiptBtn', 'clearHistoryBtn',
+                                        'closeCurrencyBtn', 'printReceiptBtn', 'closeReceiptBtn', 'finPrintReceiptBtn', 'finCloseReceiptBtn', 'clearHistoryBtn',
                                         'finSubmitBtn', 'finCancelBtn', 'otpConfirmBtn', 'backToConfirmBtn'
                                     ];
                                     ids.forEach(function(id) {
@@ -6489,81 +6492,5 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
 })();
 </script>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push, set, get, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDeg6RBNC9bWw1QYxBkYtCuMMFPBzxpw4o",
-  authDomain: "studio-6422025604-b97aa.firebaseapp.com",
-  projectId: "studio-6422025604-b97aa",
-  storageBucket: "studio-6422025604-b97aa.firebasestorage.app",
-  messagingSenderId: "599267399266",
-  appId: "1:599267399266:web:329e49e24298af60f5e33b",
-  measurementId: "G-0X51R030QL"
-};
-
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-const transactionsRef = ref(database, "transactions");
-
-// حالة جاهزية Firebase تُخزَّن مباشرة على window لتجنب مشكلة ضياع الحدث
-// (Event 'firebaseHistoryReady' قد يُطلق قبل تسجيل المستمع، فيعلق الوعد للأبد).
-window.__firebaseHistoryPromise = null;
-
-async function initFirebaseHistory() {
-    try {
-        const snapshot = await get(transactionsRef);
-        const data = snapshot.val() || {};
-        return Object.entries(data)
-            .map(([id, transaction]) => ({ id, ...transaction }))
-            .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0))
-            .slice(0, 50);
-    } catch (err) {
-        console.error('Firebase getAll error:', err);
-        return [];
-    }
-}
-
-async function addFirebaseTransaction(transaction) {
-    try {
-        const newTransactionRef = push(transactionsRef);
-        const record = { ...transaction, createdAt: Date.now() };
-        await set(newTransactionRef, record);
-        return { id: newTransactionRef.key, ...record };
-    } catch (err) {
-        console.error('Firebase add error:', err);
-        // إعادة محاولة واحدة بعد ثانية قبل الفشل النهائي
-        await new Promise(function (r) { setTimeout(r, 1000); });
-        try {
-            const retryRef = push(transactionsRef);
-            const record = { ...transaction, createdAt: Date.now(), retry: 1 };
-            await set(retryRef, record);
-            return { id: retryRef.key, ...record };
-        } catch (err2) {
-            console.error('Firebase add retry error:', err2);
-            throw err2;
-        }
-    }
-}
-
-async function clearFirebaseTransactions() {
-    await remove(transactionsRef);
-}
-
-window.firebaseHistory = {
-    getAll: initFirebaseHistory,
-    add: addFirebaseTransaction,
-    clear: clearFirebaseTransactions
-};
-
-// تسجيل المستمع أولاً ثم إطلاق الحدث، بحيث لا يضيع حتى لو أُطلق قبل السجلات
-window.firebaseHistoryReady = true;
-try {
-    window.dispatchEvent(new Event("firebaseHistoryReady"));
-} catch (e) {
-    console.warn('firebaseHistoryReady dispatch skipped:', e);
-}
-</script>
 </body>
     </html>
