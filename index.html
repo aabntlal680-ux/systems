@@ -4334,6 +4334,11 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                         <option value="other" data-ar="أخرى" data-en="Other">أخرى</option>
                                     </select>
                                 </div>
+
+                                <div class="fee-box" id="transferFeeAutoBox" style="margin:4px 0 12px;padding:10px 14px">
+                                    <div class="fee-box-amount" id="feeDisplay">USD 0.00 تُحتسب تلقائياً من مبلغ التحويل</div>
+                                    <!-- <div class="fee-box-note" data-k="fee-auto-note">تُحتسب تلقائياً من مبلغ التحويل ونسبة الرسوم</div> -->
+                                </div>
                             </div>
                         </div>
 
@@ -4371,12 +4376,6 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                 <button class="currency-btn flat" style="cursor:default">%</button>
                             </div>
                         </div>
-                        <div class="fee-box" id="transferFeeAutoBox" style="margin:4px 0 12px;padding:10px 14px">
-                            <div class="fee-box-title" data-k="fee-auto-title">قيمة الرسوم التلقائية</div>
-                            <div class="fee-box-amount" id="feeDisplay">USD 0.00</div>
-                            <div class="fee-box-note" data-k="fee-auto-note">تُحتسب تلقائياً من مبلغ التحويل ونسبة الرسوم</div>
-                        </div>
-                        
 
                         <div class="form-row" id="paidFeeRow">
                             <label class="form-label" data-k="lbl-paid-fee">الرسوم المدفوعة</label>
