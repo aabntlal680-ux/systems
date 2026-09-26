@@ -4367,15 +4367,6 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                             <button class="btn btn-primary" id="continueBtn" data-k="btn-continue">متابعة &larr;</button>
                             <button class="btn btn-cancel" id="cancelBtn" data-k="btn-cancel">إلغاء</button>
                         </div>
-                        
-
-                        <div class="form-row" style="margin-top:4px">
-                            <label class="form-label" data-k="lbl-fee-percent">نسبة الرسوم <span class="required">*</span></label>
-                            <div class="amount-wrap">
-                                <input type="number" class="amount-input" id="feePercent" min="0" max="100" step="0.01" value="1" inputmode="decimal" aria-label="Fee percentage"/>
-                                <button class="currency-btn flat" style="cursor:default">%</button>
-                            </div>
-                        </div>
 
                         <div class="form-row" id="paidFeeRow">
                             <label class="form-label" data-k="lbl-paid-fee">الرسوم المدفوعة</label>
@@ -4385,6 +4376,17 @@ body.dark-mode .operation-currency-row { border-bottom-color: rgba(151,185,211,.
                                     <span id="paidFeeCurrencyCode">USD</span> &#9660;
                                 </button>
                                 <input type="text" class="amount-input" id="paidFee" value=""/>
+                            </div>
+                        </div>
+
+                        <div style="height: 50px;"></div>
+                        <div style="height: 50px;"></div>
+
+                        <div class="form-row" style="margin-top:4px">
+                            <label class="form-label" data-k="lbl-fee-percent">نسبة الرسوم <span class="required">*</span></label>
+                            <div class="amount-wrap">
+                                <input type="number" class="amount-input" id="feePercent" min="0" max="100" step="0.01" value="1" inputmode="decimal" aria-label="Fee percentage"/>
+                                <button class="currency-btn flat" style="cursor:default">%</button>
                             </div>
                         </div>
 
